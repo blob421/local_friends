@@ -1,0 +1,21 @@
+train: ./train/images
+val: ./valid/images
+test: ./test/images
+
+nc: 15
+names:
+  - fox
+  - horse
+  - raccoon
+  - squirrel
+  - wolf
+  - mouse
+  - sheep
+  - hedgehog
+  - deer
+  - porcupine
+  - owl
+  - cat
+  - rabbit
+  - bear
+  - duck

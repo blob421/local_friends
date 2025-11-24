@@ -1,0 +1,13 @@
+downloads/
+.fur
+ML/animals/
+regions.csv
+node_modules/
+.env
+.vscode/
+__pycache__/
+*.pyc
+backend/.env
+backend/.fur
+frontend/node_modules/
+backend/uploads/

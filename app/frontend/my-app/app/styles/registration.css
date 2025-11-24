@@ -1,0 +1,29 @@
+.register_cont{
+    left: 50%; top: 50%; transform: translate(-50%,-50%); position: absolute;
+    display: flex; flex-direction: column; background-color: rgb(135, 208, 247); padding: 4%;
+    height: 70vh; color: black; align-items: center; justify-content: center;
+    gap: 2%;
+}
+.btn_reg{
+    background-color: rgb(208, 208, 208); margin-top: 5%; padding: 2%;
+    border: 1px solid black; cursor: pointer;
+}
+.header_reg{
+    font-size: 22px; color: black; margin-bottom: 5vh;
+}
+.reg_input{
+    background-color: aliceblue; border: 1px solid black; border-radius: 5px;
+    padding: 1%; width: 200px;
+}
+
+.username_help{
+    background-color: rgb(216, 112, 122); padding-left: 1%;
+    padding-right: 1%; border-radius: 4px; width: 200px; text-align: center;
+}
+.email_help{
+    background-color: rgb(216, 112, 122); width: 200px; padding-left: 1%;
+    padding-right: 1%; border-radius: 4px;text-align: center;
+}
+.pass_help{
+    margin-top: 2%;
+}
