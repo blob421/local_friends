@@ -1,0 +1,23 @@
+.top_bar_landing{
+    background-color: rgb(88, 88, 197); height: 10vh;
+}
+.login_btn_landing{
+    background-color: rgb(158, 198, 232); padding: 1%; width: 7vw; 
+    color: white; text-decoration: none; font-size: medium;
+    text-align: center; border-radius: 4px;
+
+}
+.login_btn_cont{
+     right: 10; position: absolute; display: flex; 
+     align-items: center; height: 10vh; gap: 2%;
+}
+.reg_btn_landing{
+    background-color: rgb(158, 198, 232); padding: 1%; width: 7vw; 
+    color: white; text-decoration: none; font-size: medium;
+    text-align: center;  border-radius: 4px;
+}
+.dashboard_btn_landing{
+    background-color: rgb(158, 198, 232); padding: 2%; width: 8vw; 
+    color: white; text-decoration: none; font-size: medium;
+    text-align: center; border-radius: 4px;
+}

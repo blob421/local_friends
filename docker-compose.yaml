@@ -1,0 +1,72 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./app/backend/Dockerfile
+    command:
+      node app.js
+    
+    volumes:
+      - mediaData:/usr/src/app/media/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - rabbitmq
+      - postgres
+    restart:
+       always
+  frontend:
+    build:
+      context: .
+      dockerfile: ./app/frontend/my-app/Dockerfile
+    ports:
+      - "3001:3001"
+    command:
+      yarn start
+    environment:
+     - PORT=3001
+    restart:
+      always
+
+  pika:
+    build: 
+      context: ./ML
+    
+        
+    working_dir: /ML
+    command: python detect.py
+    volumes:
+      - mediaData:/usr/src/app/media/
+    env_file:
+      - .env
+    restart: always
+
+  
+  rabbitmq:
+    image: rabbitmq:management-alpine
+    ports:
+      - "5672:5672"
+    environment:
+    - RABBITMQ_DEFAULT_USER=admin
+    - RABBITMQ_DEFAULT_PASS=secret
+    restart:
+      always
+
+ 
+    
+  postgres:
+    image: postgres:17
+   
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+    restart: always
+    env_file:
+      - .env
+
+
+volumes:
+    pgdata:
+    mediaData:
