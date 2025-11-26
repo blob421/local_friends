@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
 
-const sequelize = new Sequelize('postgres://postgres:1246@postgres:5432/js-backend')
-//const sequelize = new Sequelize('postgres://postgres:1246@localhost:5432/js-backend')
+ // const sequelize = new Sequelize('postgres://postgres:1246@postgres:5432/js-backend')
+const sequelize = new Sequelize('postgres://postgres:1246@localhost:5432/js-backend')
 
 ///////////////////////////// MODELS ////////////////////////////////
 
@@ -13,7 +13,8 @@ User.init(
     email: {type: DataTypes.STRING, allowNull: false},
     username: {type: DataTypes.STRING, allowNull: false},
     password: {type: DataTypes.STRING, allowNull: false},
-    picture: {type: DataTypes.STRING}
+    picture: {type: DataTypes.STRING},
+    
     
   },
   {
@@ -118,7 +119,9 @@ Media.init(
 class Animal extends Model {}
 Animal.init(
   {
-    name: {type: DataTypes.STRING}
+    name: {type: DataTypes.STRING},
+    description: {type:DataTypes.TEXT},
+    picture: {type: DataTypes.STRING}
   },{
     sequelize,
     modelName: 'Animal'
@@ -129,6 +132,7 @@ Animal.init(
 Post.hasMany(Media) // for include media in post
 User.hasOne(Media)
 Post.hasOne(Animal)
+User.belongsTo(Animal)
 Media.belongsTo(Post,{
   onDelete: 'CASCADE'
 })
@@ -170,4 +174,4 @@ UserStat.belongsTo(User, {
 // the defined model is the class itself
 console.log(User === sequelize.models.User); // true
 
-module.exports = { sequelize, User, Post, Region, Team, Badge, Media};
+module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal};
