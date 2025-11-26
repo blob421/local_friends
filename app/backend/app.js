@@ -17,7 +17,8 @@ app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', router);
-app.use('/uploads', express.static('uploads'));
+app.use('/usr/src/app/media', express.static('/usr/src/app/media'));
+
 
 const bcrypt = require('bcrypt');
 

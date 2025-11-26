@@ -1,12 +1,28 @@
-
+/************************ BAR *****************************/
+.feed_top_bar_create{
+    background-color: rgb(112, 114, 116); top:0; position: sticky; border-radius: 2px;
+    height: 8vh; display: flex; align-items: center; gap: 1%;  justify-content: flex-end;
+    
+}
+.new_post_btn:hover{
+    background-color: rgb(116, 186, 239); cursor: pointer;
+}
+.new_post_icon{
+  height: 20px;
+}
+.new_post_btn{
+    width: 20%; background-color: rgb(161, 192, 216); height: 90%; display: 
+    flex; align-items: center; justify-content: center; border-radius: 5px; border: 1px solid black;
+    font-size: smaller; gap: 6%;
+}
 /************************ Feed *****************************/
 
 .feed_left{
-    background-color: grey; height: 90vh; 
+    background-color: grey; height: 90vh; width: 20%;
 }
 .feed_middle{
  display: block; overflow-y: scroll;  background-color: rgb(68, 68, 68);
- position: relative;
+ position: relative; width: 60%; overflow-x: hidden; height:90vh
 }
 .images_cont_feed{
     max-width: 300px; max-height: 200px;
@@ -15,11 +31,29 @@
     width: 200px; max-height: 200px;
 }
 .post_unit_feed{
-  background-color: aliceblue; color: black; display: flex; 
-  flex-direction: column; width: 100%; align-items: center; margin-bottom: 20px;
+  background-color: rgb(50, 50, 50); color: rgb(244, 244, 244); display: flex; 
+  align-items: center; margin-bottom: 20px; padding: 2%;
   border-radius: 10px; margin-top: 5px;
 }
-
+.post_unit_feed:hover{
+    background-color: rgb(62, 62, 62); cursor: pointer;
+}
+.flex_cont{
+    display: flex;
+}
+.posts_cont{
+   
+   justify-content: center; flex-direction: column; 
+}
+.left_post_text{
+    min-height: 100%;
+}
+.post_title{
+    height: 10%;
+}
+.post_content{
+    height: 90%;
+}
 /************************ Right panel  *****************************/
 .collapsed_post_form{
     width: 10px;
@@ -41,5 +75,74 @@
     width: 10vw; background-color: grey;
 }
 .feed_right{
-    background-color: antiquewhite;  height: 90vh; right: 0; position: relative;
+    background-color: antiquewhite;  height: 90vh; right: 0; position: relative; width:20%
+}
+
+/********************** MODAL ***********************/
+#feed_modal_bg{
+    background-color: rgba(0, 0, 0, 0.29); width: 100vw; height: 100%; position: fixed;
+    z-index: 1000;
+}
+.title_modal_feed{
+    text-align: center; margin-bottom: 6%; font-size: large !important;
+}
+.feed_modal{
+    left: 50%; top: 30%; height: 65vh; width: 40vw; position: relative; transform: translate(-50%, -50%);
+    background-color: rgb(61, 61, 61); border-radius: 17px; display: flex; flex-direction: column;
+    padding: 4%; border: 3px solid rgb(41, 41, 41) ; color: rgb(252, 252, 252); gap: 1vh;
+    font-size: smaller;
+    
+}
+
+.feed_modal input{
+    border: 1px solid rgb(151, 151, 151); padding-left: 1%;
+}
+.feed_modal textarea{
+     border: 1px solid rgb(151, 151, 151);padding-left: 1%;
+}
+
+input[type='file']{
+    background-color: rgb(222, 222, 222); color: black !important; width: 50%; cursor: pointer;
+    border: 2px solid rgb(44, 44, 44) !important; text-align: center !important; padding: 1%;
+    font-size: small;
+}
+.post_btn_feed_modal{
+     width: 10vw; background-color: grey; position: absolute; right: 33; bottom: 10;
+     border-radius: 5px; padding: 0.5%; border: 1px solid white;
+}
+.x_btn_feed_modal{
+     position: absolute; right: 8; top: 9; background-color: rgb(204, 108, 108); 
+    z-index: 10000; width: 23px; height: 23px; cursor: pointer;
+    text-align: center; border-radius: 6px; border: 1px solid black;
+}
+/******************************** POST DETAIL MODAL *********************************/
+
+#post_detail_bg{
+  
+    background-color: rgba(0, 0, 0, 0.29); width: 100vw; height: 100%; position: fixed;
+    z-index: 1000;
+}
+.post_detail_modal{
+    left: 50%; top: 40%; transform: translate(-50%, -50%); background-color: rgb(40, 40, 40);
+    height: 80vh; width: 55vw; position: absolute; border-radius: 10px; border:1px solid white;
+    display: flex; flex-direction: column; align-items: center;
+}
+.title_post_detail{
+    text-align: center; margin-top: 2vh;
+}
+.description_post_detail{
+    width: 90%; border-radius: 5px; border: 1px solid white; height: 10%;
+}
+.post_detail_pictures_cont{
+     position: relative; width: 100%; border: 1px solid green; display: flex; justify-content: center;
+}
+.image_post_detail{
+    width: 50%;
+}
+.comments_post_detail_cont{
+    height: 40%; width: 100%; border: 1px solid rgb(225, 121, 121); position: relative;
+}
+.comment_bar{
+    border: 1px solid white; left: 50%; transform: translateX(-50%);
+    border-radius: 5px; width: 90%; position: absolute;
 }

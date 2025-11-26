@@ -5,6 +5,7 @@ import {useEffect} from 'react'
 import AsyncSelect from 'react-select/async';
 import debounce from "lodash.debounce";
 import {fetchAuth} from '../components/fetch'
+import handle_debounce from "../components/debounce";
 
 type UserInfoModalProps = {
   url?: string;        // might be undefined
@@ -29,29 +30,9 @@ export default function User_info_modal({url, username, email, firstName, lastNa
     const [selectedOption, setSelectedOption] = useState<Option | null>();
     const params = new URLSearchParams(window.location.search)
     const usernameExists = params.get('username')
-
-const loadOptions = debounce((inputValue, callback) => {
-  if (inputValue.length < 2) {
-    callback([]);
-    return;
-  }
-
-fetchAuth(`${url}/regions?name=${inputValue}`)
-  .then((res) => res.json())
-  .then((data) => {
-    // Transform backend JSON into react-select options
-    const arr = data.results.map((region: any) => ({
-      label: region.name,
-      value: region.id,
-    }));
-
-    // Update local state if you want to keep options
-    setOptions(arr);
-
-    // Pass options back to react-select's async callback
-    callback(arr);
-  });
-}, 400); // 400ms debounce
+    
+    const search_url = `${url}/regions`
+    const loadOptions = handle_debounce(search_url)
 
   return(
     
@@ -65,7 +46,7 @@ fetchAuth(`${url}/regions?name=${inputValue}`)
 
             <div className="top_picture_flex">
              
-                {pictureUrl && <img src={url + '/uploads' + pictureUrl} className="pic_edit"></img>}
+                {pictureUrl && <img src={url + pictureUrl} className="pic_edit"></img>}
         
                 {!pictureUrl && <img src={'/avatar.png'} className="pic_edit"
                 alt="profile picture">

@@ -10,7 +10,7 @@ const {getChannel} = require('./rabbit')
 const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
-const { User, Post, Team, Badge, Region, Media } = require('./db');
+const { User, Post, Team, Badge, Region, Media, Animal } = require('./db');
 
 const router = express.Router();
 router.use(express.json());
@@ -77,10 +77,16 @@ router.post('/login', async (req, res) => {
 
 router.get('/dashboard', authenticateToken, async (req, res) => {
    const user = await User.findOne({where:{id: req.user.id},
-  include: {
+  include: [
+    {
     model: Region,
     attributes: ['name', 'id'] 
-  }})
+    }, 
+    {
+    model:Animal,
+    attributes : ['name', 'picture', 'description']
+    }
+]})
    const teams = await Team.findAll()
    res.json({user, teams})
 });
@@ -235,12 +241,22 @@ async (req, res)=>{
   if (data.email){
     user.email = data.email
   }
-  await user.save()
-  if (username_exists){
+  if (data.animal_select){
+    const animal = await Animal.findOne({where: {name: data.animal_select}})
+    user.AnimalId = animal.id
+    await user.save()
+    res.redirect(`${process.env.FRONT_END_URL}/dashboard`)
+
+  }else{
+    await user.save()
+    if (username_exists){
     res.redirect(`${process.env.FRONT_END_URL}/dashboard?modal=true&username=false`)
   }
   res.redirect(`${process.env.FRONT_END_URL}/dashboard?modal=true`)
  }
+  }
+  
+ 
 )
 
 //////////////////////////////// REGIONS API ////////////////////////////////////////
@@ -255,6 +271,15 @@ router.get('/regions', authenticateToken, async (req, res)=>{
   res.json({results})
 } )
 
+router.get('/animals', authenticateToken, async(req, res)=>{
+  const search = req.query.name
+  const results = await Animal.findAll({attributes: ['name', 'id'],
+                                       where:{name:{[Op.iLike]: `${search}%`}},
+                                       group: ['name', 'id'],
+                                       limit: 20
+                                      })
+  res.json({results})
+})
 ///////////////////////////////////// MAP /////////////////////////////////////////////
 
 router.get('/map', authenticateToken, async (req, res)=>{

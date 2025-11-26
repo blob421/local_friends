@@ -4,7 +4,7 @@
 }
 
 .menu_options{
-    background-color: aqua; 
+    background-color: rgb(35, 152, 241);  gap:3%
 }
 
 .dash_cont{
@@ -22,8 +22,19 @@
     display: flex; justify-content: center;
 }
 .teams_grid{
-    display: grid;  grid-template-columns: repeat(4, 1fr);
-     overflow-y: scroll; padding-top: 2.5vh; height: 75%; scrollbar-width: thin;
+    display: flex;  height:75%;
+      scrollbar-width: thin; 
+     
+}
+.animal_text_dash{
+    font-size: small; padding: 3%; background-color: rgba(38, 38, 38, 0.094);
+}
+.animal_desc_dash{
+width: 55%; ;overflow-y: scroll; scrollbar-width: thin; 
+}
+.animal_title_dash{
+    text-align: center; position: sticky; top: 0; background-color: rgb(39, 39, 39);
+    
 }
 .teams_grid > * {
   justify-self: center; 
@@ -31,8 +42,11 @@
 .team_ico:hover{
     animation: wiggle ; animation-duration: 1.5s; animation-fill-mode: forwards;
 }
-.team_ico{
-    cursor: pointer; border: 1px solid black;
+.animal_ico{
+   width:90%; height: 90%;
+}
+.animal_pic_cont{
+ cursor: pointer;  width:45%; display: flex; justify-content: center; align-items: center;
 }
 @keyframes wiggle{
     to{transform: scale(1.1);} from{transform: scale(1);}
@@ -53,17 +67,25 @@
     display: flex; justify-content: center;
 }
 .account_bot{
- padding-top: 2vh; display: flex; align-items: center; 
+  display: flex; align-items: center; padding-top: 3%;
 }
 .info_left{
- width: 65%; border: 1px solid red;
+ width: 65%;  font-size: small; display: flex; align-items: center; 
+ padding-top: 2vh; background-color: rgba(0, 0, 0, 0.139); margin-right: 5px;
+}
+.profile_pic_dash{
+    height: 90%; width: 90%;
+}
+.text_elipsis{
+    text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: 95%;
 }
 .photo_right{
-    border: 1px solid red; width: 35%; 
+    width: 35%; display: flex; align-items: center;
+    justify-content: center;
 }
 .edit_icon_dash{
     position: absolute; right: 10; top: 10; cursor: pointer;border-radius: 4px;
-    background-color: rgb(214, 208, 190);
+    background-color: rgb(228, 227, 223);
 
 }
 .edit_icon_dash:hover{
@@ -87,10 +109,19 @@
      top: 50%; transform: translate(-50%, -50%); height: 100vh; 
     width: 100vw;
 }
+#profile_modal_bg_animal{
+       background-color: rgba(0, 0, 0, 0.29); position: absolute; left: 50%;
+     top: 50%; transform: translate(-50%, -50%); height: 100vh; 
+    width: 100vw;
+}
 .profile_modal{
     position: absolute; left: 50%; width: 50vw; height: 80vh;
      top: 50%; transform: translate(-50%, -50%); background-color: aliceblue;
      z-index: 1000; display: flex; justify-content: center;  
+}
+.mini_modal{
+    width: 40vw !important; height: 20vh !important; position: relative; border-radius: 5px;
+     top: 40%; display: block;
 }
 .x_btn_modal_edit_dash{
     position: absolute; right: 11; top: 9; background-color: rgb(204, 108, 108); 
@@ -105,6 +136,12 @@
 .submit_btn_edit_profile{
      width: 9vw; background-color: rgb(100, 135, 225) !important; 
      color: white !important; border-radius: 5px; height: 7.5vh !important;
+
+}
+.submit_btn_edit_animal{
+     width: 9vw; background-color: rgb(100, 135, 225) !important; 
+     color: white !important; border-radius: 5px; height: 7.5vh !important;
+     bottom: 10; right: 10; position: absolute;
 
 }
 .submit_cont_dash_edit{
@@ -148,7 +185,9 @@
     display: flex; flex-direction: column; justify-content: center; width: 16vw;
     height: 11vh;
 }
-
+.animal_select{
+    margin-top: 2vh !important; left: 2vw; position: absolute; top:2.5vh
+}
 .region_select{
     width: 270px; color: black; z-index: 10000;
 }

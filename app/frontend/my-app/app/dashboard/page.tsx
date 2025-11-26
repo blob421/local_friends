@@ -6,6 +6,7 @@ import $ from 'jquery'
 import dynamic from 'next/dynamic';
 
 const UserModal = dynamic(()=> import('./user_info_modal'))
+const AnimalModal = dynamic(() => import('./animal_modal'))
 
 type Region = {
   id : Number
@@ -20,10 +21,16 @@ export default  function Dashboard(){
   const [lastName, setLastName] = useState('')
   const [team, setTeam] = useState("")
   const [email , setEmail] = useState("")
+
+  const [animalName , setanimalName] = useState("")
+  const [animalDesc , setanimalDesc] = useState("")
+  const [animalPic , setanimalPic] = useState(null)
+
   const [region , setRegion] = useState<Region | null >(null)
   const [pictureUrl, setPicture] = useState("")
   const [showModal, setModal] = useState(false)
   const [modalTriggered, setModalTriggered] = useState(false)
+  const [animalModal, setAnimalModal] = useState(false)
   
  
   useEffect(()=>{
@@ -49,10 +56,17 @@ export default  function Dashboard(){
        setLastName(data.user.lastName)
        setTeam(data.user.TeamId)
        setEmail(data.user.email)
+       
+       const animal_Name = data.user.Animal.name
+       
+       setanimalName(animal_Name[0].toUpperCase() + animal_Name.substring(1))
+       setanimalPic(data.user.Animal.picture)
+       setanimalDesc(data.user.Animal.description)
+
        setUsername(data.user.username)
-       console.log(data.user.Region)
+       
        setRegion(data.user.Region)
-       setPicture(data.user.picture.split('uploads')[1].replace(/\\/g, '/'))
+       setPicture(data.user.picture)
 
        
 
@@ -70,16 +84,16 @@ export default  function Dashboard(){
   return (
 <div className="dash_cont">
       <div className="row outer_row_dash">
-           <div className="col-md-1 d-flex flex-row flex-md-column gap-3
+           <div className="col-md-1 d-flex flex-row flex-md-column
            align-items-center pt-2 pb-2 pt-md-4 pb-md-0 menu_options">
               <Image src="/person.jpg" alt="person_icon" 
-              width={40} height={40}>
+              width={30} height={30}>
               </Image>
               <Image src="/stats.jpg" alt="stats_icon" 
-              width={40} height={40}>
+              width={30} height={30}>
               </Image>
               <Image src="/gear_icon.png" alt="gear_icon" 
-              width={40} height={40}>
+              width={30} height={30}>
               </Image>
               
 
@@ -96,25 +110,41 @@ export default  function Dashboard(){
                   
                     <div className="col-md-5">
                           <div className="rectangle">
+                             <Image src={"/pen.png"} alt="Edit" height={25} 
+                            width={25} className="edit_icon_dash"
+                            onClick={
+                              ()=>{ 
+                              setAnimalModal(true); 
+                              $('#profile_modal_bg_animal').show()
+                              }
+                              }></Image>
                                 <div className="team_upper">
                                    {team}
-                                   {!team && 'Pick your team'}
+                                   {!team && 'Team'}
 
                                 </div>
+                                
                                 <div className="teams_grid">
+                                     <div className="animal_pic_cont">
+                                              {animalPic && 
+                                              <img src={animalPic}
+                                                alt="" className="animal_ico">
+                                              </img>}
+                                     </div>
+                                    
+                                  
+                                     <div className="animal_desc_dash">
 
-                                  <Image src={"/home.jpg"} width={50} height={50} 
-                                    alt="" className="team_ico">
-                                  </Image>
-                                  <Image src={"/home.jpg"} width={50} height={50} 
-                                    alt="" className="team_ico">
-                                  </Image>
-                                  <Image src={"/home.jpg"} width={50} height={50} 
-                                    alt="" className="team_ico">
-                                  </Image>
-                                  <Image src={"/home.jpg"} width={50} height={50} 
-                                    alt="" className="team_ico">
-                                  </Image>
+                                   
+                                          <div className="animal_title_dash">
+                                          {animalName}
+                                            </div>
+                                          <div className="animal_text_dash">
+                                           {animalDesc}
+
+                                          </div>
+                                 
+                                   </div>
                                 
                                  
                                 </div>
@@ -135,8 +165,8 @@ export default  function Dashboard(){
                   
                     <div className="col-md-5">
                           <div className="rectangle">
-                            <Image src={"/pen.png"} alt="Edit" height={30} 
-                            width={30} className="edit_icon_dash"
+                            <Image src={"/pen.png"} alt="Edit" height={25} 
+                            width={25} className="edit_icon_dash"
                             onClick={
                               ()=>{ 
                               setModalTriggered(true); 
@@ -152,7 +182,8 @@ export default  function Dashboard(){
 
                                 <div className="photo_right">
 
-                                    {pictureUrl && <img src={url + '/uploads' + pictureUrl}></img>}
+                                    {pictureUrl && <img src={url + pictureUrl} 
+                                    className="profile_pic_dash"></img>}
 
                                     {!pictureUrl && <img src={'/avatar.png'}
                                     alt="profile picture">
@@ -164,8 +195,8 @@ export default  function Dashboard(){
                                   
                                     <ul>
                                         <li>Username: {username}</li>
-                                        <li>Name: {firstName}{lastName}</li>
-                                        <li>Email: {email}</li>
+                                        <li>Name: {firstName + " "}{lastName}</li>
+                                        <li className="text_elipsis">Email: {email}</li>
                                         <li>Region: {region?.name}</li>
                                       </ul>
 
@@ -193,6 +224,7 @@ export default  function Dashboard(){
             </div>
      </div>
 
+{animalModal && <AnimalModal url={url}/>}
 
 {(showModal || modalTriggered) && (<UserModal url={url} username={username} 
 email={email} firstName={firstName} lastName={lastName}
