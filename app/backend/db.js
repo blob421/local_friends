@@ -46,7 +46,16 @@ Region.init({
   timestamps: false
 })
 
-
+class Comment extends Model {}
+Comment.init(
+  {
+     content: {type: DataTypes.STRING, allowNull: false}
+  },
+  {
+    sequelize,
+    modelName : 'Comment'
+  }
+)
 class Post extends Model {}
 Post.init(
   {
@@ -129,12 +138,18 @@ Animal.init(
 )
 
 //////////////////////////// RELATIONS //////////////////////////////
+Post.hasMany(Comment)
 Post.hasMany(Media) // for include media in post
 User.hasOne(Media)
 Post.hasOne(Animal)
 User.belongsTo(Animal)
+
 Media.belongsTo(Post,{
   onDelete: 'CASCADE'
+})
+
+Comment.belongsTo(User, {
+  onDelete: "CASCADE"
 })
 
 Badge.belongsTo(Team, {
@@ -174,4 +189,4 @@ UserStat.belongsTo(User, {
 // the defined model is the class itself
 console.log(User === sequelize.models.User); // true
 
-module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal};
+module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment};

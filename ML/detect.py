@@ -39,4 +39,3 @@ for attempt in range(5):
 
           time.sleep(5)
           continue
-con = pika.BlockingConnection(pika.ConnectionParameters(host="bla", ))

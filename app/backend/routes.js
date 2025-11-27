@@ -10,7 +10,7 @@ const {getChannel} = require('./rabbit')
 const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
-const { User, Post, Team, Badge, Region, Media, Animal } = require('./db');
+const { User, Post, Team, Badge, Region, Media, Animal, Comment } = require('./db');
 
 const router = express.Router();
 router.use(express.json());
@@ -174,7 +174,8 @@ router.get('/home', authenticateToken, async (req, res) =>{
     where: {RegionId: region}, order: [['id', 'DESC']], limit : 50, include:[ {
       model: Media,
       attributes: ['url']
-    }]
+    },
+    {model: User, attributes: ['username', 'picture']}]
   })
 
   console.log(posts)
@@ -193,6 +194,22 @@ router.get('/images', async (req, res)=>{
 
 })
 
+router.get('/post/:id/comments',authenticateToken, async (req, res) => {
+  const postId = parseInt(req.params.id)
+  const comments = await Comment.findAll({include: {model: User, attributes: ['picture', 'username']} ,
+    where: {PostId: postId}})
+  res.json({comments})
+})
+
+router.post('/post/:id/comment',authenticateToken, async (req, res) => {
+  const postId = req.params.id
+  const data = req.body
+  const userId = req.user.id
+  console.log(data.comment)
+  
+  await Comment.create({content: data.comment, UserId: userId, PostId: postId})
+  res.redirect(process.env.FRONT_END_URL + `/home?post=${encodeURIComponent(postId)}` )
+})
 ///////////////////////////// PROFILE //////////////////////////////////
 router.post('/profile/edit', authenticateToken, uploadUser.single('image'), 
 async (req, res)=>{

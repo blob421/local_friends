@@ -16,13 +16,18 @@
     font-size: smaller; gap: 6%;
 }
 /************************ Feed *****************************/
-
+.post_user_home_img{
+    width:20px; height: 20px; 
+}
+.post_home_user{
+    display: flex; gap: 2%;
+}
 .feed_left{
-    background-color: grey; height: 90vh; width: 20%;
+    background-color: rgb(16, 16, 16); 
 }
 .feed_middle{
- display: block; overflow-y: scroll;  background-color: rgb(68, 68, 68);
- position: relative; width: 60%; overflow-x: hidden; height:90vh
+ overflow-y: scroll;  background-color: rgb(68, 68, 68); height: 90vh;
+ 
 }
 .images_cont_feed{
     max-width: 300px; max-height: 200px;
@@ -38,9 +43,7 @@
 .post_unit_feed:hover{
     background-color: rgb(62, 62, 62); cursor: pointer;
 }
-.flex_cont{
-    display: flex;
-}
+
 .posts_cont{
    
    justify-content: center; flex-direction: column; 
@@ -75,8 +78,7 @@
     width: 10vw; background-color: grey;
 }
 .feed_right{
-    background-color: antiquewhite;  height: 90vh; right: 0; position: relative; width:20%
-}
+    background-color: rgb(16, 16, 16); }
 
 /********************** MODAL ***********************/
 #feed_modal_bg{
@@ -124,25 +126,61 @@ input[type='file']{
 }
 .post_detail_modal{
     left: 50%; top: 40%; transform: translate(-50%, -50%); background-color: rgb(40, 40, 40);
-    height: 80vh; width: 55vw; position: absolute; border-radius: 10px; border:1px solid white;
+    height: 93vh; width: 55vw; position: absolute; border-radius: 10px; border:1px solid white;
     display: flex; flex-direction: column; align-items: center;
 }
+.post_detail_author{
+    height: 10%; display: flex; gap: 2%; background-color: grey; font-size: small;
+    align-items: center; border-radius: 5px;
+}
+.img_post_detail_author{
+  height: 20px;
+}
 .title_post_detail{
-    text-align: center; margin-top: 2vh;
+    text-align: center; margin-top: 3vh; margin-bottom: 2vh;
 }
 .description_post_detail{
-    width: 90%; border-radius: 5px; border: 1px solid white; height: 10%;
+    border: 1px solid rgb(128, 128, 128); border-radius: 7px;  height: 220px;
 }
 .post_detail_pictures_cont{
-     position: relative; width: 100%; border: 1px solid green; display: flex; justify-content: center;
+       display: flex; justify-content: center;
+     
 }
+
 .image_post_detail{
-    width: 50%;
+ max-height: 220px;
+}
+.first_comment{
+    text-align: center; color: rgb(171, 171, 171); position: absolute;
+    top: 50%; left:50%; transform: translate(-50%, -50%);
+}
+.comment_form{
+    width: 100%; display: flex; justify-content: center; gap: 2%; height: 12%;
+    align-items: center;
+}
+.comment_form input{
+    width: 75%; border: 1px solid white; border-radius: 5px; height: 40%;
+}
+.single_comment{
+    border: 1px solid green; border: 1px solid white; background-color: black;
+    display: flex; gap: 2%; border-radius: 15px; width: 75%; position: relative;
+    left: 50%; transform: translateX(-50%); margin: 1px; padding:5px; font-size: small
 }
 .comments_post_detail_cont{
-    height: 40%; width: 100%; border: 1px solid rgb(225, 121, 121); position: relative;
+    height: 40%; width: 100%; border: 1px solid rgb(82, 82, 82); position: relative;
+    overflow-y: scroll; scrollbar-width: thin; background-color: rgb(61, 61, 61);
 }
-.comment_bar{
-    border: 1px solid white; left: 50%; transform: translateX(-50%);
-    border-radius: 5px; width: 90%; position: absolute;
+
+.user_comment_pic{
+    display: flex; width: 20%;
+}
+.picture_comment{
+    height: 20px; width:20px
+}
+.comment_content_post_detail{
+    width: 80%; 
+}
+
+.post_detail_desc{
+    height: 20%;
 }
