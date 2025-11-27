@@ -55,6 +55,11 @@ const url = process.env.NEXT_PUBLIC_API_URL
   const postId = parseInt(isPost)
   setPostDetailModal(true)
   setActivePost(posts.find(obj=> obj.id === postId))
+
+   const text_contents = $('.post_content').toArray()
+  text_contents.forEach(c=>{
+    truncateText(c, 5)
+  })
   
  }
     
@@ -76,6 +81,15 @@ useEffect(()=>{
 
 }, [])
 
+function truncateText(el: HTMLElement, lines: number) {
+ 
+  const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+  const maxHeight = lineHeight * lines;
+
+  while (el.scrollHeight > maxHeight) {
+    el.textContent = el.textContent!.replace(/\W*\s(\S)*$/, '...');
+  }
+}
 
 return (
  
@@ -120,13 +134,12 @@ return (
 
                       <div className='images_cont_feed col-md-4'>
                         
-                    {post.Media?.map((media, index) => (
+                    
                         <img className='feed_images'
-                          key={index}
-                          src={url + media.url.replace("\\", "/")} // fix Windows-style backslash
+                          src={url + post.Media[0].url.replace("\\", "/")} // fix Windows-style backslash
                           alt={`media for post ${post.id}`}
                         />
-                      ))}
+                     
               </div>                   
       
                       </div>
@@ -143,7 +156,8 @@ return (
             </div>
             
           {createModal && <CreateModal url={url}/>}    
-          {postDetailModal && (activePost && <PostDetailModal comments={comments} post={activePost}/>)}                 
+          {postDetailModal && (activePost && <PostDetailModal 
+          comments={comments} post={activePost} onClose={() => setPostDetailModal(false)}/>)}                 
         </div>
 
 
