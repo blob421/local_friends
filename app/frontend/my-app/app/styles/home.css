@@ -55,7 +55,7 @@
     height: 10%;
 }
 .post_content{
-    height: 90%;
+    height: 90%; font-size: small;
 }
 /************************ Right panel  *****************************/
 .collapsed_post_form{
@@ -114,63 +114,89 @@ input[type='file']{
 }
 .x_btn_feed_modal{
      position: absolute; right: 8; top: 9; background-color: rgb(204, 108, 108); 
-    z-index: 10000; width: 23px; height: 23px; cursor: pointer;
+    z-index: 100000; width: 23px; height: 23px; cursor: pointer;
     text-align: center; border-radius: 6px; border: 1px solid black;
 }
 /******************************** POST DETAIL MODAL *********************************/
 
 #post_detail_bg{
   
-    background-color: rgba(0, 0, 0, 0.29); width: 100vw; height: 100%; position: fixed;
+    background-color: rgba(0, 0, 0, 0.29); 
     z-index: 1000;
 }
 .post_detail_modal{
-    left: 50%; top: 40%; transform: translate(-50%, -50%); background-color: rgb(40, 40, 40);
-    height: 93vh; width: 55vw; position: absolute; border-radius: 10px; border:1px solid white;
-    display: flex; flex-direction: column; align-items: center;
+  background-color: rgb(40, 40, 40);
+    height: 93vh;  border-radius: 10px; border:1px solid white; position: relative;
+    display: flex; flex-direction: column; align-items: center; z-index: 1005;
 }
 .post_detail_author{
-    height: 10%; display: flex; gap: 2%; background-color: grey; font-size: small;
-    align-items: center; border-radius: 5px;
-}
+    height: 25%; display: flex; gap: 2%; background-color: rgb(53, 53, 53); font-size: small;
+    align-items: center; border-radius: 5px; position: sticky; top:0; margin-bottom: 1vh;
+ }
 .img_post_detail_author{
   height: 20px;
 }
 .title_post_detail{
-    text-align: center; margin-top: 3vh; margin-bottom: 2vh;
+    text-align: center; margin-top: 3vh; 
 }
 .description_post_detail{
-    border: 1px solid rgb(128, 128, 128); border-radius: 7px;  height: 220px;
+    border-radius: 7px;  max-height: 45vh; 
+    height: fit-content; font-size: small; overflow-y: auto; scrollbar-width: thin; padding-right: 2%;
+    margin-bottom: 2vh;
 }
+
+.row#description_image_row {
+  height: 50vh; /* default */
+  transition: height 1s ease;
+}
+
+.row.shrinked_row {
+  height: 10vh !important;
+}
+
 .post_detail_pictures_cont{
-       display: flex; justify-content: center;
+       display: flex; justify-content: center; 
      
+}
+.enlarged_img{
+    position: fixed; min-height: 95vh; max-height:95vh;left: 50%; top: 50%; transform: translate(-50%,-50%); 
+    z-index: 100000;
 }
 
 .image_post_detail{
- max-height: 220px;
+
+  object-fit: contain; /* optional: fit inside box without cropping */
 }
+
+
 .first_comment{
     text-align: center; color: rgb(171, 171, 171); position: absolute;
     top: 50%; left:50%; transform: translate(-50%, -50%);
 }
 .comment_form{
-    width: 100%; display: flex; justify-content: center; gap: 2%; height: 12%;
-    align-items: center;
+    width: 100%; display: flex; justify-content: center; gap: 2%; height: 20%;
+    align-items: center; font-size: small; max-height: 100px;
 }
-.comment_form input{
-    width: 75%; border: 1px solid white; border-radius: 5px; height: 40%;
+.comment_form textarea{
+    width: 75%; border: 1px solid white; border-radius: 5px; height: 70%;
+    padding: 1%;
+}
+.comment_bar{
+    width: 75%;
 }
 .single_comment{
-    border: 1px solid green; border: 1px solid white; background-color: black;
-    display: flex; gap: 2%; border-radius: 15px; width: 75%; position: relative;
-    left: 50%; transform: translateX(-50%); margin: 1px; padding:5px; font-size: small
+    border: 1px solid green; border: 1px solid white; background-color: rgb(38, 38, 38);
+    display: flex; flex-direction: column; gap: 2%; border-radius: 15px; width: 75%; position: relative;
+    left: 50%; transform: translateX(-50%); margin: 1px; padding:15px; font-size: small
 }
 .comments_post_detail_cont{
-    height: 40%; width: 100%; border: 1px solid rgb(82, 82, 82); position: relative;
+    height: 80%; width: 100%; border: 1px solid rgb(82, 82, 82); position: relative;
     overflow-y: scroll; scrollbar-width: thin; background-color: rgb(61, 61, 61);
+    z-index: 10000;
 }
-
+.elevated{
+    z-index: 100000;
+}
 .user_comment_pic{
     display: flex; width: 20%;
 }
@@ -183,4 +209,29 @@ input[type='file']{
 
 .post_detail_desc{
     height: 20%;
+}
+.carousel-item img {
+  object-fit: contain;
+  max-height: 45vh; /* set a max height */
+}
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;  
+   width: auto;      /* anchor to the carousel container */
+  top: 50%;                 /* vertical center */
+  transform: translateY(-50%);
+            /* shrink clickable area */
+}
+
+.carousel-control-prev {
+  left: -50px;              /* push outside */
+}
+
+.carousel-control-next {
+  right: -50px;             /* push outside */
+}
+@media (max-width: 768px) {   /* md breakpoint */
+  .description_post_detail {
+    height: 100px !important;
+  }
 }
