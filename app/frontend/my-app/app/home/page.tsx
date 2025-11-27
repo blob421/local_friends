@@ -12,20 +12,55 @@ type Post = {
   title: string;
   content: string;
   Media: Media[]
+  User: User
   
 };
 type Media = {
   url: string;
 };
-
+type Comment = {
+  content : string
+  id: string
+  User: User
+  PostId: string
+  UserId: string
+}
+type User = {
+  picture: string
+  username: string
+}
 export default function Home(){
 const [posts, setPosts] = useState<Post[]>([])
 const [createModal, setModal] = useState(false)
 const [postDetailModal, setPostDetailModal] = useState(false)
+const [comments, setComments] = useState<Comment[]>([])
+const [activePost, setActivePost] = useState<Post | undefined>(undefined)
 
-const [activePost, setActivePost] = useState<Post | null>(null)
 
 const url = process.env.NEXT_PUBLIC_API_URL
+ useEffect(()=>{
+  if (!activePost){
+    return;
+  }
+        fetchAuth(`${url}/post/${activePost?.id}/comments`).then(res => res.json()).then(
+          data => {setComments(data.comments); console.log(data)})
+    }, [activePost])
+
+
+ useEffect(()=>{
+  const params = new URLSearchParams(window.location.search)
+  const isPost = params.get('post')
+
+    if (isPost){
+  const postId = parseInt(isPost)
+  setPostDetailModal(true)
+  setActivePost(posts.find(obj=> obj.id === postId))
+  
+ }
+    
+    }, [posts])
+
+
 useEffect(()=>{
 
  const getResponse = async () => {
@@ -43,14 +78,15 @@ useEffect(()=>{
 
 
 return (
-<div className="flex_cont">
+ 
+<div className="row">
         
-            <div className="feed_left">
+            <div className="feed_left d-none d-md-block col-md-2">
                     
             </div>
 
 
-            <div className="feed_middle" id='feed_middle'>
+            <div className="feed_middle col-12 col-md-8" id='feed_middle'>
                
               <div className='row d-flex justify-content-center'>
                   
@@ -74,6 +110,10 @@ return (
                         setActivePost(post)
                        } }>
                         <div className='left_post_text col-md-8'>
+                          <div className='post_home_user'>
+                            <img src={url + post.User.picture} className='post_user_home_img'/>
+                            {post.User.username}
+                            </div>
                                     <div className='post_title'>{post.title}</div>
                                     <div className='post_content'>{post.content}</div>
                           </div>
@@ -97,13 +137,13 @@ return (
               </div>
 
             </div>
-            <div className="feed_right" id='feed_right'>
+            <div className="feed_right col-md-2" id='feed_right'>
               
                 
             </div>
             
           {createModal && <CreateModal url={url}/>}    
-          {postDetailModal && (activePost && <PostDetailModal post={activePost}/>)}                 
+          {postDetailModal && (activePost && <PostDetailModal comments={comments} post={activePost}/>)}                 
         </div>
 
 
