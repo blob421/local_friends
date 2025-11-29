@@ -48,8 +48,8 @@ export default function PostDetailModal({post, comments, onClose}:PostDetailModa
 
 
     return(
-        <div className='container'>
-          <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" id="post_detail_bg">
+        <div className='container h-100'>
+          <div className="position-absolute top-0 start-0 w-100 d-flex align-items-center justify-content-center" id="post_detail_bg">
          
              <div className="post_detail_modal col-12 col-lg-7">
               <button className="x_btn_feed_modal" onClick={onClose}>X</button>
@@ -68,7 +68,8 @@ export default function PostDetailModal({post, comments, onClose}:PostDetailModa
                                 {post.content}
                             </div>
                                 <div className="post_detail_pictures_cont col-md-6">
-                               {images.length > 1 && <Carousel images={images}/>}
+                                 {images.length > 1 && <Carousel images={images}/>}
+                                 
                                  {images.length == 1 && post.Media?.map(img=>{
                                   return <img src={url + img.url} className="image_post_detail" 
                                   onClick={()=> enlarge('0')} id='img_post_0' 
@@ -79,14 +80,17 @@ export default function PostDetailModal({post, comments, onClose}:PostDetailModa
                         
                         </div>
                      </div>
-                     
+                      <div className='comments_form_wrapper' id='comment_wrapper'>
                      <div className="comments_post_detail_cont">
                             <img src={'/arrow_expand.png'} onClick={()=>{
                              const row = $('#description_image_row')
+                             const wrapper = $('#comment_wrapper')
                              if (row.hasClass('shrinked_row')){
                               row.removeClass('shrinked_row')
+                              wrapper.removeClass('expanded_wrapper')
                              }else{
                              row.addClass('shrinked_row')
+                             wrapper.addClass('expanded_wrapper')
                              }
                              
                             }}/>
@@ -120,7 +124,7 @@ export default function PostDetailModal({post, comments, onClose}:PostDetailModa
                               
                     </form>
              </div>
-       
+       </div>
     </div>
     
     </div>

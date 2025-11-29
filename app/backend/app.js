@@ -2,6 +2,7 @@ const { sequelize, User, Region } = require('./db.js');
 const {connectRabbit, getChannel} = require('./rabbit.js')
 const {consume} = require('./consumer.js')
 require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const router = require('./routes')
@@ -9,18 +10,26 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const queryInterface = sequelize.getQueryInterface();
 
-// Middleware
+// Middleware///////////////////////////////////////////////////////////////////
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
-
+const bcrypt = require('bcrypt');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/', router);
 app.use('/usr/src/app/media', express.static('/usr/src/app/media'));
+/////////////////////////////// RATE LIMITER ///////////////////////////////////
+const {rateLimit} = require('express-rate-limit')
+const limit = rateLimit({windowMs: 1000 * 60,
+                         limit: 50,
+                         legacyHeaders: false,
+                         standardHeaders: 'draft-8', /// newest
+                          ipv6Subnet: 64, // first 64 digits same subnet
 
-
-const bcrypt = require('bcrypt');
+})
+app.use(limit)
+app.set('trust proxy', 1); // for nginx or real ips instead of the proxy
 
 /////////////////////////////// MAIN LOOP //////////////////////////////////////
 async function main() {

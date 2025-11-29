@@ -45,7 +45,17 @@ Region.init({
   modelName: 'Region',
   timestamps: false
 })
-
+class UserSettings extends Model{}
+UserSettings.init(
+  {
+     showEmail: {type: DataTypes.BOOLEAN, defaultValue: false}
+  },
+  {
+    sequelize,
+    className: 'UserSettings',
+    timestamps: false
+  }
+)
 class Comment extends Model {}
 Comment.init(
   {
@@ -144,6 +154,9 @@ User.hasOne(Media)
 Post.hasOne(Animal)
 User.belongsTo(Animal)
 
+UserSettings.belongsTo(User, {
+  onDelete: 'CASCADE'
+})
 Media.belongsTo(Post,{
   onDelete: 'CASCADE'
 })
@@ -189,4 +202,4 @@ UserStat.belongsTo(User, {
 // the defined model is the class itself
 console.log(User === sequelize.models.User); // true
 
-module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment};
+module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment, UserSettings};

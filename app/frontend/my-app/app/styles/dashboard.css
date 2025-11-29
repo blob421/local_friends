@@ -13,7 +13,9 @@
 .top_bar_dashboard{
     background-color: aliceblue; color: black; text-align: center;
 }
-
+.selected_tab_dash{
+    background-color: rgb(46, 61, 117);
+}
 /*********************Square 1*************************/
 
 .team_upper{
@@ -199,4 +201,15 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 }
 #region_dropdown{
     width: 250px;
+}
+/*****************************SETTINGS MODAL********************************/
+
+.settings_modal{
+    background-color: rgb(66, 66, 66); height: 92vh;
+}
+.dash_settings_form{
+    display: flex; color: black; z-index: 100000;
+}
+.jacked_z_index{
+    z-index: 100000;
 }
