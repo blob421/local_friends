@@ -31,7 +31,7 @@ export default function Carousel({ images }: CarouselProps) {
       <div className="carousel-inner">
         {images.map((image, idx) => (
           <div key={idx} className={`carousel-item ${idx === 0 ? "active" : ""} `}>
-            <img className={enlarged ? "enlarged_img": "d-block w-100"} src={image.url} alt={`slide-${idx}`} id={`img_post_${idx}`}
+            <img className={enlarged ? "enlarged_img": "d-block w-100 image_post_detail"} src={image.url} alt={`slide-${idx}`} id={`img_post_${idx}`}
             onClick={()=>{
                if (enlarged){
                 setEnlarged(false)

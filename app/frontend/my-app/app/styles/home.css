@@ -17,27 +17,29 @@
 }
 /************************ Feed *****************************/
 .post_user_home_img{
-    width:20px; height: 20px; 
+    width:17px; height: 17px; 
 }
 .post_home_user{
-    display: flex; gap: 2%;
+    display: flex; gap: 2%; background-color: rgb(69, 69, 69);
+     align-items: center; padding-left: 1%; font-size: small; border-radius: 5px;
+     margin-bottom: 1vh;
 }
 .feed_left{
     background-color: rgb(16, 16, 16); 
 }
 .feed_middle{
- overflow-y: scroll;  background-color: rgb(68, 68, 68); height: 90vh;
+ overflow-y: scroll; overflow-x: hidden;  background-color: rgb(68, 68, 68); height: 90vh;
  
 }
 .images_cont_feed{
-    max-width: 300px; max-height: 200px;
+    max-width: 300px;  display: flex; align-items: center;
 }
 .feed_images{
-    width: 200px; max-height: 200px;
+    width: 200px; max-height: 200px; object-fit: contain;
 }
 .post_unit_feed{
   background-color: rgb(50, 50, 50); color: rgb(244, 244, 244); display: flex; 
-  align-items: center; margin-bottom: 20px; padding: 2%;
+   margin-bottom: 20px; padding: 2%;
   border-radius: 10px; margin-top: 5px;
 }
 .post_unit_feed:hover{
@@ -46,16 +48,17 @@
 
 .posts_cont{
    
-   justify-content: center; flex-direction: column; 
+
 }
 .left_post_text{
-    min-height: 100%;
+    
 }
 .post_title{
-    height: 10%;
+    text-align: center; margin-bottom: 1.5vh;
 }
 .post_content{
-    height: 90%; font-size: small;
+     font-size: small; color: rgb(215, 215, 215);  padding: 2%;
+     border-radius:5px; background-color: rgba(0, 0, 0, 0.219);
 }
 /************************ Right panel  *****************************/
 .collapsed_post_form{
@@ -126,7 +129,7 @@ input[type='file']{
 }
 .post_detail_modal{
   background-color: rgb(40, 40, 40);
-    height: 93vh;  border-radius: 10px; border:1px solid white; position: relative;
+    height: 100vh;  border-radius: 10px; border:1px solid white; position: relative;
     display: flex; flex-direction: column; align-items: center; z-index: 1005;
 }
 .post_detail_author{
@@ -141,13 +144,16 @@ input[type='file']{
 }
 .description_post_detail{
     border-radius: 7px;  max-height: 45vh; 
-    height: fit-content; font-size: small; overflow-y: auto; scrollbar-width: thin; padding-right: 2%;
-    margin-bottom: 2vh;
+    height: fit-content; font-size: small; overflow-y: auto; scrollbar-width: thin; 
+    padding-right: 2%; background-color: rgba(0, 0, 0, 0.219);
+  
 }
 
 .row#description_image_row {
-  height: 50vh; /* default */
+  height: 64vh; /* default */
+ 
   transition: height 1s ease;
+  border: 1px solid grey;
 }
 
 .row.shrinked_row {
@@ -155,7 +161,8 @@ input[type='file']{
 }
 
 .post_detail_pictures_cont{
-       display: flex; justify-content: center; 
+      display: flex; justify-content: center; height: 300px;
+    
      
 }
 .enlarged_img{
@@ -164,8 +171,10 @@ input[type='file']{
 }
 
 .image_post_detail{
-
-  object-fit: contain; /* optional: fit inside box without cropping */
+  
+  
+  object-fit: contain;
+  /* optional: fit inside box without cropping */
 }
 
 
@@ -174,7 +183,7 @@ input[type='file']{
     top: 50%; left:50%; transform: translate(-50%, -50%);
 }
 .comment_form{
-    width: 100%; display: flex; justify-content: center; gap: 2%; height: 20%;
+    width: 100%; display: flex; justify-content: center; gap: 2%; height: 40%;
     align-items: center; font-size: small; max-height: 100px;
 }
 .comment_form textarea{
@@ -192,7 +201,14 @@ input[type='file']{
 .comments_post_detail_cont{
     height: 80%; width: 100%; border: 1px solid rgb(82, 82, 82); position: relative;
     overflow-y: scroll; scrollbar-width: thin; background-color: rgb(61, 61, 61);
-    z-index: 10000;
+    z-index: 10000; max-height: 80vh;
+}
+.comments_form_wrapper{
+    height: 29vh; width: 100%; display: flex; flex-direction: column; transition: height 1s ease;
+   
+}
+.comments_form_wrapper.expanded_wrapper{
+    height: 80vh;
 }
 .elevated{
     z-index: 100000;

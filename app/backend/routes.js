@@ -10,7 +10,7 @@ const {getChannel} = require('./rabbit')
 const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
-const { User, Post, Team, Badge, Region, Media, Animal, Comment } = require('./db');
+const { User, Post, Team, Badge, Region, Media, Animal, Comment, UserSettings } = require('./db');
 
 const router = express.Router();
 router.use(express.json());
@@ -74,6 +74,29 @@ router.post('/login', async (req, res) => {
   res.redirect(`${process.env.FRONT_END_URL}/dashboard`);
 });
 
+router.get('/profile/:id', authenticateToken, async (req, res)=>{
+
+  const settings = await UserSettings.findOne({where: {UserId: req.params.id}})
+ const attr = settings.showEmail
+  ? { exclude: [] }
+  : { exclude: ['email'] };
+
+  const user = await User.findOne({where: {id: req.params.id},
+                             attributes : attr,
+                             include: [
+                                {
+                                  model: Region,
+                                  attributes: ['name', 'id']
+                                },
+                                {
+                                  model: Animal,
+                                  attributes: ['name', 'picture', 'description']
+                                }
+                              ]})
+
+  
+  res.json({user, settings})
+})
 
 router.get('/dashboard', authenticateToken, async (req, res) => {
    const user = await User.findOne({where:{id: req.user.id},
@@ -88,7 +111,8 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
     }
 ]})
    const teams = await Team.findAll()
-   res.json({user, teams})
+   const settings = await UserSettings.findOne({where: {UserId: user.id}})
+   res.json({user, teams, settings})
 });
 
 router.post('/register', async (req, res) => {
@@ -110,7 +134,7 @@ router.post('/register', async (req, res) => {
 
   const newUser = await User.create({username: data.username, password: hashed, 
     email:data.email})
-
+  await UserSettings.create({UserId: newUser.id})
   
   const token = jwt.sign({id: newUser.id, username: newUser.username},
     process.env.JWT_SECRET, 
@@ -175,7 +199,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
       model: Media,
       attributes: ['url']
     },
-    {model: User, attributes: ['username', 'picture']}]
+    {model: User, attributes: ['username', 'picture', 'id']}]
   })
 
   console.log(posts)

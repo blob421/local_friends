@@ -3,7 +3,7 @@ import {useState, useEffect } from 'react'
 import {fetchAuth} from '../components/fetch'
 import $ from 'jquery'
 import dynamic from 'next/dynamic';
-
+import { encodeUrlSafe } from '../components/encode';
 const CreateModal = dynamic(()=> import('./create_modal'))
 const PostDetailModal = dynamic(()=> import('./post_detail_modal'))
 
@@ -27,6 +27,7 @@ type Comment = {
 }
 type User = {
   picture: string
+  id: Number
   username: string
 }
 export default function Home(){
@@ -93,7 +94,7 @@ function truncateText(el: HTMLElement, lines: number) {
 
 return (
  
-<div className="row">
+<div className="container d-flex justify-content-center">
         
             <div className="feed_left d-none d-md-block col-md-2">
                     
@@ -116,20 +117,24 @@ return (
                   <div className='posts_cont col-md-10'>
                     
                   
-                  {posts?.map(post => (
-                      
-                      <div className='row post_unit_feed' key={post.id} onClick={()=>{
+                  {posts?.map(post => {
+                       const encoded = encodeUrlSafe(String(post.User.id));
+                      return ( <div className='row post_unit_feed' key={post.id} onClick={()=>{
                         setPostDetailModal(true);
                         $('#post_detail_bg').show();
                         setActivePost(post)
                        } }>
                         <div className='left_post_text col-md-8'>
-                          <div className='post_home_user'>
-                            <img src={url + post.User.picture} className='post_user_home_img'/>
-                            {post.User.username}
-                            </div>
-                                    <div className='post_title'>{post.title}</div>
-                                    <div className='post_content'>{post.content}</div>
+                          <div className='post_title'>{post.title}</div>
+                          
+                                    
+                                <div className='post_content'>
+                                      <div className='post_home_user'>
+                                          <img src={url + post.User.picture} className='post_user_home_img'/>
+                                          <a href={`/profile?id=${encoded}`}>{post.User.username}</a>
+                                     </div>
+                                      {post.content}
+                                </div>
                           </div>
 
                       <div className='images_cont_feed col-md-4'>
@@ -143,7 +148,7 @@ return (
               </div>                   
       
                       </div>
-                  )
+                  )}
                   )
                   }
                   </div>
