@@ -299,7 +299,17 @@ async (req, res)=>{
   
  
 )
-
+router.post('/user_settings/edit', authenticateToken, async (req, res)=>{
+  const data = req.body
+  console.log(data)
+  const settings = await UserSettings.findOne({where: {UserId: req.user.id}})
+  
+    data.email ? settings.showEmail = true : settings.showEmail = false
+  
+ 
+  await settings.save() 
+  res.redirect(`${process.env.FRONT_END_URL}/dashboard`)
+})
 //////////////////////////////// REGIONS API ////////////////////////////////////////
 
 router.get('/regions', authenticateToken, async (req, res)=>{

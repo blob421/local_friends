@@ -16,6 +16,9 @@
 .selected_tab_dash{
     background-color: rgb(46, 61, 117);
 }
+.dash_tab_icon{
+    cursor: pointer;
+}
 /*********************Square 1*************************/
 
 .team_upper{
@@ -45,7 +48,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     animation: wiggle ; animation-duration: 1.5s; animation-fill-mode: forwards;
 }
 .animal_ico{
-   width:90%; height: 90%;
+   width:90%; height: 90%; object-fit: contain;
 }
 .animal_pic_cont{
  cursor: pointer;  width:45%; display: flex; justify-content: center; align-items: center;
@@ -76,7 +79,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
  padding-top: 2vh; background-color: rgba(0, 0, 0, 0.139); margin-right: 5px;
 }
 .profile_pic_dash{
-    height: 90%; width: 90%;
+    height: 90%; width: 90%; object-fit: contain;
 }
 .text_elipsis{
     text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: 95%;
@@ -205,11 +208,33 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 /*****************************SETTINGS MODAL********************************/
 
 .settings_modal{
-    background-color: rgb(66, 66, 66); height: 92vh;
+    background-color:aliceblue; height: 92vh; display: flex; flex-direction: column;
+    border-radius: 5px; position: relative; padding: 2%;  z-index: 100000; 
+    
 }
 .dash_settings_form{
-    display: flex; color: black; z-index: 100000;
+    color: black;height: 100%; 
 }
-.jacked_z_index{
-    z-index: 100000;
+#dash_options_bg{
+    background-color: rgba(0, 0, 0, 0.331);
+}
+.option_div{
+    border: 1px solid black; padding: 2%; gap: 2%; display: flex; background-color: antiquewhite;
+    width: fit-content; font-size: small;
+}
+.option_div input{
+    transform: scale(1.2);
+}
+.options_cont{
+    height: 90%;  border-radius: 5px;
+}
+.save_setting_cont{
+    height: 10%; position: relative;display: flex; align-items: center;
+}
+.save_settings_btn{
+    background-color: blue; color: white; padding: 1%; border-radius: 5px; width: 70px;
+    position: absolute; right: 1vw; border: 1px solid rgb(255, 255, 255);
+}
+.setting_section_header{
+    text-align: center; padding: 2%; margin-bottom: 2vh;
 }
