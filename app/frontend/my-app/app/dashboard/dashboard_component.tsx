@@ -24,9 +24,7 @@ type Settings= {
 }
 
 export default function DashboardMain({visitor}: DashboardProps){
-    if (visitor){
-   
-     }
+  
      const url = process.env.NEXT_PUBLIC_API_URL
      const [username, setUsername] = useState("")
      const [firstName, setFirstName] = useState('')
@@ -111,11 +109,11 @@ export default function DashboardMain({visitor}: DashboardProps){
               width={30} height={30}>
               </Image>
               <Image src="/stats.jpg" alt="stats_icon" 
-              width={30} height={30}>
-              </Image>
-              <Image src="/gear_icon.png" alt="gear_icon" 
-              className={optionsModal ? 'selected_tab_dash': ""}
-              width={30} height={30} onClick={()=> setOptionsModal(true)}/>
+              width={30} height={30}/>
+             
+              {!visitor && <Image src="/gear_icon.png" alt="gear_icon" 
+              className={optionsModal ? 'selected_tab_dash dash_tab_icon': "dash_tab_icon"}
+              width={30} height={30} onClick={()=> setOptionsModal(true)}/>}
           
               
 
@@ -126,7 +124,8 @@ export default function DashboardMain({visitor}: DashboardProps){
                 <div className="row justify-content-center">
                  
                      <div className="col-12 top_bar_dashboard">
-                       {!visitor ? `Welcome ${firstName}`: `You are viewing the profile of ${username}` }
+                       {!visitor ? `Welcome ${firstName}`
+                                 : `You are viewing the profile of ${username}` }
                      </div>
                 </div>
                 <div className="row justify-content-center">
@@ -247,11 +246,14 @@ export default function DashboardMain({visitor}: DashboardProps){
             </div>
      </div>
 
-     {animalModal && <AnimalModal url={url}/>}
-{optionsModal && <Settings settings={Usersettings}/>}
+{animalModal && <AnimalModal url={url}/>}
+
+{optionsModal && <Settings settings={Usersettings} hideModal={()=> setOptionsModal(false)}/>}
+
 {(showModal || modalTriggered) && (<UserModal url={url} username={username} 
 email={email} firstName={firstName} lastName={lastName}
 pictureUrl={pictureUrl} Region={region?.name} RegionId={region?.id}/>)}   
+
 </div>                   
  )
 }
