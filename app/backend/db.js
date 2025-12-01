@@ -231,5 +231,5 @@ UserStat.belongsTo(User, {
 console.log(User === sequelize.models.User); // true
 
 module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment, UserSettings,
-  Addresses
+  Addresses, UserStat
 };
