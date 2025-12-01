@@ -8,9 +8,9 @@ html{
     overflow-x: hidden; 
 }
 a{
-    text-decoration: none;
+    text-decoration: none; color: white;
 }
 .home_link{
-    display: flex; gap: 3%; align-items: baseline;
+    display: flex; gap: 7%; 
 }
 

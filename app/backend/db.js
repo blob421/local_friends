@@ -45,6 +45,31 @@ Region.init({
   modelName: 'Region',
   timestamps: false
 })
+class Addresses extends Model{}
+Addresses.init({
+  street: { type: DataTypes.STRING},
+  number: {type: DataTypes.STRING, allowNull: true},
+  unit: {type: DataTypes.STRING, allowNull: true},
+  city: {type: DataTypes.STRING, allowNull: true},
+  district: {type: DataTypes.STRING, allowNull: true},
+  region: {type: DataTypes.STRING,allowNull: true}, 
+  latitude: {type: DataTypes.FLOAT},
+  longitude : {type: DataTypes.FLOAT}
+
+},
+{
+  sequelize,
+  className: 'Address',
+  timestamps: false
+},
+{
+  indexes: [
+    { fields: ['street'], using: 'BTREE' },
+    { fields: ['number'], using: 'BTREE' },
+
+  ]
+})
+
 class UserSettings extends Model{}
 UserSettings.init(
   {
@@ -71,7 +96,10 @@ Post.init(
   {
    title:{type:DataTypes.STRING, allowNull:false},
    content: {type: DataTypes.TEXT, allowNull: false},
-   guessed_animal : {type: DataTypes.STRING}
+   guessed_animal : {type: DataTypes.STRING},
+   latitude:{type: DataTypes.FLOAT},
+   longitude: {type: DataTypes.FLOAT}
+  
    
 
   },
@@ -202,4 +230,6 @@ UserStat.belongsTo(User, {
 // the defined model is the class itself
 console.log(User === sequelize.models.User); // true
 
-module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment, UserSettings};
+module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment, UserSettings,
+  Addresses
+};
