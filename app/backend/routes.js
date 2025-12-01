@@ -10,7 +10,8 @@ const {getChannel} = require('./rabbit')
 const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
-const { User, Post, Team, Badge, Region, Media, Animal, Comment, UserSettings } = require('./db');
+const { User, Post, Team, Badge, Region, Media, Animal, Comment, UserSettings
+  ,Addresses } = require('./db');
 
 const router = express.Router();
 router.use(express.json());
@@ -160,7 +161,7 @@ router.post('/post', authenticateToken,
   const user = await User.findOne({where: {id: req.user.id}})
 
   const post = await Post.create({title: data.title, content: data.content, 
-    RegionId: user.RegionId, UserId: user.id })
+    RegionId: user.RegionId, UserId: user.id, longitude: data.longitude, latitude: data.latitude })
 
   try{
 
@@ -321,7 +322,19 @@ router.get('/regions', authenticateToken, async (req, res)=>{
                                   limit: 20})
   res.json({results})
 } )
-
+router.get('/street_addresses', authenticateToken, async (req,res)=>{
+  const search = req.query.name
+  const number =  search.match(/\d+/g);
+  const string = search.replace(/\d+/g, "").trim();
+  const results = await Addresses.findAll({ where:{[Op.and] : [
+                                                         {street:{[Op.iLike]: `${string}%`}},
+                                                         {number:{[Op.iLike]: `${number? number: ""}%`}}
+                                                        ]
+                                                      },
+                                    
+                                            limit: 20})
+  res.json({results})
+})
 router.get('/animals', authenticateToken, async(req, res)=>{
   const search = req.query.name
   const results = await Animal.findAll({attributes: ['name', 'id'],
@@ -337,6 +350,9 @@ router.get('/map', authenticateToken, async (req, res)=>{
   const user = await User.findOne({where: {id: req.user.id}})
 
   const region = await Region.findOne({where: {id: user.RegionId}})
-  res.json({region})
+  const pins = await Post.findAll({
+                                    where: {RegionId: region.id}
+  })
+  res.json({region, pins})
 })
 module.exports = router;

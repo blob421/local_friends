@@ -45,6 +45,7 @@ async function main() {
   CREATE INDEX IF NOT EXISTS regions_name_trgm_idx
   ON "Regions"
   USING gin (name gin_trgm_ops);
+ 
 `);
 
   await connectRabbit()

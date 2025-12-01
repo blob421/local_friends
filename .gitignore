@@ -9,7 +9,7 @@ regions.csv
 __pycache__/
 *.pyc
 backend/.env
-
+addresses/
 
 node_modules/
 frontend/node_modules/
