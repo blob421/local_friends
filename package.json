@@ -1,6 +1,6 @@
 { "name": "local-friends",
   "private": true,
-  "workspaces": ["app/backend", "app/frontend/my-app"],
+  "workspaces": ["app/backend", "app/frontend/my-app", "app/scheduler"],
   "dependencies": {
     "dotenv": "^16.0.0",
     "eslint": "^8.0.0",

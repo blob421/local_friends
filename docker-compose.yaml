@@ -27,7 +27,21 @@ services:
      - PORT=3001
     restart:
       always
+  worker:
+    build:
+      context:
+        .
+      dockerfile:
+        ./app/scheduler/Dockerfile
+    restart:
+      always
+    command:
+      node worker.js
+    depends_on:
+      - rabbitmq
+      - db
 
+ 
   pika:
     build: 
       context: ./ML

@@ -39,7 +39,7 @@ export default async function RootLayout({
 }>) {
  const cookieStore = await cookies();
  const jwt = cookieStore.get('jwt');
-
+ console.log(jwt)
   return (
     <html lang="en">
       <body
