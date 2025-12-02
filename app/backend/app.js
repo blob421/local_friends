@@ -1,6 +1,6 @@
 const { sequelize, User, Region } = require('./db.js');
 const {connectRabbit, getChannel} = require('./rabbit.js')
-const {consume} = require('./consumer.js')
+
 require('dotenv').config();
 
 const express = require('express');
@@ -49,7 +49,7 @@ async function main() {
 `);
 
   await connectRabbit()
-  await consume()
+
   app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });

@@ -131,7 +131,8 @@ return (
                                 <div className='post_content'>
                                       <div className='post_home_user'>
                                           <img src={url + post.User.picture} className='post_user_home_img'/>
-                                          <a href={`/profile?id=${encoded}`}>{post.User.username}</a>
+                                          <a href={`/profile?id=${encoded}`} 
+                                          className='anchor_user_home'>{post.User.username}</a>
                                      </div>
                                       {post.content}
                                 </div>
@@ -139,11 +140,12 @@ return (
 
                       <div className='images_cont_feed col-md-4'>
                         
-                    
-                        <img className='feed_images'
-                          src={url + post.Media[0].url.replace("\\", "/")} // fix Windows-style backslash
-                          alt={`media for post ${post.id}`}
-                        />
+                       <div className='feed_img_cont'>
+                          <img className='feed_images'
+                            src={url + post.Media[0].url.replace("\\", "/")} // fix Windows-style backslash
+                            alt={`media for post ${post.id}`}
+                          />
+                        </div>
                      
               </div>                   
       

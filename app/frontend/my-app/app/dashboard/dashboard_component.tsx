@@ -22,7 +22,9 @@ type Settings= {
     showEmail : boolean
 
 }
-
+type stats = {
+  found: number
+}
 export default function DashboardMain({visitor}: DashboardProps){
   
      const url = process.env.NEXT_PUBLIC_API_URL
@@ -44,6 +46,7 @@ export default function DashboardMain({visitor}: DashboardProps){
      const [animalModal, setAnimalModal] = useState(false)
      const [optionsModal, setOptionsModal] = useState(false)
      
+     const [userStats, setStats] = useState<stats | null>(null)
     
      useEffect(()=>{
        const fetch_data = async () =>{
@@ -75,7 +78,7 @@ export default function DashboardMain({visitor}: DashboardProps){
           setLastName(data.user.lastName)
           setTeam(data.user.TeamId)
           setEmail(data.user.email)
-          
+          setStats(data.stats)
           const animal_Name = data.user.Animal.name
           
           setanimalName(animal_Name[0].toUpperCase() + animal_Name.substring(1))
@@ -235,7 +238,9 @@ export default function DashboardMain({visitor}: DashboardProps){
                                  Stats
                                </div>
                                 <div className="stats_bot">
-
+                                   <ul>
+                                        <li>Animals found: {userStats?.found ? userStats.found: '0'}</li>
+                                   </ul>
                                </div>
                             
                           </div>            
