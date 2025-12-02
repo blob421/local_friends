@@ -11,7 +11,8 @@ const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
 const { User, Post, Team, Badge, Region, Media, Animal, Comment, UserSettings
-  ,Addresses } = require('./db');
+  ,Addresses, 
+  UserStat} = require('./db');
 
 const router = express.Router();
 router.use(express.json());
@@ -113,7 +114,8 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
 ]})
    const teams = await Team.findAll()
    const settings = await UserSettings.findOne({where: {UserId: user.id}})
-   res.json({user, teams, settings})
+   const stats = await UserStat.findOne({where: {UserId: user.id}})
+   res.json({user, teams, settings, stats})
 });
 
 router.post('/register', async (req, res) => {
@@ -350,9 +352,15 @@ router.get('/map', authenticateToken, async (req, res)=>{
   const user = await User.findOne({where: {id: req.user.id}})
 
   const region = await Region.findOne({where: {id: user.RegionId}})
+  const now = new Date()
+  const oneYearAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 365 )
   const pins = await Post.findAll({
-                                    where: {RegionId: region.id}
-  })
+                                    where: {RegionId: region.id, guessed_animal: {[Op.ne]: null},
+                                    createdAt: {
+                                                   [Op.between]: [oneYearAgo, now]}
+                                    
+                                  }}
+  )
   res.json({region, pins})
 })
 module.exports = router;

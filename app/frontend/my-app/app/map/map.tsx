@@ -37,7 +37,7 @@ export default function Map() {
 
   const animalIcon = new L.Icon({
   iconUrl: "/cat_icon.png",   // put your image in /public
-  iconSize: [40, 40],    // size of the icon
+  iconSize: [30, 30],    // size of the icon
   iconAnchor: [20, 40],  // point of the icon which corresponds to marker's location
   popupAnchor: [0, -40]  // where the popup opens relative to the icon
 });
@@ -93,7 +93,7 @@ export default function Map() {
       {pinCoords && pinCoords.map(pin =>{
       return <Marker position={[pin.latitude, pin.longitude]} key={pin.id} icon={animalIcon}>
         <Popup>
-          {pin.animal || "Animal pending"}
+          {pin.animal || "Not verified"}
         </Popup>
       </Marker>
       })}

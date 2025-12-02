@@ -13,11 +13,11 @@ async function make_animals(){
        } 
        const animal = await Animal.findOne({where: {name: key}})
        if (!animal){
-            await Animal.create({name: key, description: animal_desc[key], picture: `/${key}_icon.png`})
+            await Animal.create({name: key, description: animal_desc[key], picture: `/animal_icons/${key}_icon.png`})
        }
        else{
          animal.description = animal_desc[key]
-         animal.picture = `/${key}_icon.png`
+         animal.picture = `/animal_icons/${key}_icon.png`
          await animal.save()
        }
 
