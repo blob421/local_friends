@@ -4,6 +4,10 @@ import {useEffect, useState} from 'react'
 import $ from 'jquery'
 import enlarge from './enlarge'
 import Carousel from './pic_carousel'
+import dynamic from 'next/dynamic';
+
+const CreateModal = dynamic(()=> import('./create_modal'))
+
 type Post = {
     id: number;
     title:string, 
@@ -19,6 +23,7 @@ type PostDetailModalProps = {
   post: Post
   comments: Comment[] 
   onClose :() => void
+  user: string
 }
 type Comment = {
   content : string
@@ -35,10 +40,10 @@ type User = {
 type Image = {
     url: string
 }
-export default function PostDetailModal({post, comments, onClose}:PostDetailModalProps){
+export default function PostDetailModal({post, comments, onClose, user}:PostDetailModalProps){
     const url = process.env.NEXT_PUBLIC_API_URL
     const [images, setImages] = useState<Image[]>([])
- 
+    const [editModalVisible, setEditModalVisible] = useState(false)
    
     useEffect(() => {
   if (post.Media) {
@@ -46,12 +51,47 @@ export default function PostDetailModal({post, comments, onClose}:PostDetailModa
   }
 }, [post, url])
 
-
+    const set_visible = (id:string) => {
+       const menu = $(`#${id}`)
+       
+       if (menu.hasClass('visible')){
+        menu.removeClass('visible')
+       
+       }else{
+        menu.addClass('visible')
+        
+       }
+    }
+    const DelPost = async ()=>{
+      const delUrl = `${url}/post/${post.id}`
+      await fetchAuth(delUrl, {method: 'DELETE'}).then(res=> {if (res.status == 401){
+        alert('Unauthorized action');
+        window.location.href = '/home'
+      }
+       if(res.status == 202){
+        window.location.href= '/home'
+       }})
+    }
     return(
         <div className='container h-100'>
           <div className="position-absolute top-0 start-0 w-100 d-flex align-items-center justify-content-center" id="post_detail_bg">
          
              <div className="post_detail_modal col-12 col-lg-7">
+
+              {post.User.username == user && 
+              <div className='menu_post_detail_cont'>
+              <button id='three_dots_post_detail' onClick={()=>set_visible('option_menu_post_detail')}>...</button>
+
+              <div id='option_menu_post_detail'>
+                   <button className='option_post_detail' 
+                   onClick={()=> set_visible('delete_post_detail_confirm')}>Delete post</button>
+                   <button className='option_post_detail' onClick={()=> setEditModalVisible(true)}>
+                    Edit post</button>
+              </div>
+              </div>}
+
+
+
               <button className="x_btn_feed_modal" onClick={onClose}>X</button>
                      <div className="title_post_detail">
                       {post.title}
@@ -82,7 +122,7 @@ export default function PostDetailModal({post, comments, onClose}:PostDetailModa
                      </div>
                       <div className='comments_form_wrapper' id='comment_wrapper'>
                      <div className="comments_post_detail_cont">
-                            <img src={'/arrow_expand.png'} onClick={()=>{
+                            <img className={'expand_icon_post_detail'} src={'/arrow_expand.png'} onClick={()=>{
                              const row = $('#description_image_row')
                              const wrapper = $('#comment_wrapper')
                              if (row.hasClass('shrinked_row')){
@@ -125,8 +165,16 @@ export default function PostDetailModal({post, comments, onClose}:PostDetailModa
                     </form>
              </div>
        </div>
+       {editModalVisible && <CreateModal url={url} post={post} 
+      onClose={()=> setEditModalVisible(false)}/>}
     </div>
     
+       <div id='delete_post_detail_confirm'>
+          Are you sure you want to delete this post ? 
+         <button className='btn btn-danger' onClick={()=> DelPost()}>Delete</button>
+      </div>
+
+      
     </div>
     )
 }
