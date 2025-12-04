@@ -36,7 +36,7 @@ const [createModal, setModal] = useState(false)
 const [postDetailModal, setPostDetailModal] = useState(false)
 const [comments, setComments] = useState<Comment[]>([])
 const [activePost, setActivePost] = useState<Post | undefined>(undefined)
-
+const [requestUser, setUser] = useState("")
 
 const url = process.env.NEXT_PUBLIC_API_URL
  useEffect(()=>{
@@ -70,13 +70,15 @@ const url = process.env.NEXT_PUBLIC_API_URL
 useEffect(()=>{
 
  const getResponse = async () => {
+  
         const response = await fetchAuth(`${url}/home`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         })
         const data = await response.json()
-        console.log(data.posts)
+   
         setPosts(data.posts)
+        setUser(data.user)
  } 
  getResponse();
 
@@ -108,7 +110,7 @@ return (
                   <div className='feed_top_bar_create col-md-10'>
                     <button className='new_post_btn' onClick={()=>{setModal(true);
                        $('#feed_modal_bg').show()}}>
-                      New post <img src={'/pen.png'} className='new_post_icon'></img>
+                      New post <img src={'/new_post.png'} className='new_post_icon'></img>
                     </button>
                      
                     
@@ -162,9 +164,9 @@ return (
                 
             </div>
             
-          {createModal && <CreateModal url={url}/>}    
+          {createModal && <CreateModal url={url} onClose={()=> setModal(false)}/>}    
           {postDetailModal && (activePost && <PostDetailModal 
-          comments={comments} post={activePost} onClose={() => setPostDetailModal(false)}/>)}                 
+          comments={comments} post={activePost} user={requestUser} onClose={() => setPostDetailModal(false)}/>)}                 
         </div>
 
 

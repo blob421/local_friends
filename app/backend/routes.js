@@ -49,6 +49,32 @@ filename: (req, file ,cb) => {
 
 const upload = multer({ storage : storage });
 const uploadUser = multer({storage : storageUser})
+
+
+const handleFiles = async (files, post)=>{
+  try{
+
+  
+  
+  if (files && files.length > 0){
+    await Promise.all(
+      files.map(async file => {
+      Media.create({
+            filename: file.filename,
+            mimeType: file.mimetype,
+            url: file.path,
+            PostId: post.id
+          })
+      const channel = await getChannel()
+      const payload = JSON.stringify({'path':file.path, 'postId': post.id})
+      channel.sendToQueue('detect_animal', Buffer.from(payload))
+      
+    })
+)}
+   }catch(err2){
+    console.log(err2)
+   }
+}
 //////////////////// AUTH ///////////////////////////
 
 router.post('/login', async (req, res) => {
@@ -165,28 +191,10 @@ router.post('/post', authenticateToken,
   const post = await Post.create({title: data.title, content: data.content, 
     RegionId: user.RegionId, UserId: user.id, longitude: data.longitude, latitude: data.latitude })
 
-  try{
 
   const files = req.files
-   console.log(files)
-  if (files && files.length > 0){
-    await Promise.all(
-      files.map(async file => {
-      Media.create({
-            filename: file.filename,
-            mimeType: file.mimetype,
-            url: file.path,
-            PostId: post.id
-          })
-      const channel = await getChannel()
-      const payload = JSON.stringify({'path':file.path, 'postId': post.id})
-      channel.sendToQueue('detect_animal', Buffer.from(payload))
-      
-    })
-)}
-   }catch(err2){
-    console.log(err2)
-   }
+  await handleFiles(files, post)
+
 
   res.redirect(`${process.env.FRONT_END_URL}/home`)
 })
@@ -209,7 +217,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
   if (posts.length < 1){
     res.status(404).send('No posts for this region')
   }
-  res.json({posts})
+  res.json({posts, user: user.username})
 
   }catch(err){
     res.status(500).send({'Error fetching posts': err})
@@ -236,6 +244,49 @@ router.post('/post/:id/comment',authenticateToken, async (req, res) => {
   
   await Comment.create({content: data.comment, UserId: userId, PostId: postId})
   res.redirect(process.env.FRONT_END_URL + `/home?post=${encodeURIComponent(postId)}` )
+})
+router.delete('/post/:id', authenticateToken, async (req, res)=>{
+  const id = req.params.id
+  const post = await Post.findOne({where: {id: id}})
+  if (req.user.id === post.UserId){
+   await post.destroy()
+   res.sendStatus(202)
+  }
+  else{
+    res.sendStatus(401)
+  }
+})
+router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), async (req, res)=>{
+  const id = req.params.id
+  const data = req.body
+  const post = await Post.findOne({where: {id: id}})
+  post.title = data.title
+  post.content = data.content
+  post.latitude = data.latitude
+  post.longitude = data.longitude
+  // Delete old photos to replace them 
+  if (req.user.id === post.UserId){
+    const files = req.files
+    if (files.length > 0){
+     const photos = await Media.findAll({where: {PostId: post.id}})
+     
+     for (const photo of photos){
+      fs.unlink(photo.url, (err)=>{
+        if (err){
+          console.log(err)
+        }
+      })
+      await photo.destroy()
+     }
+     
+        
+    
+        await handleFiles(files, post)
+     }
+     
+     await post.save()
+     res.redirect(`${process.env.FRONT_END_URL}/home?post=${post.id}`)
+  }
 })
 ///////////////////////////// PROFILE //////////////////////////////////
 router.post('/profile/edit', authenticateToken, uploadUser.single('image'), 

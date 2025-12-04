@@ -6,15 +6,15 @@
     
 }
 .new_post_btn:hover{
-    background-color: rgb(116, 186, 239); cursor: pointer;
+   background-color: rgb(99, 107, 212); cursor: pointer;
 }
 .new_post_icon{
-  height: 20px;
+  height: 26px;
 }
 .new_post_btn{
-    width: 100px; background-color: rgb(161, 192, 216); height: 70%; display: 
+    width: 120px; background-color: rgb(116, 124, 239); height: 70%; display: 
     flex; align-items: center; justify-content: center; border-radius: 5px; border: 1px solid black;
-    font-size: smaller; gap: 6%;
+    font-size: smaller; gap: 8%;
 }
 .anchor_user_home{
     color: rgb(124, 124, 244) !important
@@ -86,19 +86,27 @@
 /********************** MODAL ***********************/
 #feed_modal_bg{
     background-color: rgba(0, 0, 0, 0.29); width: 100vw; height: 100%; position: fixed;
-    z-index: 1000;
+    z-index: 100000000;
 }
 .title_modal_feed{
     text-align: center; margin-bottom: 6%; font-size: large !important;
 }
 .feed_modal{
-    left: 50%; top: 30%; height: 65vh; width: 40vw; position: relative; transform: translate(-50%, -50%);
+    left: 50%; top: 40%; height: 75vh; width: 40vw; position: relative; transform: translate(-50%, -50%);
     background-color: rgb(61, 61, 61); border-radius: 17px; display: flex; flex-direction: column;
-    padding: 4%; border: 3px solid rgb(41, 41, 41) ; color: rgb(252, 252, 252); gap: 1vh;
-    font-size: smaller;
+    padding: 4%;padding-top: 2%; border: 3px solid rgb(41, 41, 41) ; color: rgb(252, 252, 252); gap: 1vh;
+    font-size: smaller; justify-content: flex-start;
     
 }
-
+.expand_icon_post_detail{
+    height: 20px; width: 20px; position: absolute; right: 5px; top: 2px; cursor: pointer; border: 1px solid white;
+}
+.expand_icon_post_detail:hover{
+   opacity: 0.9; background-color: aliceblue;
+}
+.warn_text_edit_post{
+    color: salmon;
+}
 .feed_modal input{
     border: 1px solid rgb(151, 151, 151); padding-left: 1%;
 }
@@ -107,9 +115,9 @@
 }
 
 input[type='file']{
-    background-color: rgb(222, 222, 222); color: black !important; width: 50%; cursor: pointer;
+    background-color: rgb(222, 222, 222); color: black !important;  cursor: pointer;
     border: 2px solid rgb(44, 44, 44) !important; text-align: center !important; padding: 1%;
-    font-size: small;
+    font-size: small; 
 }
 .post_btn_feed_modal{
      width: 10vw; background-color: grey; position: absolute; right: 33; bottom: 10;
@@ -121,7 +129,10 @@ input[type='file']{
     text-align: center; border-radius: 6px; border: 1px solid black;
 }
 /******************************** POST DETAIL MODAL *********************************/
-
+.location_btn_create_post{
+    color: black;  padding: 1%; white-space: nowrap; padding-right: 2%;
+    display: flex; background-color: rgba(255, 255, 255, 0.657); gap: 4%; align-items: center;
+}
 #post_detail_bg{
   
     background-color: rgba(0, 0, 0, 0.29); 
@@ -136,6 +147,12 @@ input[type='file']{
     height: 25%; display: flex; gap: 2%; background-color: rgb(53, 53, 53); font-size: small;
     align-items: center; border-radius: 5px; position: sticky; top:0; margin-bottom: 1vh;
  }
+ .compass_icon_create_post{
+    height: 40px;
+ }
+ .location_div_newpost{
+    display: flex; align-items: center; gap: 2%;
+ }
 .img_post_detail_author{
   height: 20px;
 }
@@ -148,7 +165,35 @@ input[type='file']{
     padding-right: 2%; background-color: rgba(0, 0, 0, 0.219);
   
 }
+.visible{
+    visibility: visible !important;
+}
+.option_post_detail{
+    background-color: rgba(0, 0, 0, 0.492); padding: 2%; white-space: nowrap; font-size: smaller;
+}
+.option_post_detail:hover{
+    background-color: rgba(64, 64, 64, 0.492);
+}
+#option_menu_post_detail{
+      background-color: grey; margin-top: 12%; flex-direction: column;
+      min-width: 10vw;  border: 1px solid white; display: flex; visibility: hidden;
+}
+.menu_post_detail_cont{
+    position: absolute; right: 9%; top:1%; z-index: 9999999; display: flex; align-items: flex-end;
+    flex-direction: column;
+}
+.three_dots_post_detail{
 
+}
+#delete_post_detail_confirm{
+    height: 130px; width: 220px; position: fixed; left: 50%; top: 40%; transform: translate(-50%,-50%);
+    z-index: 999999; background-color: rgb(67, 67, 67); visibility: hidden; display: flex; 
+    justify-content: center;
+    align-items: flex-end; flex-direction: column; color: rgb(255, 255, 255); font-size: smaller;
+  
+    border: 1px solid white;
+    border-radius: 5px; padding: 2%; gap: 15%;
+}
 .row#description_image_row {
   height: 63vh; /* default */
  
