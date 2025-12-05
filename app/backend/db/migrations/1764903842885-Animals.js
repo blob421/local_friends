@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Badges", {
+    await queryInterface.createTable("Animals", {
       id: {
         type: Sequelize.INTEGER,
 
@@ -13,8 +13,14 @@ module.exports = {
 
       name: {
         type: Sequelize.STRING,
+      },
 
-        allowNull: false,
+      description: {
+        type: Sequelize.TEXT,
+      },
+
+      picture: {
+        type: Sequelize.STRING,
       },
 
       createdAt: {
@@ -28,30 +34,11 @@ module.exports = {
 
         allowNull: false,
       },
-      TeamId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Teams",
-          key: id
-        },
-       
-         onDelete: "CASCADE",
-         onUpdate: "CASCADE",
-
-      },
-      UserId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Users",
-          key: id
-        },
-        onDelete: "SET "
-      }
     });
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable("Badges");
+    await queryInterface.dropTable("Animals");
   },
 };
 

@@ -12,14 +12,16 @@ module.exports = (sequelize, DataTypes) => {
   Post.associate=models=>{
       Post.hasMany(models.Comment)
       Post.hasMany(models.Media) // for include media in post
-      Post.hasOne(models.Animal)
+      Post.belongsTo(models.Animal, {
+        onDelete: 'SET NULL'
+      })
       Post.belongsTo(models.Region, {
 
           onDelete: 'SET NULL',
           onUpdate: 'CASCADE'
         })
 
-            Post.belongsTo(models.User, {
+      Post.belongsTo(models.User, {
               
           onDelete: 'CASCADE',
           onUpdate: 'CASCADE'
