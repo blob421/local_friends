@@ -77,7 +77,7 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - /usr/src/app/media/csv:/usr/src/app/media/csv/:ro
+      - /usr/src/app/csv:/usr/src/app/csv/:ro
       - C:/Users/gabri/Desktop/Python/local_friends/regions.csv:/data/regions.csv
 
     restart: always

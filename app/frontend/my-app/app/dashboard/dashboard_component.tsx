@@ -25,10 +25,13 @@ type Settings= {
 type stats = {
   found: number
 }
+type followers = number[]
+
 export default function DashboardMain({visitor}: DashboardProps){
   
      const url = process.env.NEXT_PUBLIC_API_URL
      const [username, setUsername] = useState("")
+     const [id, setid] = useState("")
      const [firstName, setFirstName] = useState('')
      const [lastName, setLastName] = useState('')
      const [team, setTeam] = useState("")
@@ -45,9 +48,11 @@ export default function DashboardMain({visitor}: DashboardProps){
      const [modalTriggered, setModalTriggered] = useState(false)
      const [animalModal, setAnimalModal] = useState(false)
      const [optionsModal, setOptionsModal] = useState(false)
-     
+     const [following, setFollowing] = useState<followers>([])
      const [userStats, setStats] = useState<stats | null>(null)
-    
+     const [followClicked, setFollowClicked] = useState(false)
+     const [followClicked2, setFollowClicked2] = useState(false)
+     
      useEffect(()=>{
        const fetch_data = async () =>{
        const params = new URLSearchParams(window.location.search)
@@ -80,34 +85,73 @@ export default function DashboardMain({visitor}: DashboardProps){
           setEmail(data.user.email)
           setStats(data.stats)
           const animal_Name = data.user.Animal.name
-          
+          setid(data.user.id)
           setanimalName(animal_Name[0].toUpperCase() + animal_Name.substring(1))
           setanimalPic(data.user.Animal.picture)
           setanimalDesc(data.user.Animal.description)
-   
+          
           setUsername(data.user.username)
           setUserSettings(data.settings)
           setRegion(data.user.Region)
           setPicture(data.user.picture)
-   
-          
+     
+          setFollowing(data.following)
+
    
            }catch(error){
                console.log(error)
            }
        };
-   
+     
       fetch_data();
-   
+      
      }, []);
-   
+
+useEffect(()=> {
+  const expand_pop_up = () => {
+ 
+
+        if (!following.includes(parseInt(id)) && following.length > 0 ){
+        const popup = $('#follow_popup')
+        popup.addClass('popup_expanded')
+        }
+
+       }
+
+  expand_pop_up()
+}, [following, id])
+
+const follow = async () => {
+    const follow_url = `${url}/follow/${id}`
+    await fetchAuth(follow_url, {method: 'POST'}).then(res=>{ 
+      if (res.status == 400){
+         alert('Oops , something went wrong with your request')
+      }
+    })
+   }
    
    
      return (
       <div className="dash_cont">
+        {visitor && <div id="follow_popup" className={followClicked2 ? "shrink": ""} >
+                          <div id="follow_href" className={followClicked? "fadeout": ""} onClick={()=>{
+                             
+                              setFollowClicked(true)
+                       
+                        
+                          }}><div onClick={()=> {setTimeout(()=> setFollowClicked2(true), 1500);
+                             follow();
+                           }}>Follow</div>
+                          </div>
+                          <div id="checkmark_follow" className={followClicked? "appear" : ""}>
+                            Followed <img src={'/checkmark.png'} className="green_checkmark_follow"/>
+                          </div>
+                   </div>
+          }
         <div className="row outer_row_dash">
            <div className="col-md-1 d-flex flex-row flex-md-column
-           align-items-center pt-2 pb-2 pt-md-4 pb-md-0 menu_options">
+               align-items-center pt-2 pb-2 pt-md-4 pb-md-0 menu_options">
+
               <Image src="/person.jpg" alt="person_icon" 
               width={30} height={30}>
               </Image>

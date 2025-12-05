@@ -181,6 +181,29 @@ Animal.init(
   }
 )
 
+  class Followed extends Model{}
+  Followed.init({
+    followerId: {
+      type: DataTypes.INTEGER, allowNull: false,
+
+    },
+    followingId: {
+      type: DataTypes.INTEGER, allowNull: false,
+
+  
+    }
+
+  },
+      {
+      sequelize,
+      modelName: 'Followed',
+      timestamps: false
+    }
+)
+
+
+
+
 //////////////////////////// RELATIONS //////////////////////////////
 Post.hasMany(Comment)
 Post.hasMany(Media) // for include media in post
@@ -207,6 +230,13 @@ User.belongsToMany(Badge, {
   onDelete: "CASCADE",
   through: 'UserBadge',
 })
+
+User.belongsToMany(User, {through: 'Followed', onDelete: 'CASCADE',  as: 'Followers', 
+        foreignKey: 'followingId',  otherKey: 'followerId'})
+User.belongsToMany(User, {through: 'Followed', onDelete: 'CASCADE',  as: 'Following', 
+        foreignKey: 'followerId',  otherKey: 'followingId'})
+
+
 Badge.belongsToMany(User,{
  onDelete: "CASCADE",
  through: 'UserBadge',
@@ -238,5 +268,5 @@ UserStat.belongsTo(User, {
 console.log(User === sequelize.models.User); // true
 
 module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment, UserSettings,
-  Addresses, UserStat
+  Addresses, UserStat, Followed
 };

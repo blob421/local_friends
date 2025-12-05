@@ -14,7 +14,7 @@ const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
 const { User, Post, Team, Badge, Region, Media, Animal, Comment, UserSettings
-  ,Addresses, 
+  ,Addresses, Followed ,
   UserStat} = require('./db');
 
 const router = express.Router();
@@ -124,9 +124,28 @@ router.get('/profile/:id', authenticateToken, async (req, res)=>{
                                   attributes: ['name', 'picture', 'description']
                                 }
                               ]})
+  const following = await Followed.findAll({where: {followerId: req.user.id}})
+  let follows = []
+  following.forEach(follow =>{
+    follows.push(follow.followingId)
+  })
+  follows.push(req.user.id)
 
-  
-  res.json({user, settings})
+  const req_user = req.user.username
+  res.json({user, settings, req_user: req_user, following:follows})
+})
+
+router.post('/follow/:target_user', authenticateToken, async (req, res)=>{
+  const params = req.params
+  try {
+      const target_user = parseInt(params.target_user)
+      await Followed.create({followerId: req.user.id, followingId: target_user})
+      res.sendStatus(200)
+      
+  }catch(err){
+    console.log(err)
+    res.sendStatus(400)
+  }
 })
 
 router.get('/dashboard', authenticateToken, async (req, res) => {
