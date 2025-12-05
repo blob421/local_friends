@@ -2,6 +2,7 @@
 import {useState, useEffect} from 'react'
 type Settings= {
     showEmail : boolean
+    postScopeRegion: boolean
 
 }
 type settings = {
@@ -11,12 +12,14 @@ type settings = {
 
 export default function Settings({settings, hideModal}:settings){
     const [email, setEmail] = useState(false)
+    const [postScope, setpostScope] = useState(false)
     
     const url = process.env.NEXT_PUBLIC_API_URL
 
 
     useEffect(()=>{
           setEmail(settings.showEmail)
+          setpostScope(settings.postScopeRegion)
     }, [settings])
 
     const form_url = url + '/user_settings/edit'
@@ -40,6 +43,14 @@ export default function Settings({settings, hideModal}:settings){
                                 <input type="checkbox" name="email" id="EmailRadio"
                                 checked={email} onChange={(e)=> setEmail(e.target.checked)}/>
                             </div>
+
+                            <div className='setting_section_header'>Feed options</div>
+                             <div className='option_div'>
+                                <label htmlFor='postScope'>Scope posts to region</label>
+                                <input type="checkbox" name="postScope" id="postScope"
+                                checked={postScope} onChange={(e)=> setpostScope(e.target.checked)}/>
+                            </div>
+                            
                         </div>
                         <div className='save_setting_cont'>
                                <button type="submit" name="settings" className='save_settings_btn'>

@@ -5,11 +5,11 @@ type element = {
     name: string
     id: string
     number: string
-    street: string
-    city:string
-    district:string
-    longitude:Number
-    latitude: Number
+    street?: string
+    city?:string
+    district?:string
+    longitude?:Number
+    latitude?: Number
 }
 
 export default function handle_debounce(url:string, type:string){
@@ -31,7 +31,7 @@ export default function handle_debounce(url:string, type:string){
         }))}else{
              choices = data.results.map((element:element) => ({
             label: element.name,
-            name: element.name
+            value: element.id
             
         }))
         }
