@@ -43,19 +43,27 @@ const [requestUser, setUser] = useState("")
 
 const getResponse = async (scope:string | null) => {
         const fetch_url = scope ? `${url}/home?scope=${scope}` :`${url}/home`
-        const response = await fetchAuth(`${url}/home`, {
+        const response = await fetchAuth(`${fetch_url}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         })
         const data = await response.json()
         console.log(data)
-        if (data.posts.length > 0){
+
+        if (data.posts && data.posts.length > 0){
             setPosts(data.posts)
             setPostsNull(false)
         }else{
           setPostsNull(true)
         }
-        setPostScope(data.settings.postScopeRegion? 'Region': 'World')
+      if (data.region){
+        console.log(data.region)
+          setPostScope('Region')
+        }else{
+        setPostScope('World')
+        }
+
+
         setUser(data.user)
  } 
 const url = process.env.NEXT_PUBLIC_API_URL

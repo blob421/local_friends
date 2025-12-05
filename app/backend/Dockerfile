@@ -3,6 +3,7 @@ WORKDIR /usr/src/app
 
 COPY package.json yarn.lock entrypoint.sh ./
 COPY ./app/backend/package.json ./app/backend/
+RUN chmod +x ./entrypoint.sh
 
 RUN yarn install --production --cwd app/backend
 

@@ -37,7 +37,7 @@ async function main() {
   await sequelize.authenticate();
   console.log('Database connected');
   // Make sure tables exist
-  //await sequelize.sync({alter: true});
+ // await sequelize.sync({alter: true});
   console.log('Database synced');
 
   await queryInterface.sequelize.query(`
