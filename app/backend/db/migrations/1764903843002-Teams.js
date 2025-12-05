@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Comments", {
+    await queryInterface.createTable("Teams", {
       id: {
         type: Sequelize.INTEGER,
 
@@ -11,10 +11,12 @@ module.exports = {
         autoIncrement: true,
       },
 
-      content: {
+      name: {
         type: Sequelize.STRING,
 
         allowNull: false,
+
+        unique: true,
       },
 
       createdAt: {
@@ -28,30 +30,11 @@ module.exports = {
 
         allowNull: false,
       },
-       UserId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Users",
-          key: id
-        },
-       
-         onDelete: "CASCADE",
-         onUpdate: "CASCADE",
-
-
-      },
-       PostId: {
-        type: Sequelize.INTEGER,
-        references: { model: 'Posts', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-
     });
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable("Comments");
+    await queryInterface.dropTable("Teams");
   },
 };
 

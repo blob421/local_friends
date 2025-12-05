@@ -185,7 +185,7 @@ Animal.init(
 Post.hasMany(Comment)
 Post.hasMany(Media) // for include media in post
 User.hasOne(Media)
-Post.hasOne(Animal)
+Post.belongsTo(Animal)
 User.belongsTo(Animal)
 User.hasOne(UserSettings)
 

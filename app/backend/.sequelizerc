@@ -2,6 +2,6 @@ const path = require('path');
 
 module.exports = {
   'models-path': path.resolve('app/backend/db/models'),
-  'migrations-path': path.resolve('app/backend/migrations'),
+  'migrations-path': path.resolve('app/backend/db/migrations'),
   'seeders-path': path.resolve('app/backend/db/seeders'),
 };

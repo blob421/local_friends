@@ -1,7 +1,7 @@
 FROM node:21-alpine
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock entrypoint.sh ./
 COPY ./app/backend/package.json ./app/backend/
 
 RUN yarn install --production --cwd app/backend
