@@ -17,6 +17,12 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Animal, { onDelete: 'SET NULL' });
       User.belongsTo(models.Region, { onDelete: 'SET NULL' })
       User.belongsToMany(models.Badge, { through: 'UserBadge', onDelete: 'CASCADE' });
+      
+      User.belongsToMany(models.User, {through: 'Followed', onDelete: 'CASCADE',  as: 'Followers', 
+        foreignKey: 'followingId',  otherKey: 'followerId',})
+      User.belongsToMany(models.User, {through: 'Followed', onDelete: 'CASCADE',  as: 'Following',
+        foreignKey: 'followerId',   otherKey: 'followingId',
+      })
   };
 
 

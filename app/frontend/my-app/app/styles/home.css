@@ -22,10 +22,10 @@
 
 .region_home_btn{
   background-color: rgb(51, 51, 51); padding: 1%; border: 1px solid white;  border-radius: 5px;
-  position: absolute; left: 10; width: 75px;
+  position: absolute; left: 25; width: 75px;
 }
 .worldwide_home_btn{
- background-color: rgb(47, 47, 47); position: absolute; left: 95px; padding: 1%; border-radius: 5px;
+ background-color: rgb(47, 47, 47); position: absolute; left: 115px; padding: 1%; border-radius: 5px;
  width: 75px; border: 1px solid white; 
 }
 .toggled_btn{

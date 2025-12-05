@@ -19,6 +19,39 @@
 .dash_tab_icon{
     cursor: pointer;
 }
+/*********************Follow popup*************************/
+
+
+#follow_popup{
+    height: 60px; width: 200px; position: absolute; top: -60px; right: 20px;
+    transition: 1.5s ease; z-index: 10000; background-color: rgb(83, 143, 222); border:2px solid black;
+    border-radius: 3px;  cursor: pointer; display: flex; justify-content: center; align-items: center;
+    transition-delay: 0.6s;
+}
+.popup_expanded{
+    top: 0px !important;  transition: 1.5s ease; 
+}
+.shrink{
+    top: -60px !important
+}
+#follow_href{
+    transition: opacity ease 1s;  position: absolute; top: 16px; right: 77px; z-index: 100000;
+    height: fit-content; 
+}
+.fadeout{
+    opacity: 0;
+}
+#checkmark_follow{
+    display: flex; justify-content: center; align-items: center;
+    opacity: 0; color: white; position: absolute; top: 16px; right: 53px;
+    transition: opacity ease 1.5s; z-index: 10000;
+}
+.appear{
+    opacity: 1 !important;
+}
+.green_checkmark_follow{
+    height: 20px; width: 20px;
+}
 /*********************Square 1*************************/
 
 .team_upper{

@@ -17,17 +17,6 @@ module.exports = {
         defaultValue: {},
       },
 
-      createdAt: {
-        type: Sequelize.DATE,
-
-        allowNull: false,
-      },
-
-      updatedAt: {
-        type: Sequelize.DATE,
-
-        allowNull: false,
-      },
         UserId: {
           type: Sequelize.INTEGER,
           references: { model: "Users", key: "id" },
