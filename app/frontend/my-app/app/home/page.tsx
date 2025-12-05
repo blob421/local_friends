@@ -6,13 +6,16 @@ import dynamic from 'next/dynamic';
 import { encodeUrlSafe } from '../components/encode';
 const CreateModal = dynamic(()=> import('./create_modal'))
 const PostDetailModal = dynamic(()=> import('./post_detail_modal'))
-
+type Region = {
+  display_name: string
+}
 type Post = {
   id: number;
   title: string;
   content: string;
   Media: Media[]
   User: User
+  Region: Region
   
 };
 type Media = {
@@ -91,16 +94,55 @@ const url = process.env.NEXT_PUBLIC_API_URL
   })
   
  }
-    
+
     }, [posts])
 
 
 useEffect(()=>{
-
+  
  
  getResponse(null);
 
 }, [])
+
+useEffect(()=> {
+const setVisiblePopUp = (id:number) =>{
+  const popUp = $(`#region_popup_icon_${id}`)
+  if (popUp.hasClass('visible')){
+    popUp.removeClass('visible')
+  }else{
+  popUp.addClass('visible')
+  }
+}
+const popUps = document.querySelectorAll('[id^="web_icon"]')
+
+popUps.forEach(popup =>{
+  const id = parseInt(popup.id.split('_')[2])
+    popup.addEventListener('mouseenter', ()=> {
+     
+      setVisiblePopUp(id)
+
+    })
+    popup.addEventListener('mouseout', ()=> {
+      setVisiblePopUp(id)
+    })
+        popup.addEventListener('touchstart', (e)=> {
+          e.preventDefault()
+          e.stopPropagation();  
+      setVisiblePopUp(id)
+    })
+})
+document.addEventListener('click', (e) => {
+  const target = e.target as HTMLElement;
+  if (!target.closest('.web_icon_cont')) {
+    const popUps = document.querySelectorAll('[id^="region_popup_icon_"]')
+    popUps.forEach(pop=>{
+      pop.classList.remove('visible')
+    })
+  }
+});
+
+}, [posts])
 
 function truncateText(el: HTMLElement, lines: number) {
  
@@ -153,17 +195,33 @@ return (
                     </div>:
 
                   <div className='posts_cont col-md-10'>
-                  
+                 
                   
                   {posts?.map(post => {
+                    
                        const encoded = encodeUrlSafe(String(post.User.id));
-                      return ( <div className='row post_unit_feed' key={post.id} onClick={()=>{
+                      return ( 
+                        
+                      <div className='row post_unit_feed' key={post.id} onClick={()=>{
+                       
                         setPostDetailModal(true);
                         $('#post_detail_bg').show();
                         setActivePost(post)
                        } }>
+                         
                         <div className='left_post_text col-md-8'>
-                          <div className='post_title'>{post.title}</div>
+                          <div className='post_title'>
+
+                            {post.Region.display_name && <div className='web_icon_cont'>
+                            <img src={'/web_icon2.png'} className='web_icon_posts' id={`web_icon_${post.id}`}/>
+                               <div id={`region_popup_icon_${post.id}`} className='region_popup_feed'>
+                                {post.Region.display_name}
+                              </div>
+                            </div>
+                            }
+                            
+                            {post.title}
+                            </div>
                           
                                     
                                 <div className='post_content'>

@@ -1,4 +1,4 @@
-const {sequelize, Animal} = require('../db')
+const {sequelize, Animal, Team} = require('../db')
 const fs = require('fs')
 const path = require('path')
 const animal_json = require('../../../ML/animals.json');
@@ -14,6 +14,7 @@ async function make_animals(){
        const animal = await Animal.findOne({where: {name: key}})
        if (!animal){
             await Animal.create({name: key, description: animal_desc[key], picture: `/animal_icons/${key}_icon.png`})
+            await Team.create({name: key})
        }
        else{
          animal.description = animal_desc[key]

@@ -258,6 +258,10 @@ router.get('/home', authenticateToken, async (req, res) =>{
           model: Media,
           attributes: ['url']
         },
+        {
+          model: Region,
+          attributes: ['display_name']
+        },
         {model: User, 
         attributes: ['username', 'picture', 'id']}]
 
