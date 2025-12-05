@@ -2,7 +2,7 @@
 .feed_top_bar_create{
     background-color: rgba(48, 49, 50, 0.954); top:0; position: sticky; border-radius: 5px;
     height: 9vh; display: flex; align-items: center; gap: 1%;  justify-content: flex-end;
-    margin-bottom: 1%; border: 1px solid grey;
+    margin-bottom: 1%; border: 1px solid grey; z-index: 1000;
     
 }
 .new_post_btn:hover{
@@ -32,6 +32,17 @@
    background-color: grey !important;
 }
 /************************ Feed *****************************/
+.web_icon_posts{
+   
+}
+.region_popup_feed{
+    background-color: rgb(65, 65, 65); border: 1px solid white; border-radius: 5px; font-size: small;
+    width: fit-content; padding: 17%; visibility: hidden;
+}
+.web_icon_cont{
+ height: 20px; width: 20px;   position:absolute; left: 4;
+}
+
 .no_posts_div{
     height: 30vh; background-color: rgba(18, 18, 18, 0.508); color: rgb(255, 255, 255);  padding: 2%;
    display: flex; align-items: center; justify-content: center; margin-top: 1vh;
@@ -70,7 +81,8 @@
 
 
 .post_title{
-    text-align: center; margin-bottom: 1.5vh;
+    text-align: center; margin-bottom: 1.5vh; display: flex; justify-content: center; align-items: center;
+    position: relative;
 }
 .post_content{
      font-size: small; color: rgb(215, 215, 215);  padding: 2%;
