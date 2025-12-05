@@ -80,7 +80,7 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
                         <div className='location_div_newpost'>
                             <button className={'location_btn_create_post'} type='button' onClick={()=> getLocation()}>
                                 Use location
-                                <img src={"/11.png"} className='compass_icon_create_post'/>
+                                <img src={"/compass.png"} className='compass_icon_create_post'/>
                             </button> 
                              OR
                         </div>

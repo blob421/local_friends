@@ -32,12 +32,32 @@ type User = {
 }
 export default function Home(){
 const [posts, setPosts] = useState<Post[]>([])
+const [noPosts, setPostsNull] = useState(false)
+const [postScope, setPostScope] = useState("")
+
 const [createModal, setModal] = useState(false)
 const [postDetailModal, setPostDetailModal] = useState(false)
 const [comments, setComments] = useState<Comment[]>([])
 const [activePost, setActivePost] = useState<Post | undefined>(undefined)
 const [requestUser, setUser] = useState("")
 
+const getResponse = async (scope:string | null) => {
+        const fetch_url = scope ? `${url}/home?scope=${scope}` :`${url}/home`
+        const response = await fetchAuth(`${url}/home`, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'}
+        })
+        const data = await response.json()
+        console.log(data)
+        if (data.posts.length > 0){
+            setPosts(data.posts)
+            setPostsNull(false)
+        }else{
+          setPostsNull(true)
+        }
+        setPostScope(data.settings.postScopeRegion? 'Region': 'World')
+        setUser(data.user)
+ } 
 const url = process.env.NEXT_PUBLIC_API_URL
  useEffect(()=>{
   if (!activePost){
@@ -69,18 +89,8 @@ const url = process.env.NEXT_PUBLIC_API_URL
 
 useEffect(()=>{
 
- const getResponse = async () => {
-  
-        const response = await fetchAuth(`${url}/home`, {
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'}
-        })
-        const data = await response.json()
-   
-        setPosts(data.posts)
-        setUser(data.user)
- } 
- getResponse();
+ 
+ getResponse(null);
 
 }, [])
 
@@ -108,6 +118,21 @@ return (
               <div className='row d-flex justify-content-center'>
                   
                   <div className='feed_top_bar_create col-md-10'>
+
+                    <button className={postScope !== 'Region' ? 'region_home_btn'
+                                                             : 'region_home_btn toggled_btn'}
+                     onClick={()=>{ if(postScope == 'World'){setPostScope('Region'); getResponse('region')}}}>
+                      Region</button>
+                  
+                    <button onClick={
+                      ()=>{ if(postScope == 'Region'){setPostScope('World'); getResponse('world')}}
+                    }
+                    className={postScope == 'World' ? 'worldwide_home_btn toggled_btn'
+                                                    : 'worldwide_home_btn'}>World</button>
+
+
+
+
                     <button className='new_post_btn' onClick={()=>{setModal(true);
                        $('#feed_modal_bg').show()}}>
                       New post <img src={'/new_post.png'} className='new_post_icon'></img>
@@ -115,9 +140,12 @@ return (
                      
                     
                   </div>
+                  {noPosts ? <div className='col-md-10 no_posts_div'>
+                     No posts yet for this region
+                    </div>:
 
                   <div className='posts_cont col-md-10'>
-                    
+                  
                   
                   {posts?.map(post => {
                        const encoded = encodeUrlSafe(String(post.User.id));
@@ -156,7 +184,7 @@ return (
                   )
                   }
                   </div>
-              </div>
+            }  </div>
 
             </div>
             <div className="feed_right col-md-2" id='feed_right'>

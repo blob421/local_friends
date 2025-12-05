@@ -3,6 +3,11 @@ const { Sequelize, DataTypes, Model } = require('sequelize');
  // const sequelize = new Sequelize('postgres://postgres:1246@postgres:5432/js-backend')
 const sequelize = new Sequelize('postgres://postgres:1246@localhost:5432/js-backend')
 
+///Squelize cli :
+/// yarn sequelize-cli migration:generate --name add-users-table
+/// edit the migration file 
+/// yarn sequelize-cli db:migrate --env production
+
 ///////////////////////////// MODELS ////////////////////////////////
 
 class User extends Model {}
@@ -73,7 +78,8 @@ Addresses.init({
 class UserSettings extends Model{}
 UserSettings.init(
   {
-     showEmail: {type: DataTypes.BOOLEAN, defaultValue: false}
+     showEmail: {type: DataTypes.BOOLEAN, defaultValue: false},
+     postScopeRegion: {type: DataTypes.BOOLEAN, defaultValue: true}
   },
   {
     sequelize,
@@ -181,6 +187,7 @@ Post.hasMany(Media) // for include media in post
 User.hasOne(Media)
 Post.hasOne(Animal)
 User.belongsTo(Animal)
+User.hasOne(UserSettings)
 
 UserSettings.belongsTo(User, {
   onDelete: 'CASCADE'

@@ -58,7 +58,7 @@ async function main(){
     //////////INIT DB
     const sequelize = new Sequelize('postgres://postgres:1246@db:5432/js-backend');
     await sequelize.authenticate()
-    await sequelize.sync({alter:true})
+
 
 
     //////////INIT RABBITMQ

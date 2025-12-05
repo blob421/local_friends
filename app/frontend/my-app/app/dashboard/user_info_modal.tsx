@@ -1,10 +1,7 @@
 
 import { useState } from "react";
 import $ from 'jquery'
-import {useEffect} from 'react'
 import AsyncSelect from 'react-select/async';
-import debounce from "lodash.debounce";
-import {fetchAuth} from '../components/fetch'
 import handle_debounce from "../components/debounce";
 
 type UserInfoModalProps = {
@@ -32,7 +29,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
     const usernameExists = params.get('username')
     
     const search_url = `${url}/regions`
-    const loadOptions = handle_debounce(search_url)
+    const loadOptions = handle_debounce(search_url, 'user')
 
   return(
     
@@ -64,7 +61,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
                           loadOptions={loadOptions}
                           defaultOptions
                           className="region_select"
-                          value={selectedOption}                 // ✅ controlled value
+                          value={selectedOption}              
                           onChange={(option) => {setSelectedOption(option);
                           
                           }} 

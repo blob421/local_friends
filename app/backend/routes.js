@@ -22,7 +22,7 @@ const authenticateToken = require('./jwt_middleware');
 //////////////////// FILE STORAGE ///////////////////
 const multer = require('multer')
 const path = require('path');
-const fs = require('fs')
+const fs = require('fs');
 
 const storage = multer.diskStorage({ 
 destination: (req, file, cb) => {
@@ -200,24 +200,42 @@ router.post('/post', authenticateToken,
 })
 
 
-
+//
 router.get('/home', authenticateToken, async (req, res) =>{
-  const user = await User.findOne({where: {id: req.user.id}})
-  const region = user.RegionId
+  const user = await User.findOne({where: {id: req.user.id},
+                                  include: [{model: UserSettings}]})
+  const scope = req.query.scope
+  let region
+ 
   try {
-  const posts = await Post.findAll({
-    where: {RegionId: region}, order: [['id', 'DESC']], limit : 50, include:[ {
-      model: Media,
-      attributes: ['url']
-    },
-    {model: User, attributes: ['username', 'picture', 'id']}]
-  })
+    if (scope === 'world'){
+       region = null
+    }
+    else if (scope === 'region'){
+        region = user.RegionId
+    } 
 
-  console.log(posts)
-  if (posts.length < 1){
-    res.status(404).send('No posts for this region')
-  }
-  res.json({posts, user: user.username})
+     else{
+        region = user.UserSetting.postScopeRegion ? user.RegionId : null
+       }    
+      
+      
+      const posts = 
+         await Post.findAll({
+        where: region ? { RegionId: region } : {}, 
+        order: [['id', 'DESC']], limit : 50, include:[ {
+          
+          model: Media,
+          attributes: ['url']
+        },
+        {model: User, 
+        attributes: ['username', 'picture', 'id']}]
+      })
+
+    res.json({posts, user: user.username, settings: user.UserSetting})
+   
+
+  
 
   }catch(err){
     res.status(500).send({'Error fetching posts': err})
@@ -359,6 +377,7 @@ router.post('/user_settings/edit', authenticateToken, async (req, res)=>{
   const settings = await UserSettings.findOne({where: {UserId: req.user.id}})
   
     data.email ? settings.showEmail = true : settings.showEmail = false
+    data.postScope ? settings.postScopeRegion = true: settings.postScopeRegion = false
   
  
   await settings.save() 
