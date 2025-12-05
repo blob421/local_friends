@@ -1,5 +1,8 @@
+//////////////////REDIS///////////////////
+const Redis = require("ioredis");
+const redis = new Redis({ host: "localhost", port: 6379 });
 
-
+/////////////////////////////////////////
 
 const express = require('express');
 const bcrypt = require('bcrypt'); // for password hashing
@@ -187,10 +190,18 @@ router.post('/post', authenticateToken,
   const data = req.body
   
   const user = await User.findOne({where: {id: req.user.id}})
-
+  
   const post = await Post.create({title: data.title, content: data.content, 
     RegionId: user.RegionId, UserId: user.id, longitude: data.longitude, latitude: data.latitude })
 
+  try {
+
+  await redis.del('feed:world');
+  await redis.del(`feed:region:${user.RegionId}`);
+
+  }catch(err){
+    console.log(err)
+  }
 
   const files = req.files
   await handleFiles(files, post)
@@ -206,21 +217,40 @@ router.get('/home', authenticateToken, async (req, res) =>{
                                   include: [{model: UserSettings}]})
   const scope = req.query.scope
   let region
- 
+  let posts
+  let cached = null
   try {
-    if (scope === 'world'){
+    if (scope && scope === 'world'){
        region = null
     }
-    else if (scope === 'region'){
+    else if (scope  && scope === 'region'){
         region = user.RegionId
     } 
 
-     else{
+    else{
         region = user.UserSetting.postScopeRegion ? user.RegionId : null
        }    
+
+      try {
+
+          if (scope == 'world'){
+            cached = await redis.get("feed:world");
+          }
+          if (scope == 'region'){
+            cached = await redis.get(`feed:region_${user.RegionId}`);
+          }
+
+      }catch(err){
+        console.log(err)
+      }
+
+      if (cached){
+        posts = JSON.parse(cached)
+
+      }else{
+
       
-      
-      const posts = 
+        posts = 
          await Post.findAll({
         where: region ? { RegionId: region } : {}, 
         order: [['id', 'DESC']], limit : 50, include:[ {
@@ -230,14 +260,25 @@ router.get('/home', authenticateToken, async (req, res) =>{
         },
         {model: User, 
         attributes: ['username', 'picture', 'id']}]
-      })
 
-    res.json({posts, user: user.username, settings: user.UserSetting})
+      })
+       if (scope == 'world'){
+          await redis.set('feed:world',JSON.stringify(posts), "EX", 300)
+        }
+       if (scope == 'region'){
+          await redis.set(`feed:region:${user.RegionId}`, JSON.stringify(posts), "EX", 300);
+      }
+
+      
+    }
+
+    res.json({posts, user: user.username, settings: user.UserSetting, region: region})
    
 
   
 
   }catch(err){
+    console.log(err)
     res.status(500).send({'Error fetching posts': err})
   }
 
