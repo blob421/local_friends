@@ -97,6 +97,16 @@ Comment.init(
     modelName : 'Comment'
   }
 )
+class SubComment extends Model {}
+SubComment.init(
+  {
+    content: {type: DataTypes.STRING, allowNull: false}
+  },
+  {
+    sequelize,
+    modelName : 'SubComment'
+  }
+)
 class Post extends Model {}
 Post.init(
   {
@@ -212,13 +222,35 @@ Post.belongsTo(Animal)
 User.belongsTo(Animal)
 User.hasOne(UserSettings)
 
+SubComment.belongsTo(Comment, {
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE',
+
+})
+SubComment.belongsTo(SubComment, {
+  as: 'parent',
+  foreignKey: 'ParentId'
+});
+
+SubComment.hasMany(SubComment, {
+  as: 'children',
+  foreignKey: 'ParentId'
+});
+
+Comment.hasMany(SubComment, {
+  onDelete: 'CASCADE'
+})
+
 UserSettings.belongsTo(User, {
   onDelete: 'CASCADE'
 })
 Media.belongsTo(Post,{
   onDelete: 'CASCADE'
 })
-
+SubComment.belongsTo(User, {
+  onDelete: "CASCADE",
+    onUpdate: 'CASCADE',
+})
 Comment.belongsTo(User, {
   onDelete: "CASCADE"
 })
@@ -268,5 +300,5 @@ UserStat.belongsTo(User, {
 console.log(User === sequelize.models.User); // true
 
 module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment, UserSettings,
-  Addresses, UserStat, Followed
+  Addresses, UserStat, Followed, SubComment
 };
