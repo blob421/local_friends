@@ -53,7 +53,7 @@ export default async function Home(){
                         </div>
                         <div className="col-md-4">
                              <div className="img-fluid">
-                                  <img src={'/earth2.png'} className="earth_image"></img>
+                                  <img src={'/earth.png'} className="earth_image"></img>
                              </div>
                         </div>
                    </div>
