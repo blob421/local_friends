@@ -13,7 +13,7 @@ type Coords = [number, number][];
 type coords = {
     latitude: number
     longitude: number
-    animal: string
+    guessed_animal: string
     id: number
 }
 type pins = coords[]
@@ -29,26 +29,35 @@ function FitBBox({ bbox }: { bbox: BBox }) {
   );
   return null;
 }
-
+import type {Post, Media, User, Region } from "../home/page.tsx"
 export default function Map() {
   const [bbox, setBbox] = useState<BBox | null>(null);
   const [coords, setCoords] = useState<Coords | null>(null);
   const [pinCoords, setPinCoords] = useState<pins | undefined>(undefined)
 
-  const animalIcon = new L.Icon({
-  iconUrl: "/cat_icon.png",   // put your image in /public
-  iconSize: [30, 30],    // size of the icon
-  iconAnchor: [20, 40],  // point of the icon which corresponds to marker's location
-  popupAnchor: [0, -40]  // where the popup opens relative to the icon
-});
+///////////////////////// CACHE AND ICON /////////////////////////////
 
+const iconCache: Record<string, L.Icon> = {};
+const animalIcon = (name: string) => {
+  if (!iconCache[name]) {
+    iconCache[name] = new L.Icon({
+      iconUrl: `/${name}_icon.png`,
+      iconSize: [30, 30],
+      iconAnchor: [20, 40],
+      popupAnchor: [0, -40],
+    });
+  }
+  return iconCache[name];
+};
+
+///////////////////////////////////////////////////////////////////////
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetchAuth(`${url}/map`, { method: "GET" });
         const data = await res.json();
         console.log(data.pins)
-        const pin_lists = data.pins.filter(post => post.latitude).map(post=>{
+        const pin_lists = data.pins.filter((post:Post) => post.latitude).map((post:Post)=>{
          
            const dict = {latitude: post.latitude, longitude: post.longitude,
                          animal: post.guessed_animal, id: post.id}
@@ -80,6 +89,8 @@ export default function Map() {
     }
   }, [bbox]);
 
+
+
   return (
     <MapContainer
       style={{ height: "85vh", width: "100%", margin:"2vh"}}
@@ -90,10 +101,11 @@ export default function Map() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="© OpenStreetMap contributors"
       />
+      
       {pinCoords && pinCoords.map(pin =>{
-      return <Marker position={[pin.latitude, pin.longitude]} key={pin.id} icon={animalIcon}>
+      return <Marker position={[pin.latitude, pin.longitude]} key={pin.id} icon={animalIcon(pin.guessed_animal)}>
         <Popup>
-          {pin.animal || "Not verified"}
+          {pin.guessed_animal || "Not verified"}
         </Popup>
       </Marker>
       })}

@@ -6,29 +6,33 @@ import dynamic from 'next/dynamic';
 import { encodeUrlSafe } from '../components/encode';
 const CreateModal = dynamic(()=> import('./create_modal'))
 const PostDetailModal = dynamic(()=> import('./post_detail_modal'))
-type Region = {
+export type Region = {
   display_name: string
 }
-type Post = {
+export type Post = {
   id: number;
   title: string;
   content: string;
   Media: Media[]
   User: User
   Region: Region
+  latitude: number
+  guessed_animal: string
+  longitude: number
   
 };
-type Media = {
+export type Media = {
   url: string;
 };
-type Comment = {
+export type Comment = {
   content : string
   id: string
   User: User
   PostId: string
   UserId: string
+  SubComments: Comment[]
 }
-type User = {
+export type User = {
   picture: string
   id: Number
   username: string

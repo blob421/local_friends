@@ -14,7 +14,7 @@ const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
 const { User, Post, Team, Badge, Region, Media, Animal, Comment, UserSettings
-  ,Addresses, Followed ,
+  ,Addresses, Followed , SubComment,
   UserStat} = require('./db');
 
 const router = express.Router();
@@ -306,7 +306,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
                         attributes: ['username', 'picture', 'id']}]
 
                       })
-                      
+
       const personalizedPosts = [...mainstreamPosts, ...followedPosts]
       const uniquePosts = Array.from(
         new Map(personalizedPosts.map(post => [post.id, post])).values()
@@ -342,8 +342,29 @@ router.get('/images', async (req, res)=>{
 
 router.get('/post/:id/comments',authenticateToken, async (req, res) => {
   const postId = parseInt(req.params.id)
-  const comments = await Comment.findAll({include: {model: User, attributes: ['picture', 'username']} ,
-    where: {PostId: postId}})
+ const comments = await Comment.findAll({
+  where: { PostId: postId },
+  include: [
+    {
+      model: User,
+      attributes: ['picture', 'username']
+    },
+    {
+      model: SubComment,
+      include: [
+        { model: User, attributes: ['picture', 'username'] },
+        {
+          association: 'children',   // subcomments of subcomments
+          include: [
+            { model: User, attributes: ['picture', 'username'] }
+          ]
+        }
+      ]
+    }
+  ]
+});
+
+  
   res.json({comments})
 })
 
@@ -352,8 +373,20 @@ router.post('/post/:id/comment',authenticateToken, async (req, res) => {
   const data = req.body
   const userId = req.user.id
   console.log(data.comment)
+  const parentSubcomment = data.parentSub
+  const parentComment = data.parent
+  if (parentComment){
+    await SubComment.create({content: data.comment, CommentId: parentComment, UserId: req.user.id})
+  }
+  else if (parentSubcomment){
+     await SubComment.create({content: data.comment, ParentId: parentSubcomment, UserId: req.user.id})
+  }
+  else{
+     const comment = await Comment.create({content: data.comment, UserId: userId, PostId: postId})
+  }
+ 
   
-  await Comment.create({content: data.comment, UserId: userId, PostId: postId})
+
   res.redirect(process.env.FRONT_END_URL + `/home?post=${encodeURIComponent(postId)}` )
 })
 router.delete('/post/:id', authenticateToken, async (req, res)=>{

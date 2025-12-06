@@ -31,6 +31,8 @@ type Comment = {
   User: User
   PostId: string
   UserId: string
+  SubComments : Comment[]
+  children?: Comment[]
 }
 type User = {
   picture: string
@@ -44,7 +46,11 @@ export default function PostDetailModal({post, comments, onClose, user}:PostDeta
     const url = process.env.NEXT_PUBLIC_API_URL
     const [images, setImages] = useState<Image[]>([])
     const [editModalVisible, setEditModalVisible] = useState(false)
-   
+    const [parentComment, setParentComment] = useState("")
+    const [replyInput, setReplyInput] = useState(false)
+    const [parentSubcomment, setParentSubcomment] = useState("")
+    const [SubcommentInput, setSubcommentInput] = useState(false)
+
     useEffect(() => {
   if (post.Media) {
     setImages(post.Media.map(img => ({ url: url + img.url })))
@@ -60,6 +66,21 @@ export default function PostDetailModal({post, comments, onClose, user}:PostDeta
        }else{
         menu.addClass('visible')
         
+       }
+    }
+    const getCommentSize = (id:string) =>{
+       const parent = $(`#${id}`)
+       if (parent.hasClass('large_width')){
+        return 'medium_width'
+       }
+       else if (parent.hasClass('medium_width')){
+        return 'small_width'
+       }
+       else if(parent.hasClass('small_width')){
+        return ""
+       }
+       else{
+        return 'large_width'
        }
     }
     const DelPost = async ()=>{
@@ -102,9 +123,11 @@ export default function PostDetailModal({post, comments, onClose, user}:PostDeta
  
                             <div className="description_post_detail col-md-6">
                               <div className='post_detail_author'>
-                                <img src={url + post.User.picture} className='img_post_detail_author'/>
-                                {post.User.username}
+                                        {post.User.picture ? <img src={url + post.User.picture} className='img_post_detail_author'/>
+                                         : <img src={'/avatar.png'} className='img_post_detail_author'/>}
+                                           {post.User.username}
                               </div>
+
                                 {post.content}
                             </div>
                                 <div className="post_detail_pictures_cont col-md-6">
@@ -134,20 +157,106 @@ export default function PostDetailModal({post, comments, onClose, user}:PostDeta
                              }
                              
                             }}/>
+
                             {comments && comments.map(c=>{
-                              return <div className='single_comment' key={c.id}>
+                              return <div className='comment_subcomments_cont' key={c.id}>
+                              
+                              <div className='single_comment' id={`top_comment_${c.id}`} >
                                       <div className='user_comment_pic'>
-                                        
-                                       <img src={url + c.User.picture} className='picture_comment'/>
+                              {post.User.picture ? <img src={url + post.User.picture} className='picture_comment'/>
+                                         : <img src={'/avatar.png'} className='picture_comment'/>}
+         
                                        {c.User.username}
                                       </div>
                                       <div className='comment_content_post_detail'>
                                         {c.content}
                                       </div>
-                                      
-                              
+
+                                      <div className={'reply_comment'} 
+                                      onClick={()=> {setReplyInput(true); setParentComment(c.id)}}>Reply</div>
+
+
+                                    
                                      </div>
+                                      {/******Set size of the input for top comments*****/}
+                                      { (replyInput && c.id == parentComment ) &&
+                                          <div 
+                                          
+                                          className={'reply_input_cont single_comment' 
+                                            + " " + getCommentSize(`top_comment_${c.id}`)
+                                        } id={`input_${c.id}`}>    
+
+
+                                        <form className="comment_form" method="POST" 
+                                                 action={url + `/post/${post.id}/comment`}>
+                                              <input type='text' name='comment' className='reply_input'/>
+                                              <input type='hidden' name='parent' value={parentComment}/>
+                                        </form>
+                                          </div>
+
+                                      }
+                                    {/************************ SUBCOMMENT ***************************/}
+                                      {c.SubComments && c.SubComments.map((sub, index)=>{
+
+                                        return <div className='subcomments_subcomments_cont'>
+                                        <div  className={'reply_input_cont single_comment' 
+                                            + " " + getCommentSize(`top_comment_${c.id}`)
+                                        }
+                                        
+                                        key={`subcomment_${sub.id}`} id={`subcomment_${sub.id}`}>
+
+                                    <div className='user_comment_pic'>
+                      {sub.User.picture ? <img src={url + sub.User.picture} className='picture_comment'/>
+                                         : <img src={'/avatar.png'} className='picture_comment'/>}
+         
+                                       {sub.User.username}
+                                      </div>
+                                      <div className='comment_content_post_detail'>
+                                        {sub.content}
+                                      </div>
+                                         <div className={'reply_comment'} 
+                                      onClick={()=> {setSubcommentInput(true); setParentSubcomment(sub.id)}}>Reply</div>
+
+                                       
+
+
+                                          </div>
+                                          { (SubcommentInput && sub.id == parentSubcomment ) &&
+                                          <div className={'reply_input_cont single_comment' + " " + 
+
+                                            getCommentSize(`subcomment_${sub.id}`)
+                                        }>     
+                                              <form className="comment_form" method="POST" 
+                                                      action={url + `/post/${post.id}/comment`}>
+                                                    <input type='text' name='comment' className='reply_input'/>
+                                                    <input type='hidden' name='parentSub' value={parentSubcomment}/>
+                                              </form>
+                                          </div>
+                                           }
+                                         {sub.children && sub.children.map((s, index)=>{
+                                          return <div className={'single_comment' + " " + 
+                                            getCommentSize(`subcomment_${sub.id}`)} key={`sub_sub_${sub.id}`}>
+                                                                                   <div className='user_comment_pic'>
+                              {s.User.picture ? <img src={url + s.User.picture} className='picture_comment'/>
+                                         : <img src={'/avatar.png'} className='picture_comment'/>}
+         
+                                       {s.User.username}
+                                      </div>
+                                      <div className='comment_content_post_detail'>
+                                        {s.content}
+                                      </div>
+                                            </div>
+                                         })}
+                                     
+
+                                          </div>      
+                                      })}
+                                     </div>
+                                   
+ 
                             })}
+
+
                             {comments.length < 1 && <div
                             className='first_comment'> Be the first to make a comment</div>}
                    
