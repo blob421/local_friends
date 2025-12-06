@@ -106,13 +106,8 @@ useEffect(()=>{
 }, [])
 
 useEffect(()=> {
-const setVisiblePopUp = (id:number) =>{
-  const popUp = $(`#region_popup_icon_${id}`)
-  if (popUp.hasClass('visible')){
-    popUp.removeClass('visible')
-  }else{
-  popUp.addClass('visible')
-  }
+const handle_popups = ()=>{
+
 }
 const popUps = document.querySelectorAll('[id^="web_icon"]')
 
@@ -142,7 +137,17 @@ document.addEventListener('click', (e) => {
   }
 });
 
-}, [posts])
+}, [postScope, posts])
+
+
+const setVisiblePopUp = (id:number) =>{
+  const popUp = $(`#region_popup_icon_${id}`)
+  if (popUp.hasClass('visible')){
+    popUp.removeClass('visible')
+  }else{
+  popUp.addClass('visible')
+  }
+}
 
 function truncateText(el: HTMLElement, lines: number) {
  
@@ -226,7 +231,9 @@ return (
                                     
                                 <div className='post_content'>
                                       <div className='post_home_user'>
-                                          <img src={url + post.User.picture} className='post_user_home_img'/>
+                                        {post.User.picture ? <img src={url + post.User.picture} className='post_user_home_img'/>
+                                         : <img src={'/avatar.png'} className='post_user_home_img'/>}
+                                         
                                           <a href={`/profile?id=${encoded}`} 
                                           className='anchor_user_home'>{post.User.username}</a>
                                      </div>

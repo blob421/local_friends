@@ -20,7 +20,7 @@ type DashboardProps = {
 
 type Settings= {
     showEmail : boolean
-
+    postScopeRegion: boolean
 }
 type stats = {
   found: number
@@ -40,7 +40,7 @@ export default function DashboardMain({visitor}: DashboardProps){
      const [animalName , setanimalName] = useState("")
      const [animalDesc , setanimalDesc] = useState("")
      const [animalPic , setanimalPic] = useState(null)
-     const [Usersettings, setUserSettings] = useState<Settings>({ showEmail: false });
+     const [Usersettings, setUserSettings] = useState<Settings>({ showEmail: false, 'postScopeRegion': false });
      const [region , setRegion] = useState<Region | null >(null)
      const [pictureUrl, setPicture] = useState("")
 
@@ -111,7 +111,7 @@ useEffect(()=> {
   const expand_pop_up = () => {
  
 
-        if (!following.includes(parseInt(id)) && following.length > 0 ){
+        if (following && (following.length > 0 && !following.includes(parseInt(id)))){
         const popup = $('#follow_popup')
         popup.addClass('popup_expanded')
         }

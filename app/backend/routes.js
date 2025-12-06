@@ -234,6 +234,8 @@ router.post('/post', authenticateToken,
 router.get('/home', authenticateToken, async (req, res) =>{
   const user = await User.findOne({where: {id: req.user.id},
                                   include: [{model: UserSettings}]})
+ 
+
   const scope = req.query.scope
   let region
   let posts
@@ -267,24 +269,51 @@ router.get('/home', authenticateToken, async (req, res) =>{
         posts = JSON.parse(cached)
 
       }else{
+          const followed = await Followed.findAll({where: {followerId: req.user.id}})  
 
-      
-        posts = 
-         await Post.findAll({
-        where: region ? { RegionId: region } : {}, 
-        order: [['id', 'DESC']], limit : 50, include:[ {
-          
-          model: Media,
-          attributes: ['url']
-        },
-        {
-          model: Region,
-          attributes: ['display_name']
-        },
-        {model: User, 
-        attributes: ['username', 'picture', 'id']}]
+          const arr = followed.map(follow => follow.followingId)
 
-      })
+          const followedPostsNested = await Promise.all(
+                arr.map(ar =>
+                  Post.findAll({
+                    where: region ? { RegionId: region, UserId: ar } : { UserId: ar },
+                    order: [['id', 'DESC']],
+                    limit: 2,
+                    include: [
+                      { model: Media, attributes: ['url'] },
+                      { model: Region, attributes: ['display_name'] },
+                      { model: User, attributes: ['username', 'picture', 'id'] }
+                    ]
+                  })
+                )
+              );
+              const followedPosts = followedPostsNested.flat();
+
+
+          const mainstreamPosts = 
+                        await Post.findAll({
+                        where: region ? { RegionId: region} : {}, 
+                        order: [['id', 'DESC']], limit : 40, include:[ {
+                          
+                          model: Media,
+                          attributes: ['url']
+                        },
+                        {
+                          model: Region,
+                          attributes: ['display_name']
+                        },
+                        {model: User, 
+                        attributes: ['username', 'picture', 'id']}]
+
+                      })
+                      
+      const personalizedPosts = [...mainstreamPosts, ...followedPosts]
+      const uniquePosts = Array.from(
+        new Map(personalizedPosts.map(post => [post.id, post])).values()
+      );
+
+      const posts = uniquePosts.sort(() => Math.random() - 0.5);
+
        if (scope == 'world'){
           await redis.set('feed:world',JSON.stringify(posts), "EX", 300)
         }
