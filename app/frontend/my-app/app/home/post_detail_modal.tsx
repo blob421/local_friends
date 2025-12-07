@@ -17,6 +17,7 @@ type PostDetailModalProps = {
   onClose :() => void
   user: string
   feed: string
+  commentReload: string
 }
 
 type Image = {
@@ -24,7 +25,9 @@ type Image = {
 }
 
 
-export default function PostDetailModal({post, comments, onClose, user, feed}:PostDetailModalProps){
+export default function PostDetailModal({post, comments, onClose, user, feed, 
+  commentReload}:PostDetailModalProps){
+
     const url = process.env.NEXT_PUBLIC_API_URL
     const [images, setImages] = useState<Image[]>([])
     const [editModalVisible, setEditModalVisible] = useState(false)
@@ -33,13 +36,24 @@ export default function PostDetailModal({post, comments, onClose, user, feed}:Po
     const [replyInput, setReplyInput] = useState(false)
     const [parentSubcomment, setParentSubcomment] = useState("")
     const [SubcommentInput, setSubcommentInput] = useState(false)
-
+    const [activeInput, setActiveInput] = useState('')
     const [emoteModal, setEmoteModal] = useState(false)
     const [selectedEmoji, setSelectedEmoji] = useState("")
     
     const textRef = useRef<HTMLDivElement>(null);
     const [overflowingIds, setOverflowingIds] = useState<string[]>([]);
 
+const expandComments = ()=>{
+  const row = $('#description_image_row')
+                             const wrapper = $('#comment_wrapper')
+                             if (row.hasClass('shrinked_row')){
+                              row.removeClass('shrinked_row')
+                              wrapper.removeClass('expanded_wrapper')
+                             }else{
+                             row.addClass('shrinked_row')
+                             wrapper.addClass('expanded_wrapper')
+                             }
+}
 const removeOverflowingId = (id: string) => {
   setOverflowingIds(prev => prev.filter(existingId => existingId !== id));
 };
@@ -61,7 +75,13 @@ useEffect(() => {
       newOverflowing.push(el.id); // use the div's own id
     }
   });
-
+      if (commentReload){
+         console.log(commentReload)
+    expandComments()
+    const comment = document.getElementById(commentReload)
+    comment?.scrollIntoView()
+    
+  }
   setOverflowingIds(newOverflowing);
   console.log(newOverflowing)
 }, [comments]);
@@ -90,6 +110,24 @@ const InsertEmoji = () =>{
     }
   }
 
+useEffect(() => {
+  if (emoteModal) {
+    const emojiCont = document.getElementById("myEmojiPicker");
+    const scrollContainer = document.getElementById("comments_cont");
+
+    if (emojiCont && scrollContainer) {
+      const visibleHeight = scrollContainer.clientHeight;
+      const scrollTop = scrollContainer.scrollTop;
+
+      // midpoint of visible area relative to container itself
+      const relativeTop = scrollTop + visibleHeight / 2;
+
+      emojiCont.style.position = "absolute";
+      emojiCont.style.top = `${relativeTop -150}px`;
+    }
+  }
+}, [emoteModal, activeInput]);
+
 
 useEffect(()=>{
    InsertEmoji()
@@ -110,10 +148,9 @@ useEffect(() => {
   else if (!target.closest('.EmojiPickerReact') && !target.closest('.smile_emote_comment')){
 
   setEmoteModal(false)
-  
+
   }
-  const comment_inputs = document.querySelectorAll('[id^="input"]')
-  const subcomment_inputs = document.querySelectorAll('[id^="input_sub_"]')
+
 
   })
   
@@ -190,14 +227,14 @@ useEffect(() => {
                                          : <img src={'/avatar.png'} className='img_post_detail_author'/>}
                                            {post.User.username}
                               </div>
-
-                                {post.content}
+                                <div>{post.content} </div>
+                                
                             </div>
                                 <div className="post_detail_pictures_cont col-md-6">
                                  {images.length > 1 && <Carousel images={images}/>}
                                  
                                  {images.length == 1 && post.Media?.map(img=>{
-                                  return <img src={url + img.url} className="image_post_detail" 
+                                  return <img src={url + img.url} className="image_post_detail_single" 
                                   onClick={()=> enlarge('0')} id='img_post_0' 
                                   key={post.id}></img>
                                 })
@@ -208,26 +245,23 @@ useEffect(() => {
                      </div>
                       <div className='comments_form_wrapper' id='comment_wrapper'>
                         
-                     <div className="comments_post_detail_cont">
-                        {emoteModal && <EmojiPicker width={190} height={300} 
-                                              style={{ zIndex: 1000000, position: 'absolute', right: -18, transform: 'scale(0.8'}} 
+                     <div className="comments_post_detail_cont" id='comments_cont'>
+                        {emoteModal && <div id="myEmojiPicker">
+
+                        <EmojiPicker width={190} height={300} 
+                                              style={{ zIndex: 1000000,
+                                                transform: 'scale(0.8)'}} 
                                               onEmojiClick={(emojiData)=>{setSelectedEmoji(emojiData.emoji);
                                                 setEmoteModal(false); 
                                               }} searchDisabled={true} skinTonesDisabled={true}
-                                              previewConfig={{ showPreview: false }}/>}
-
+                                              previewConfig={{ showPreview: false }} />
+                                      </div>
+                                              }
+                               
                             <img className={'expand_icon_post_detail'} src={'/arrow_expand.png'} onClick={()=>{
-                             const row = $('#description_image_row')
-                             const wrapper = $('#comment_wrapper')
-                             if (row.hasClass('shrinked_row')){
-                              row.removeClass('shrinked_row')
-                              wrapper.removeClass('expanded_wrapper')
-                             }else{
-                             row.addClass('shrinked_row')
-                             wrapper.addClass('expanded_wrapper')
-                             }
+                             expandComments()
                              
-                            }}/>
+                            } }/>
 
                             {comments && comments.map(c=>{
                               const encoded = encodeUrlSafe(String(c.User.id));
@@ -250,7 +284,7 @@ useEffect(() => {
 
                                       <div className={'reply_comment'} 
                                       onClick={()=> {setSubcommentInput(false);setReplyInput(true); 
-                                      setParentComment(c.id)}}>Reply</div>
+                                      setParentComment(c.id);setActiveInput(`comment_${c.id}`)} }>Reply</div>
 
 
                                     </div>
@@ -300,14 +334,16 @@ useEffect(() => {
                                         <a href={`/profile?id=${encoded}`} 
                                           className='anchor_user_home'>{sub.User.username}</a>
                                       </div>
-                                      <div className='comment_content_post_detail' id={`subcomment_${c.id}`}>
+                                      <div className='comment_content_post_detail' id={`subcomment_${sub.id}`}>
                                         {sub.content}
                                       
                                       </div>
 
 
                                          <div className={'reply_comment'} 
-                                      onClick={()=> {setReplyInput(false);setSubcommentInput(true); setParentSubcomment(sub.id)}}>Reply</div>
+                                      onClick={()=> {setReplyInput(false);setSubcommentInput(true);
+                                       setParentSubcomment(sub.id); setActiveInput(`subcomment_${sub.id}`)}}>
+                                        Reply</div>
 
                                        
 
@@ -344,7 +380,8 @@ useEffect(() => {
                                          {sub.children && sub.children.map((s, index)=>{
                                            const encoded = encodeUrlSafe(String(s.User.id));
                                           return <div className={'single_comment' + " " + 
-                                            getCommentSize(`subcomment_${sub.id}`)} key={`sub_sub_${s.id}`}>
+                                            getCommentSize(`subcomment_${sub.id}`)} key={`sub_sub_${s.id}`}
+                                            id={`subcomment_${sub.id}`}>
                                            <div className='left_side_comment'>
                                                                                    <div className='user_comment_pic'>
                               {s.User.picture ? <img src={url + s.User.picture} className='picture_comment'/>
@@ -391,6 +428,8 @@ useEffect(() => {
                                 className="comment_bar" 
                                 name='comment'>
                                 </textarea>
+                                <img src={'/smile_icon.png'} className='smile_emote_comment'
+                                    onClick={()=> {!emoteModal ? setEmoteModal(true): setEmoteModal(false)}}/>
                                 <button type='submit' className='submit_comment_post'>Go</button>
                               
                     </form>

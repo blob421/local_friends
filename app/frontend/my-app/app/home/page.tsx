@@ -49,6 +49,7 @@ const [postDetailModal, setPostDetailModal] = useState(false)
 const [comments, setComments] = useState<Comment[]>([])
 const [activePost, setActivePost] = useState<Post | undefined>(undefined)
 const [requestUser, setUser] = useState("")
+const [commentReload, setCommentReload] = useState("")
 
 const getResponse = async (scope:string | null) => {
         const fetch_url = scope ? `${url}/home?scope=${scope.toLowerCase()}` :`${url}/home`
@@ -111,8 +112,12 @@ const url = process.env.NEXT_PUBLIC_API_URL
 
 
 useEffect(()=>{
-  const params = new URLSearchParams(window.location.search)
+ const params = new URLSearchParams(window.location.search)
  const feed = params.get('feed')
+ const comment = params.get('comment')
+ if(comment){
+   setCommentReload(comment)
+ }
  getResponse(feed || null);
 
 }, [])
@@ -141,6 +146,7 @@ popUps.forEach(popup =>{
 })
 document.addEventListener('click', (e) => {
   const target = e.target as HTMLElement;
+ 
   if (!target.closest('.web_icon_cont')) {
     const popUps = document.querySelectorAll('[id^="region_popup_icon_"]')
     popUps.forEach(pop=>{
@@ -160,6 +166,14 @@ const setVisiblePopUp = (id:number) =>{
   popUp.addClass('visible')
   }
 }
+ const newPostDiv = document.getElementById('new_post_div')
+ const newPostIcon = $('#new_post_icon')
+ newPostDiv?.addEventListener('mouseenter', ()=>{
+     newPostIcon.addClass('newPostButtonRight')
+ })
+ newPostDiv?.addEventListener('mouseout', ()=>{
+     newPostIcon.removeClass('newPostButtonRight')
+ })
 
 function truncateText(el: HTMLElement, lines: number) {
  
@@ -200,9 +214,9 @@ return (
 
 
 
-                    <button className='new_post_btn' onClick={()=>{setModal(true);
+                    <button className='new_post_btn' id={'new_post_div'} onClick={()=>{setModal(true);
                        $('#feed_modal_bg').show()}}>
-                      New post <img src={'/new_post.png'} className='new_post_icon'></img>
+                      New post <img src={'/new_post.png'} id='new_post_icon' className='new_post_icon'></img>
                     </button>
                      
                     
@@ -224,6 +238,7 @@ return (
                         setPostDetailModal(true);
                         $('#post_detail_bg').show();
                         setActivePost(post)
+                        setCommentReload("")
                        } }>
                          
                         <div className='left_post_text col-md-8'>
@@ -278,7 +293,7 @@ return (
             </div>
             
           {createModal && <CreateModal url={url} onClose={()=> setModal(false)}/>}    
-          {postDetailModal && (activePost && <PostDetailModal feed={postScope}
+          {postDetailModal && (activePost && <PostDetailModal feed={postScope} commentReload={commentReload}
           comments={comments} post={activePost} user={requestUser} onClose={() => setPostDetailModal(false)}/>)}                 
         </div>
 

@@ -9,7 +9,10 @@
    background-color: rgb(99, 107, 212); cursor: pointer;
 }
 .new_post_icon{
-  height: 26px;
+  height: 26px; transition: transform ease 0.5s;
+}
+.newPostButtonRight{
+    transform: scale(1.1); position: relative;
 }
 .new_post_btn{
     width: 120px; background-color: rgb(116, 124, 239); height: 70%; display: 
@@ -27,6 +30,12 @@
 .worldwide_home_btn{
  background-color: rgb(47, 47, 47); position: absolute; left: 115px; padding: 1%; border-radius: 5px;
  width: 75px; border: 1px solid white; 
+}
+.region_home_btn:hover{
+    background-color: rgb(75, 75, 75);
+}
+.worldwide_home_btn:hover{
+    background-color: rgb(75, 75, 75);
 }
 .toggled_btn{
    background-color: grey !important;
@@ -183,7 +192,7 @@ input[type='file']{
     display: flex; align-items: center; gap: 2%;
  }
 .img_post_detail_author{
-  height: 20px;
+  height: 20px; 
 }
 .title_post_detail{
     text-align: center; margin-top: 3vh; 
@@ -191,7 +200,7 @@ input[type='file']{
 .description_post_detail{
     border-radius: 7px;  max-height: 45vh; 
     height: fit-content; font-size: small; overflow-y: auto; scrollbar-width: thin; 
-    padding-right: 2%; background-color: rgba(0, 0, 0, 0.219);
+    padding-right: 2%; background-color: rgba(0, 0, 0, 0.219); padding-bottom: 20px;
   
 }
 .visible{
@@ -251,6 +260,14 @@ input[type='file']{
   cursor: pointer;
   object-fit: contain; 
   /* optional: fit inside box without cropping */
+}
+.image_post_detail_single{
+      cursor: pointer;
+  object-fit: contain; max-height: 350px;
+  /* optional: fit inside box without cropping */
+}
+#myEmojiPicker{
+    position: absolute; z-index: 1000000; right: -18;
 }
 .reply_comment{
     position: absolute; right: 10px; top:10px; color: rgb(151, 151, 151);
@@ -317,7 +334,7 @@ input[type='file']{
 .comments_post_detail_cont{
     height: 80%; width: 100%; border: 1px solid rgb(82, 82, 82); position: relative;
     overflow-y: scroll; scrollbar-width: thin; background-color: rgb(61, 61, 61);
-    z-index: 10000; max-height: 80vh; overflow-x: hidden;
+    z-index: 10000; max-height: 80vh; overflow-x: hidden; scroll-behavior: smooth;
 }
 .comments_form_wrapper{
     height: 29vh; width: 100%; display: flex; flex-direction: column; transition: height 1s ease;
