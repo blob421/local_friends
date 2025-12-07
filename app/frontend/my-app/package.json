@@ -11,6 +11,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
+    "emoji-picker-react": "^4.16.1",
     "jquery": "^3.7.1",
     "leaflet": "^1.9.4",
     "lodash.debounce": "^4.0.8",

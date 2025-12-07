@@ -347,29 +347,33 @@ router.get('/post/:id/comments',authenticateToken, async (req, res) => {
   include: [
     {
       model: User,
-      attributes: ['picture', 'username']
+      attributes: ['picture', 'username', 'id']
     },
     {
       model: SubComment,
       include: [
-        { model: User, attributes: ['picture', 'username'] },
+        { model: User, attributes: ['picture', 'username', 'id'] },
         {
           association: 'children',   // subcomments of subcomments
           include: [
-            { model: User, attributes: ['picture', 'username'] }
-          ]
+            { model: User, attributes: ['picture', 'username', 'id'] }
+          ],
+          distinct: true
         }
-      ]
+      ],
+      distinct: true
     }
-  ]
+  ],
+  distinct: true
 });
 
   
   res.json({comments})
 })
 
-router.post('/post/:id/comment',authenticateToken, async (req, res) => {
+router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) => {
   const postId = req.params.id
+  const feed = req.params.feed
   const data = req.body
   const userId = req.user.id
   console.log(data.comment)
@@ -387,7 +391,7 @@ router.post('/post/:id/comment',authenticateToken, async (req, res) => {
  
   
 
-  res.redirect(process.env.FRONT_END_URL + `/home?post=${encodeURIComponent(postId)}` )
+  res.redirect(process.env.FRONT_END_URL + `/home?post=${encodeURIComponent(postId)}&feed=${feed}` )
 })
 router.delete('/post/:id', authenticateToken, async (req, res)=>{
   const id = req.params.id
