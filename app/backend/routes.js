@@ -364,6 +364,7 @@ router.get('/post/:id/comments',authenticateToken, async (req, res) => {
       distinct: true
     }
   ],
+  order: [['id', 'DESC']],
   distinct: true
 });
 
@@ -379,19 +380,25 @@ router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) =
   console.log(data.comment)
   const parentSubcomment = data.parentSub
   const parentComment = data.parent
+  let commentId
+  let comment
   if (parentComment){
-    await SubComment.create({content: data.comment, CommentId: parentComment, UserId: req.user.id})
+    comment = await SubComment.create({content: data.comment, CommentId: parentComment, UserId: req.user.id})
+    comment = `subcomment_${comment.id}`
   }
   else if (parentSubcomment){
-     await SubComment.create({content: data.comment, ParentId: parentSubcomment, UserId: req.user.id})
-  }
+     comment = await SubComment.create({content: data.comment, ParentId: parentSubcomment, UserId: req.user.id})
+     comment = `subcomment_${comment.id}`
+  } 
   else{
-     const comment = await Comment.create({content: data.comment, UserId: userId, PostId: postId})
+     comment = await Comment.create({content: data.comment, UserId: userId, PostId: postId})
+     commentId = `top_comment_${comment.id}`
   }
  
   
 
-  res.redirect(process.env.FRONT_END_URL + `/home?post=${encodeURIComponent(postId)}&feed=${feed}` )
+  res.redirect(process.env.FRONT_END_URL + 
+    `/home?post=${encodeURIComponent(postId)}&feed=${feed}&comment=${commentId}` )
 })
 router.delete('/post/:id', authenticateToken, async (req, res)=>{
   const id = req.params.id
