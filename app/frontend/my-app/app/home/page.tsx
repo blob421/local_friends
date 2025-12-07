@@ -19,6 +19,7 @@ export type Post = {
   latitude: number
   guessed_animal: string
   longitude: number
+ 
   
 };
 export type Media = {
@@ -31,10 +32,11 @@ export type Comment = {
   PostId: string
   UserId: string
   SubComments: Comment[]
+  children: Post[]
 }
 export type User = {
   picture: string
-  id: Number
+  id: number
   username: string
 }
 export default function Home(){
@@ -49,7 +51,7 @@ const [activePost, setActivePost] = useState<Post | undefined>(undefined)
 const [requestUser, setUser] = useState("")
 
 const getResponse = async (scope:string | null) => {
-        const fetch_url = scope ? `${url}/home?scope=${scope}` :`${url}/home`
+        const fetch_url = scope ? `${url}/home?scope=${scope.toLowerCase()}` :`${url}/home`
         const response = await fetchAuth(`${fetch_url}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
@@ -63,11 +65,16 @@ const getResponse = async (scope:string | null) => {
         }else{
           setPostsNull(true)
         }
-      if (data.region){
-        console.log(data.region)
-          setPostScope('Region')
+        if (scope){
+          setPostScope(scope)
         }else{
-        setPostScope('World')
+            if (data.region){
+              console.log(data.region)
+                setPostScope('Region')
+              }else{
+              setPostScope('World')
+              }
+
         }
 
 
@@ -86,6 +93,7 @@ const url = process.env.NEXT_PUBLIC_API_URL
  useEffect(()=>{
   const params = new URLSearchParams(window.location.search)
   const isPost = params.get('post')
+  
 
     if (isPost){
   const postId = parseInt(isPost)
@@ -103,9 +111,9 @@ const url = process.env.NEXT_PUBLIC_API_URL
 
 
 useEffect(()=>{
-  
- 
- getResponse(null);
+  const params = new URLSearchParams(window.location.search)
+ const feed = params.get('feed')
+ getResponse(feed || null);
 
 }, [])
 
@@ -180,11 +188,11 @@ return (
 
                     <button className={postScope !== 'Region' ? 'region_home_btn'
                                                              : 'region_home_btn toggled_btn'}
-                     onClick={()=>{ if(postScope == 'World'){setPostScope('Region'); getResponse('region')}}}>
+                     onClick={()=>{ if(postScope == 'World'){setPostScope('Region'); getResponse('Region')}}}>
                       Region</button>
                   
                     <button onClick={
-                      ()=>{ if(postScope == 'Region'){setPostScope('World'); getResponse('world')}}
+                      ()=>{ if(postScope == 'Region'){setPostScope('World'); getResponse('World')}}
                     }
                     className={postScope == 'World' ? 'worldwide_home_btn toggled_btn'
                                                     : 'worldwide_home_btn'}>World</button>
@@ -270,7 +278,7 @@ return (
             </div>
             
           {createModal && <CreateModal url={url} onClose={()=> setModal(false)}/>}    
-          {postDetailModal && (activePost && <PostDetailModal 
+          {postDetailModal && (activePost && <PostDetailModal feed={postScope}
           comments={comments} post={activePost} user={requestUser} onClose={() => setPostDetailModal(false)}/>)}                 
         </div>
 
