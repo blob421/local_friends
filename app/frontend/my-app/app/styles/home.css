@@ -44,10 +44,11 @@
 .web_icon_posts{
    
 }
+
 .region_popup_feed{
     background-color: rgb(65, 65, 65); border: 1px solid white; border-radius: 5px; font-size: small;
-    width: fit-content; padding: 17%; visibility: hidden;
-}
+    width: fit-content; padding: 17%; visibility: hidden; position: absolute;
+} 
 .web_icon_cont{
  height: 20px; width: 20px;   position:absolute; left: 4;
 }
@@ -77,25 +78,48 @@
     
 }
 .feed_images{
-    width: 200px; max-height: 200px; object-fit: contain; height: 90%;
+    width: 200px; max-height: 200px; object-fit: contain; height: 90%; margin-top: 2%;
 }
 .post_unit_feed{
   background-color: rgb(50, 50, 50); color: rgb(244, 244, 244); display: flex; 
-   margin-bottom: 20px; padding: 2%; border: 2px solid rgb(89, 148, 188);
-  border-radius: 10px; margin-top: 5px; justify-content: center;
+   margin-bottom: 20px; padding: 2%; border: 2px solid rgb(105, 105, 105);
+  border-radius: 10px;  justify-content: center; position: relative;
 }
 .post_unit_feed:hover{
     background-color: rgb(62, 62, 62); cursor: pointer;
 }
-
-
+.posts_cont{
+    background-color: rgb(45, 45, 45); padding: 6%; border-radius: 5px; padding-top:4%
+}
+.see_more_main_feed{
+    color: rgb(164, 164, 164);
+}
+.show_more_wrapper{
+    display: flex; justify-content: flex-end; width: 97%; margin-top: 1vh; font-size: x-small;
+}
 .post_title{
     text-align: center; margin-bottom: 1.5vh; display: flex; justify-content: center; align-items: center;
     position: relative;
 }
 .post_content{
-     font-size: small; color: rgb(215, 215, 215);  padding: 2%;
+     font-size: small; color: rgb(215, 215, 215); padding: 3%;
      border-radius:5px; background-color: rgba(0, 0, 0, 0.219);
+}
+.truncated_8 {
+  display: -webkit-box;
+  -webkit-line-clamp: 9; 
+  line-clamp: 9;    /* number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.truncated_11 {
+  display: -webkit-box;
+  -webkit-line-clamp: 9; 
+  line-clamp: 9;    /* number of lines to show */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 /************************ Right panel  *****************************/
 .collapsed_post_form{
@@ -204,10 +228,31 @@ input[type='file']{
 }
 .description_post_detail{
     border-radius: 7px;  max-height: 45vh; 
-    height: fit-content; font-size: small; overflow-y: auto; scrollbar-width: thin; 
+    height: fit-content; font-size: small; overflow-y: auto;  
     padding-right: 2%; background-color: rgba(0, 0, 0, 0.219); padding-bottom: 20px;
   
 }
+/* Width of the scrollbar */
+.description_post_detail::-webkit-scrollbar {
+  width: 10px; 
+}
+
+/* Track (background) */
+.description_post_detail::-webkit-scrollbar-track {
+  background: #f1f1f1;border-radius: 6px;
+}
+
+/* Handle (thumb) */
+.description_post_detail::-webkit-scrollbar-thumb {
+  background: #5890c7;
+  border-radius: 6px;
+}
+
+/* Handle on hover */
+.description_post_detail::-webkit-scrollbar-thumb:hover {
+  background: #4776a5;
+}
+
 .visible{
     visibility: visible !important;
 }
@@ -249,7 +294,7 @@ input[type='file']{
 }
 
 .post_detail_pictures_cont{
-      display: flex; justify-content: center; 
+      display: flex; justify-content: center; height: 52vh;
      
 }
 .feed_img_cont{
@@ -331,8 +376,11 @@ input[type='file']{
     display: flex; flex-direction: column; width: 80%;
 }
 .x_btn_comment{
-    position: absolute; right: 6px; top: 7px; font-size: 12px; color: rgb(193, 193, 193);
-    background-color: rgb(30, 30, 30); width: 4%; border-radius: 5px;
+    position: absolute; right: 6px; top: 8px; font-size: 12px; color: rgb(193, 193, 193);
+    background-color: rgb(30, 30, 30); width: 4%; border-radius: 5px; 
+}
+.x_btn_comment:hover{
+     background-color: rgb(51, 51, 51);
 }
 .single_comment{
     border: 1px solid green; border: 1px solid white; background-color: rgb(38, 38, 38);
@@ -367,18 +415,21 @@ input[type='file']{
 /***********************Comment del modal **********************/
 
 #commentDelBg{
-    width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.344); left: 50%; top: 50%; justify-content: center;
+    width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.438); left: 50%; top: 50%; justify-content: center;
     align-items: center; transform: translate(-50%,-50%); z-index: 9999999999; position: absolute;
 }
 .commentDelForm{
     height: 20vh; width: 30vw; position: relative; left: 50%; top: 50%; justify-content: center;
-    align-items: center; transform: translate(-50%,-50%); background-color: rgb(56, 56, 56);
+    align-items: center; transform: translate(-50%,-50%); background-color: rgb(43, 43, 43);
     justify-content: center; align-items: center; display: flex; gap: 5%; border-radius: 6px;
     border: 1px solid white; padding: 3%;
 }
 .x_btn_comment_modal{
-    position: absolute; right: 6px; top: 6px; color: rgb(254, 254, 254); font-size: smaller;
-    background-color: rgb(77, 139, 215); width: 6.5%; border: 1px solid white; border-radius: 6px;
+    position: absolute; right: 6px; top: 8px; color: rgb(254, 254, 254); font-size: smaller;
+    background-color: rgb(48, 48, 48); width: 6.5%; border: 1px solid white; border-radius: 6px;
+}
+.x_btn_comment_modal:hover{
+    background-color: rgb(72, 72, 72); 
 }
 /************************************************************/
 .comment_content_post_detail{
@@ -402,8 +453,8 @@ input[type='file']{
 }
 .carousel-control-prev,
 .carousel-control-next {
-  position: absolute;  
-   width: auto;      /* anchor to the carousel container */
+  
+        /* anchor to the carousel container */
   top: 50%;                 /* vertical center */
   transform: translateY(-50%);
             /* shrink clickable area */
@@ -433,11 +484,11 @@ input[type='file']{
 }
 @media (max-width: 768px) {   /* md breakpoint */
   .description_post_detail {
-    height: 100px !important; margin-bottom: 2vh;
+    height: 200px !important; margin-bottom: 2vh;
   }
 
   .post_detail_pictures_cont{
-     height: 230px;
+     height: 320px;
     
 
 }
@@ -448,7 +499,7 @@ input[type='file']{
         width: 90%;
     }
 .carousel-item{
-    height: 190px; object-fit: contain;
+    height: 320px; object-fit: contain;
 }
 .feed_modal{
     width: 100%; height: 100%; top: 50%; position: fixed;

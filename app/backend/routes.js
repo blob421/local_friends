@@ -258,14 +258,14 @@ router.get('/home', authenticateToken, async (req, res) =>{
             cached = await redis.get("feed:world");
           }
           if (scope == 'region'){
-            cached = await redis.get(`feed:region_${user.RegionId}`);
+            cached = await redis.get(`feed:region:${user.RegionId}`);
           }
 
       }catch(err){
         console.log(err)
       }
 
-      if (cached && cached.length > 0){
+      if (cached){
         posts = JSON.parse(cached)
 
       }else{

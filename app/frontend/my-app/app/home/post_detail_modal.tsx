@@ -111,16 +111,6 @@ const InsertEmoji = () =>{
   }
   
 }
-  const checkTruncatedText = () => {
-    if (textRef.current) {
-      const lineHeight = parseFloat(
-        getComputedStyle(textRef.current).lineHeight
-      );
-      const maxHeight = lineHeight * 2; // 2 lines
-      return textRef.current.scrollHeight > maxHeight
-    }
-  }
-
 
 
 useEffect(()=>{
