@@ -82,7 +82,7 @@
 .post_unit_feed{
   background-color: rgb(50, 50, 50); color: rgb(244, 244, 244); display: flex; 
    margin-bottom: 20px; padding: 2%; border: 2px solid rgb(89, 148, 188);
-  border-radius: 10px; margin-top: 5px;
+  border-radius: 10px; margin-top: 5px; justify-content: center;
 }
 .post_unit_feed:hover{
     background-color: rgb(62, 62, 62); cursor: pointer;
@@ -135,9 +135,14 @@
     font-size: smaller; justify-content: flex-start;
     
 }
+.expand_icon_post_detail_cont{
+    width: 99%; display: flex; justify-content: flex-end; position: sticky;  right: 5px; top: 2px;
+    height: 4px;
+    
+}
 .expand_icon_post_detail{
-    height: 20px; width: 20px; position: sticky; 
-    right: 5px; top: 2px; cursor: pointer; border: 1px solid white;
+    height: 20px; width: 20px; 
+   ; cursor: pointer; border: 1px solid white;
 }
 .expand_icon_post_detail:hover{
    opacity: 0.9; background-color: aliceblue;
@@ -174,7 +179,7 @@ input[type='file']{
 #post_detail_bg{
   
     background-color: rgba(0, 0, 0, 0.29); 
-    z-index: 1000;
+    z-index: 1000; position: absolute;
 }
 .post_detail_modal{
   background-color: rgb(40, 40, 40);
@@ -267,17 +272,17 @@ input[type='file']{
   /* optional: fit inside box without cropping */
 }
 #myEmojiPicker{
-    position: absolute; z-index: 1000000; right: -18;
+    position: absolute; z-index: 1000000; right: -18; transform: translateY(-50%); top: 50%;
 }
 .reply_comment{
-    position: absolute; right: 10px; top:10px; color: rgb(151, 151, 151);
+    position: absolute; right: 7.5px; bottom:5px; color: rgb(151, 151, 151);
 }
 .reply_comment:hover{
     color:grey; cursor:pointer;
 
 }
 .smile_emote_comment{
-    height: 24px; width: 24px;
+    height: 24px; width: 24px; cursor: pointer; z-index: 10000000000;
 }
 
 
@@ -292,15 +297,15 @@ input[type='file']{
     top: 50%; left:50%; transform: translate(-50%, -50%);
 }
 .comment_form{
-    width: 100%; display: flex;  gap: 2%; height: 40%; justify-content: center;
-    align-items: center; font-size: small; max-height: 100px;
+    width: 100%; display: flex;  gap: 2%; height: 40%; justify-content: flex-end;
+    align-items: center; font-size: small; max-height: 100px; right: 5.5%; position: relative;
 }
 .comment_form input{
    background-color: rgb(63, 63, 63); width: 75%; border: 2px solid rgb(1, 1, 1); border-radius: 5px; 
    color: white; outline: 1.5px solid rgb(255, 255, 255); padding-left: 3px; 
 }
 .comment_form textarea{
-    width: 50vw; border: 1px solid white; border-radius: 5px; height: 70%;
+    width: 70%; border: 1px solid white; border-radius: 5px; height: 70%;
     padding: 1%;
 }
 .comment_subcomments_cont{
@@ -323,12 +328,16 @@ input[type='file']{
   width: 70% !important;
 }
 .left_side_comment{
-    display: flex; flex-direction: column; width: 87%;
+    display: flex; flex-direction: column; width: 80%;
+}
+.x_btn_comment{
+    position: absolute; right: 6px; top: 7px; font-size: 12px; color: rgb(193, 193, 193);
+    background-color: rgb(30, 30, 30); width: 4%; border-radius: 5px;
 }
 .single_comment{
     border: 1px solid green; border: 1px solid white; background-color: rgb(38, 38, 38);
-    display: flex;  gap: 2%; border-radius: 15px;  position: relative;
-    margin: 1px; padding:10px; font-size: small; width: 100%; margin-top: 2px;
+    display: flex;  gap: 0.1%; border-radius: 15px;  position: relative;
+    margin: 1px; padding:10px; font-size: small; width: 100%; margin-top: 2px; align-items: flex-end;
     
 }
 .comments_post_detail_cont{
@@ -341,7 +350,7 @@ input[type='file']{
    
 }
 .see_more{
-    position: absolute; right: 8px; bottom: 9px;
+   font-size: x-small;
 }
 .comments_form_wrapper.expanded_wrapper{
     height: 80vh;
@@ -355,6 +364,23 @@ input[type='file']{
 .picture_comment{
     height: 20px; width:20px
 }
+/***********************Comment del modal **********************/
+
+#commentDelBg{
+    width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.344); left: 50%; top: 50%; justify-content: center;
+    align-items: center; transform: translate(-50%,-50%); z-index: 9999999999; position: absolute;
+}
+.commentDelForm{
+    height: 20vh; width: 30vw; position: relative; left: 50%; top: 50%; justify-content: center;
+    align-items: center; transform: translate(-50%,-50%); background-color: rgb(56, 56, 56);
+    justify-content: center; align-items: center; display: flex; gap: 5%; border-radius: 6px;
+    border: 1px solid white; padding: 3%;
+}
+.x_btn_comment_modal{
+    position: absolute; right: 6px; top: 6px; color: rgb(254, 254, 254); font-size: smaller;
+    background-color: rgb(77, 139, 215); width: 6.5%; border: 1px solid white; border-radius: 6px;
+}
+/************************************************************/
 .comment_content_post_detail{
     width: 100%; margin-top: 1%;  margin-left:2px;
 }
@@ -390,6 +416,21 @@ input[type='file']{
 .carousel-control-next {
   right: -50px;             /* push outside */
 }
+@media (max-width: 1025px) {
+  .col-ipad-pro {
+    flex: 0 0 100%;   /* behave like col-12 */
+    max-width: 100%;
+  }
+  .posts_cont {
+    width: 95%;
+  }
+  .feed_top_bar_create {
+     width: 95%;
+  }
+  .feed_img_cont{
+    margin-top: 1vh; margin-bottom: 1vh;
+  }
+}
 @media (max-width: 768px) {   /* md breakpoint */
   .description_post_detail {
     height: 100px !important; margin-bottom: 2vh;
@@ -399,6 +440,9 @@ input[type='file']{
      height: 230px;
     
 
+}
+.left_side_comment{
+    width: 73%;
 }
    .comment_subcomments_cont{
         width: 90%;
@@ -410,3 +454,5 @@ input[type='file']{
     width: 100%; height: 100%; top: 50%; position: fixed;
 }
 }
+
+

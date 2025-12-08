@@ -119,7 +119,15 @@ useEffect(()=>{
    setCommentReload(comment)
  }
  getResponse(feed || null);
-
+ 
+ const newPostDiv = document.getElementById('new_post_div')
+ const newPostIcon = $('#new_post_icon')
+ newPostDiv?.addEventListener('mouseenter', ()=>{
+     newPostIcon.addClass('newPostButtonRight')
+ })
+ newPostDiv?.addEventListener('mouseout', ()=>{
+     newPostIcon.removeClass('newPostButtonRight')
+ })
 }, [])
 
 useEffect(()=> {
@@ -166,14 +174,7 @@ const setVisiblePopUp = (id:number) =>{
   popUp.addClass('visible')
   }
 }
- const newPostDiv = document.getElementById('new_post_div')
- const newPostIcon = $('#new_post_icon')
- newPostDiv?.addEventListener('mouseenter', ()=>{
-     newPostIcon.addClass('newPostButtonRight')
- })
- newPostDiv?.addEventListener('mouseout', ()=>{
-     newPostIcon.removeClass('newPostButtonRight')
- })
+
 
 function truncateText(el: HTMLElement, lines: number) {
  
@@ -187,14 +188,12 @@ function truncateText(el: HTMLElement, lines: number) {
 
 return (
  
-<div className="container d-flex justify-content-center">
+<div className="container-fluid d-flex justify-content-center">
         
-            <div className="feed_left d-none d-md-block col-md-2">
-                    
-            </div>
+        
 
 
-            <div className="feed_middle col-12 col-md-8" id='feed_middle'>
+            <div className="feed_middle col-12 col-lg-8 col-ipad-pro" id='feed_middle'>
                
               <div className='row d-flex justify-content-center'>
                   
@@ -287,10 +286,7 @@ return (
             }  </div>
 
             </div>
-            <div className="feed_right col-md-2" id='feed_right'>
-              
-                
-            </div>
+      
             
           {createModal && <CreateModal url={url} onClose={()=> setModal(false)}/>}    
           {postDetailModal && (activePost && <PostDetailModal feed={postScope} commentReload={commentReload}
