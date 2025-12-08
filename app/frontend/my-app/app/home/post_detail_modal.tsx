@@ -42,7 +42,18 @@ export default function PostDetailModal({post, comments, onClose, user, feed,
     
     const textRef = useRef<HTMLDivElement>(null);
     const [overflowingIds, setOverflowingIds] = useState<string[]>([]);
+    const [commentDelModal,showDeleteCommentModal] = useState(false)
+    const [CommentDelId, setCommentDelete] = useState("")
+    const [commentDelType, setCommentDelType] = useState("")
 
+const DelComment = async () =>{
+  const del_url = `${url}/comment/delete/${commentDelType}/${CommentDelId}`
+  await fetchAuth(del_url, {method: 'DELETE'}).then(res=> {
+    res.status == 200 ? window.location.href= `/home?post=${post.id}&feed=${feed}`
+                      : alert('Oops we could not delete your comment , try again later'); 
+                        showDeleteCommentModal(false)
+  })
+}
 const expandComments = ()=>{
   const row = $('#description_image_row')
                              const wrapper = $('#comment_wrapper')
@@ -110,23 +121,6 @@ const InsertEmoji = () =>{
     }
   }
 
-useEffect(() => {
-  if (emoteModal) {
-    const emojiCont = document.getElementById("myEmojiPicker");
-    const scrollContainer = document.getElementById("comments_cont");
-
-    if (emojiCont && scrollContainer) {
-      const visibleHeight = scrollContainer.clientHeight;
-      const scrollTop = scrollContainer.scrollTop;
-
-      // midpoint of visible area relative to container itself
-      const relativeTop = scrollTop + visibleHeight / 2;
-
-      emojiCont.style.position = "absolute";
-      emojiCont.style.top = `${relativeTop -150}px`;
-    }
-  }
-}, [emoteModal, activeInput]);
 
 
 useEffect(()=>{
@@ -140,7 +134,8 @@ useEffect(() => {
    
   document.addEventListener('click', (e)=>{
   const target = e.target as HTMLElement;
-  if (!target.closest('.single_comment') && !target.closest('.EmojiPickerReact')){
+  if ((!target.closest('.single_comment') && !target.closest('.EmojiPickerReact')) 
+    &&!target.closest('.comment_form')){
   setReplyInput(false)
   setEmoteModal(false)
   setSubcommentInput(false)
@@ -193,11 +188,21 @@ useEffect(() => {
        }})
     }
     return(
-        <div className='container h-100'>
+       
           <div className="position-absolute top-0 start-0 w-100 d-flex align-items-center justify-content-center" id="post_detail_bg">
          
              <div className="post_detail_modal col-12 col-lg-7">
-              
+                  {emoteModal && <div id="myEmojiPicker">
+
+                        <EmojiPicker width={190} height={300} 
+                                              style={{ zIndex: 1000000,
+                                                transform: 'scale(0.8)'}} 
+                                              onEmojiClick={(emojiData)=>{setSelectedEmoji(emojiData.emoji);
+                                                setEmoteModal(false); 
+                                              }} searchDisabled={true} skinTonesDisabled={true}
+                                              previewConfig={{ showPreview: false }} />
+                                      </div>
+                                              }
 
               {post.User.username == user && 
               <div className='menu_post_detail_cont'>
@@ -243,32 +248,34 @@ useEffect(() => {
                         
                         </div>
                      </div>
+                    
                       <div className='comments_form_wrapper' id='comment_wrapper'>
-                        
-                     <div className="comments_post_detail_cont" id='comments_cont'>
-                        {emoteModal && <div id="myEmojiPicker">
-
-                        <EmojiPicker width={190} height={300} 
-                                              style={{ zIndex: 1000000,
-                                                transform: 'scale(0.8)'}} 
-                                              onEmojiClick={(emojiData)=>{setSelectedEmoji(emojiData.emoji);
-                                                setEmoteModal(false); 
-                                              }} searchDisabled={true} skinTonesDisabled={true}
-                                              previewConfig={{ showPreview: false }} />
-                                      </div>
-                                              }
+                          
                                
-                            <img className={'expand_icon_post_detail'} src={'/arrow_expand.png'} onClick={()=>{
+                          
+                     <div className="comments_post_detail_cont" id='comments_cont'>
+                      <div className='expand_icon_post_detail_cont'>
+                        <img className={'expand_icon_post_detail'} src={'/arrow_expand.png'} onClick={()=>{
                              expandComments()
                              
                             } }/>
+                      </div>
 
                             {comments && comments.map(c=>{
                               const encoded = encodeUrlSafe(String(c.User.id));
                               return <div className='comment_subcomments_cont' key={c.id}>
-                              
-                              <div className='single_comment' id={`top_comment_${c.id}`} >
-                                <div className='left_side_comment'>
+
+                               
+
+                          <div className='single_comment' id={`top_comment_${c.id}`} >
+
+                            {user == c.User.username && <button className='x_btn_comment'
+                            onClick={()=>{ showDeleteCommentModal(true); 
+                                           setCommentDelete(c.id);
+                                           setCommentDelType('comment')}
+                                           }>X</button>}
+
+                              <div className='left_side_comment'>
                                 <div className='user_comment_pic'>
                               {post.User.picture ? <img src={url + post.User.picture} className='picture_comment'/>
                                          : <img src={'/avatar.png'} className='picture_comment'/>}
@@ -321,10 +328,15 @@ useEffect(() => {
 
                                         return <div className='subcomments_subcomments_cont' key={`subcomment_${sub.id}`}>
                                         <div  className={'reply_input_cont single_comment' 
-                                            + " " + getCommentSize(`top_comment_${c.id}`)
-                                        }
-                                        
-                                        id={`subcomment_${sub.id}`}>
+                                              + " " + getCommentSize(`top_comment_${c.id}`)}
+                                            id={`subcomment_${sub.id}`}>
+
+                          {user == sub.User.username && <button className='x_btn_comment'
+                            onClick={()=>{ showDeleteCommentModal(true); 
+                                           setCommentDelete(sub.id);
+                                           setCommentDelType('subcomment')}
+                                           }>X</button>}
+
                                     <div className='left_side_comment'>
 
                                     <div className='user_comment_pic'>
@@ -382,6 +394,14 @@ useEffect(() => {
                                           return <div className={'single_comment' + " " + 
                                             getCommentSize(`subcomment_${sub.id}`)} key={`sub_sub_${s.id}`}
                                             id={`subcomment_${sub.id}`}>
+
+                          {user == s.User.username && <button className='x_btn_comment'
+                            onClick={()=>{ showDeleteCommentModal(true); 
+                                           setCommentDelete((s.id).toString());
+                                           setCommentDelType('subcomment')}
+                                           }>X</button>}
+
+
                                            <div className='left_side_comment'>
                                                                                    <div className='user_comment_pic'>
                               {s.User.picture ? <img src={url + s.User.picture} className='picture_comment'/>
@@ -439,14 +459,24 @@ useEffect(() => {
        </div>
        {editModalVisible && <CreateModal url={url} post={post} 
       onClose={()=> setEditModalVisible(false)}/>}
-    </div>
+
+      
+      {commentDelModal && <div id='commentDelBg'>
+                               <div className='commentDelForm'>
+                                <button className='x_btn_comment_modal' 
+                                onClick={()=>showDeleteCommentModal(false)}>X</button>
+                                  Delete comment ?
+                                 <button className='btn btn-danger' onClick={()=> DelComment()}>Delete</button>
+                               </div>
+        
+                          </div>}
+  
     
        <div id='delete_post_detail_confirm'>
           Are you sure you want to delete this post ? 
          <button className='btn btn-danger' onClick={()=> DelPost()}>Delete</button>
       </div>
 
-      
     </div>
     )
 }

@@ -252,7 +252,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
         region = user.UserSetting.postScopeRegion ? user.RegionId : null
        }    
 
-      try {
+    try {
 
           if (scope == 'world'){
             cached = await redis.get("feed:world");
@@ -265,7 +265,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
         console.log(err)
       }
 
-      if (cached){
+      if (cached && cached.length > 0){
         posts = JSON.parse(cached)
 
       }else{
@@ -307,15 +307,16 @@ router.get('/home', authenticateToken, async (req, res) =>{
 
                       })
 
-      const personalizedPosts = [...mainstreamPosts, ...followedPosts]
-      const uniquePosts = Array.from(
+        const personalizedPosts = [...mainstreamPosts, ...followedPosts]
+        const uniquePosts = Array.from(
         new Map(personalizedPosts.map(post => [post.id, post])).values()
       );
 
-      const posts = uniquePosts.sort(() => Math.random() - 0.5);
+      posts = uniquePosts.sort(() => Math.random() - 0.5);
 
        if (scope == 'world'){
           await redis.set('feed:world',JSON.stringify(posts), "EX", 300)
+          
         }
        if (scope == 'region'){
           await redis.set(`feed:region:${user.RegionId}`, JSON.stringify(posts), "EX", 300);
@@ -323,7 +324,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
 
       
     }
-
+  
     res.json({posts, user: user.username, settings: user.UserSetting, region: region})
    
 
@@ -339,6 +340,20 @@ router.get('/home', authenticateToken, async (req, res) =>{
 router.get('/images', async (req, res)=>{
 
 })
+router.delete('/comment/delete/:commentType/:commentId', authenticateToken, async (req, res)=>{
+  const commentId = req.params.commentId
+  const commentType = req.params.commentType
+  try{
+   commentType == 'comment' ? await Comment.destroy({where: {id: commentId}})
+                            : await SubComment.destroy({where: {id: commentId}})
+  }catch(err){
+  
+    console.log(err)
+    res.sendStatus(404)
+  }
+  res.sendStatus(200)
+})
+
 
 router.get('/post/:id/comments',authenticateToken, async (req, res) => {
   const postId = parseInt(req.params.id)
