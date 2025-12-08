@@ -4,6 +4,8 @@ import {fetchAuth} from '../components/fetch'
 import $ from 'jquery'
 import dynamic from 'next/dynamic';
 import { encodeUrlSafe } from '../components/encode';
+
+
 const CreateModal = dynamic(()=> import('./create_modal'))
 const PostDetailModal = dynamic(()=> import('./post_detail_modal'))
 export type Region = {
@@ -50,6 +52,13 @@ const [comments, setComments] = useState<Comment[]>([])
 const [activePost, setActivePost] = useState<Post | undefined>(undefined)
 const [requestUser, setUser] = useState("")
 const [commentReload, setCommentReload] = useState("")
+
+
+const [overflowingIds, setOverflowingIds] = useState<string[]>([]);
+
+const removeOverflowingId = (id: string) => {
+  setOverflowingIds(prev => prev.filter(existingId => existingId !== id));
+};
 
 const getResponse = async (scope:string | null) => {
         const fetch_url = scope ? `${url}/home?scope=${scope.toLowerCase()}` :`${url}/home`
@@ -128,7 +137,32 @@ useEffect(()=>{
  newPostDiv?.addEventListener('mouseout', ()=>{
      newPostIcon.removeClass('newPostButtonRight')
  })
+
+
+
 }, [])
+
+useEffect(() => {
+  const newOverflowing: string[] = [];
+  const allComments = document.querySelectorAll<HTMLDivElement>(
+    ".post_text"
+  );
+
+  allComments.forEach(el => {
+    const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
+    const maxHeight = lineHeight * 8; // 2 lines
+    if (el.scrollHeight > maxHeight) {
+      newOverflowing.push(el.id); // use the div's own id
+    }
+  });
+  setOverflowingIds(newOverflowing);
+  
+
+}, [posts]);
+
+
+
+
 
 useEffect(()=> {
 const handle_popups = ()=>{
@@ -263,8 +297,24 @@ return (
                                           <a href={`/profile?id=${encoded}`} 
                                           className='anchor_user_home'>{post.User.username}</a>
                                      </div>
+                                     <div className='post_text truncated_8' id={`post_text_${post.id}`}>
                                       {post.content}
+                                     </div>
+                                {overflowingIds.includes(`post_text_${post.id}`) && 
+                                <div className='show_more_wrapper'>
+                                <button className='see_more_main_feed' onClick={(e)=> {e.stopPropagation();
+                                  const text = $(`#post_text_${post.id}`)
+                                  text.removeClass('truncated_8');
+                                  removeOverflowingId(`post_text_${post.id}`)
+                                }}>Show more
+
+                                </button>
                                 </div>
+                                
+                                }
+                                </div>
+
+
                           </div>
 
                       <div className='images_cont_feed col-md-4'>
