@@ -8,6 +8,7 @@ type ModalProps = {
     url?: string
     post?: Post
     onClose: () => void
+    edit?: boolean
 }
 type coords = {
     latitude: number
@@ -28,7 +29,7 @@ type Media = {
   url: string;
 };
 
-export default function CreateModal ({url, post, onClose}:ModalProps){
+export default function CreateModal ({url, post, onClose, edit}:ModalProps){
 const [geoAble, setGeoAble] = useState(false)
 const [coords , setCoords] = useState<coords | null >(null)
 const [title, setTitle] = useState(post?.title ?? "");
@@ -66,7 +67,7 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
                         <input type="text" placeholder="Title" name="title" value={title? title : ""}
                         onChange={(e) => setTitle(e.target.value)}
 
-                        required>
+                        required maxLength={40}>
                         </input>
                         
                         <textarea placeholder="Content" required
@@ -79,7 +80,7 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
 
                         <div className='location_div_newpost'>
                             <button className={'location_btn_create_post'} type='button' onClick={()=> getLocation()}>
-                                Use location
+                                {edit? "Change location " : "Use location"}
                                 <img src={"/compass.png"} className='compass_icon_create_post'/>
                             </button> 
                              OR
@@ -96,7 +97,7 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
                         <input type='hidden' name='longitude' 
                         value={coords?.longitude ? String(coords.longitude) : ""}/>
                         
-                        <button type="submit" className="post_btn_feed_modal" disabled={coords === null}>
+                        <button type="submit" className="post_btn_feed_modal" disabled={!edit && coords === null}>
                          Post
                         </button>
                    

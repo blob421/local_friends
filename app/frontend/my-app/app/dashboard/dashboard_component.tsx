@@ -52,7 +52,14 @@ export default function DashboardMain({visitor}: DashboardProps){
      const [userStats, setStats] = useState<stats | null>(null)
      const [followClicked, setFollowClicked] = useState(false)
      const [followClicked2, setFollowClicked2] = useState(false)
-     
+     const [reqUser, setReqUser] = useState("")
+
+     const unfollow = async ()=>{
+        const unfollow_url = `${url}/unfollow/user/${id}`
+        await fetchAuth(unfollow_url, {method: 'POST'}).then(res=> res.status == 200 ? location.reload() : 
+      alert('There was a problem unfollowing , try again later'))
+     }
+
      useEffect(()=>{
        const fetch_data = async () =>{
        const params = new URLSearchParams(window.location.search)
@@ -89,7 +96,7 @@ export default function DashboardMain({visitor}: DashboardProps){
           setanimalName(animal_Name[0].toUpperCase() + animal_Name.substring(1))
           setanimalPic(data.user.Animal.picture)
           setanimalDesc(data.user.Animal.description)
-          
+          setReqUser(data.req_user)
           setUsername(data.user.username)
           setUserSettings(data.settings)
           setRegion(data.user.Region)
@@ -173,6 +180,12 @@ const follow = async () => {
                      <div className="col-12 top_bar_dashboard">
                        {!visitor ? `Welcome ${firstName}`
                                  : `You are viewing the profile of ${username}` }
+
+                      {reqUser !== id && following.includes(parseInt(id)) && <button className="unfollow"
+                      onClick={()=>unfollow()}>
+                        Unfollow
+                        </button>
+                        }
                      </div>
                 </div>
                 <div className="row justify-content-center">
