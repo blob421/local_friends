@@ -110,7 +110,7 @@ SubComment.init(
 class Post extends Model {}
 Post.init(
   {
-   title:{type:DataTypes.STRING, allowNull:false},
+   title:{type:DataTypes.STRING(40), allowNull:false},
    content: {type: DataTypes.TEXT, allowNull: false},
    guessed_animal : {type: DataTypes.STRING},
    latitude:{type: DataTypes.FLOAT},

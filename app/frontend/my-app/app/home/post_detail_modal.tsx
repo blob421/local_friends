@@ -102,12 +102,15 @@ const InsertEmoji = () =>{
   const input = document.getElementById('sub_input') as HTMLInputElement | null;
 
   const sub_input = document.getElementById('c_input') as HTMLInputElement | null;
-
+  const text_input = document.getElementById('text_input_comment') as HTMLInputElement ;
   if (input){
       input.value += selectedEmoji
   }
   else if(sub_input){
      sub_input.value += selectedEmoji
+  }
+  else {
+    text_input.value += selectedEmoji
   }
   
 }
@@ -436,7 +439,7 @@ useEffect(() => {
                             
                                 <textarea placeholder="Type here ..." 
                                 className="comment_bar" 
-                                name='comment'>
+                                name='comment' id='text_input_comment'>
                                 </textarea>
                                 <img src={'/smile_icon.png'} className='smile_emote_comment'
                                     onClick={()=> {!emoteModal ? setEmoteModal(true): setEmoteModal(false)}}/>
@@ -447,7 +450,7 @@ useEffect(() => {
              </div>
              
        </div>
-       {editModalVisible && <CreateModal url={url} post={post} 
+       {editModalVisible && <CreateModal url={url} post={post} edit={true}
       onClose={()=> setEditModalVisible(false)}/>}
 
       

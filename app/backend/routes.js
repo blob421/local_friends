@@ -131,9 +131,21 @@ router.get('/profile/:id', authenticateToken, async (req, res)=>{
   })
   follows.push(req.user.id)
 
-  const req_user = req.user.username
+  const req_user = req.user.id
   res.json({user, settings, req_user: req_user, following:follows})
 })
+
+
+router.post('/unfollow/user/:id', authenticateToken, async (req, res)=>{
+  const userid = req.params.id
+  try {
+     await Followed.destroy({where: {followerId: req.user.id, followingId: userid}})
+  }catch(err){
+    res.sendStatus(404)
+  }
+ res.sendStatus(200)
+})
+
 
 router.post('/follow/:target_user', authenticateToken, async (req, res)=>{
   const params = req.params
@@ -432,8 +444,8 @@ router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), asyn
   const post = await Post.findOne({where: {id: id}})
   post.title = data.title
   post.content = data.content
-  post.latitude = data.latitude
-  post.longitude = data.longitude
+  data.latitude ? post.latitude = data.latitude : post.latitude = post.latitude
+  data. longitude ? post.longitude = data.longitude: post.longitude = post.longitude
   // Delete old photos to replace them 
   if (req.user.id === post.UserId){
     const files = req.files
