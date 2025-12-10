@@ -124,11 +124,15 @@ router.get('/profile/:id', authenticateToken, async (req, res)=>{
                                   attributes: ['name', 'picture', 'description']
                                 }
                               ]})
+                              
   const following = await Followed.findAll({where: {followerId: req.user.id}})
   let follows = []
-  following.forEach(follow =>{
+  following.forEach(follow => {
+   
     follows.push(follow.followingId)
   })
+
+  
   follows.push(req.user.id)
 
   const req_user = req.user.id
@@ -146,11 +150,32 @@ router.post('/unfollow/user/:id', authenticateToken, async (req, res)=>{
  res.sendStatus(200)
 })
 
+router.get('/get_followers/', authenticateToken, async (req, res)=>{
+  const userId = req.user.id
+  const query = req.query.name
+  let follower_list = []
 
+  const followers = await Followed.findAll({where: {followerId: userId}})
+
+  followers.map(f=>{
+       follower_list.push(f.followingId)
+    }
+  )
+   
+    const users = await User.findAll({where: {id: {[Op.in]: follower_list}, username: {[Op.iLike]: `${query}%`}}})
+  
+   res.json({users})
+
+
+
+
+})
 router.post('/follow/:target_user', authenticateToken, async (req, res)=>{
   const params = req.params
+  console.log(params.target_user)
   try {
       const target_user = parseInt(params.target_user)
+      
       await Followed.create({followerId: req.user.id, followingId: target_user})
       res.sendStatus(200)
       
@@ -175,7 +200,19 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
    const teams = await Team.findAll()
    const settings = await UserSettings.findOne({where: {UserId: user.id}})
    const stats = await UserStat.findOne({where: {UserId: user.id}})
-   res.json({user, teams, settings, stats})
+
+
+     const following = await Followed.findAll({where: {followerId: req.user.id}})
+  let follows = []
+  following.forEach(follow => {
+   
+    follows.push(follow.followingId)
+  })
+
+  const following_Users = await User.findAll({where:{id: {[Op.in]: follows}},
+                                              attributes: ['username', 'id']})
+                                              
+   res.json({user, teams, settings, stats, following_Users: following_Users})
 });
 
 router.post('/register', async (req, res) => {
@@ -535,17 +572,27 @@ async (req, res)=>{
   
  
 )
-router.post('/user_settings/edit', authenticateToken, async (req, res)=>{
+
+router.post('/user_settings/edit/:firstLogin', authenticateToken, async (req, res)=>{
   const data = req.body
+  const first_login = req.params.firstLogin
   console.log(data)
   const settings = await UserSettings.findOne({where: {UserId: req.user.id}})
-  
+    if (first_login == 'true'){
+       settings.firstLogin = false
+       await settings.save() 
+       res.sendStatus(200)
+    } 
+    if (data){
     data.email ? settings.showEmail = true : settings.showEmail = false
     data.postScope ? settings.postScopeRegion = true: settings.postScopeRegion = false
+      await settings.save() 
+       res.redirect(`${process.env.FRONT_END_URL}/dashboard`)
+    }
+
   
- 
-  await settings.save() 
-  res.redirect(`${process.env.FRONT_END_URL}/dashboard`)
+    
+
 })
 //////////////////////////////// REGIONS API ////////////////////////////////////////
 

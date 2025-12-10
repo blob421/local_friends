@@ -43,7 +43,7 @@ export default function Register(){
                 <h1 className="header_reg">Register</h1>
 
                 <input type="text" name="username" required 
-                className="reg_input" placeholder="Username">
+                className="reg_input" placeholder="Username" maxLength={26}>
                 </input>
                  <div className='username_help' 
                 hidden={!userExists}>

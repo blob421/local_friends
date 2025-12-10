@@ -156,36 +156,18 @@ useEffect(() => {
     }
   });
   setOverflowingIds(newOverflowing);
-  
+  handle_popups()
 
 }, [posts]);
 
 
 
-
-
-useEffect(()=> {
 const handle_popups = ()=>{
 
-}
+
 const popUps = document.querySelectorAll('[id^="web_icon"]')
 
-popUps.forEach(popup =>{
-  const id = parseInt(popup.id.split('_')[2])
-    popup.addEventListener('mouseenter', ()=> {
-     
-      setVisiblePopUp(id)
 
-    })
-    popup.addEventListener('mouseout', ()=> {
-      setVisiblePopUp(id)
-    })
-        popup.addEventListener('touchstart', (e)=> {
-          e.preventDefault()
-          e.stopPropagation();  
-      setVisiblePopUp(id)
-    })
-})
 document.addEventListener('click', (e) => {
   const target = e.target as HTMLElement;
  
@@ -196,11 +178,12 @@ document.addEventListener('click', (e) => {
     })
   }
 });
+}
 
-}, [postScope, posts])
 
 
-const setVisiblePopUp = (id:number) =>{
+
+const setVisiblePopUp = (id:string) => {
   const popUp = $(`#region_popup_icon_${id}`)
   if (popUp.hasClass('visible')){
     popUp.removeClass('visible')
@@ -235,11 +218,11 @@ return (
 
                     <button className={postScope !== 'Region' ? 'region_home_btn'
                                                              : 'region_home_btn toggled_btn'}
-                     onClick={()=>{ if(postScope == 'World'){setPostScope('Region'); getResponse('Region')}}}>
+                     onClick={()=>{ if(postScope == 'World'){getResponse('Region')}}}>
                       Region</button>
                   
                     <button onClick={
-                      ()=>{ if(postScope == 'Region'){setPostScope('World'); getResponse('World')}}
+                      ()=>{ if(postScope == 'Region'){getResponse('World')}}
                     }
                     className={postScope == 'World' ? 'worldwide_home_btn toggled_btn'
                                                     : 'worldwide_home_btn'}>World</button>
@@ -272,13 +255,26 @@ return (
                         $('#post_detail_bg').show();
                         setActivePost(post)
                         setCommentReload("")
-                       } }>
+                       }}>
                          
                         <div className='left_post_text col-md-8'>
                           <div className='post_title'>
 
                             {post.Region.display_name && <div className='web_icon_cont'>
-                            <img src={'/web_icon2.png'} className='web_icon_posts' id={`web_icon_${post.id}`}/>
+                            <img
+                                src={'/web_icon2.png'}
+                                className='web_icon_posts'
+                                id={`web_icon_${post.id}`}
+                                onMouseEnter={() => setVisiblePopUp(post.id.toString())}
+                                onMouseLeave={() => setVisiblePopUp(post.id.toString())}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  
+                                  setVisiblePopUp(post.id.toString());
+                                }}
+                              />
+
                                <div id={`region_popup_icon_${post.id}`} className='region_popup_feed'>
                                 {post.Region.display_name}
                               </div>

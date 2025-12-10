@@ -22,7 +22,7 @@ export default function Settings({settings, hideModal}:settings){
           setpostScope(settings.postScopeRegion)
     }, [settings])
 
-    const form_url = url + '/user_settings/edit'
+    const form_url = url + '/user_settings/edit/false'
     return(
         <div className="container">
             <div className="start-0 top-0 h-100 w-100 position-absolute d-flex align-items-center 

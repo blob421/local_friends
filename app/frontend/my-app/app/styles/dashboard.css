@@ -25,6 +25,13 @@
     font-size: small;
 
 }
+.hint_div_dash{
+   
+}
+.dash_img_menu_cont{
+    justify-content: center; display: flex; flex-direction: column; align-items: center;
+    font-size: small; padding: 2%;
+}
 /*********************Follow popup*************************/
 
 
@@ -59,7 +66,10 @@
     height: 20px; width: 20px;
 }
 /*********************Square 1*************************/
-
+.no_team_content{
+    position: absolute;  width: 72%;
+    top: 57%; left: 50%; transform: translate(-50%,-50%); font-size: large;
+}
 .team_upper{
     height: 25%; background-color: rgba(59, 59, 59, 0.321); 
     color: rgb(243, 243, 243); font-size: 22px; align-items: center;
@@ -276,4 +286,78 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 }
 .setting_section_header{
     text-align: center; padding: 2%; margin-bottom: 2vh;
+}
+
+/******************** Followers Modal *******************************/
+.picture_user_follower_modal{
+   height:100%
+}
+.no_match_follower{
+ color: black; display: flex; justify-content: center; margin-top: 2vh;
+}
+
+#followers_modal_bg{
+      background-color: rgba(0, 0, 0, 0.29); position: absolute; left: 50%;
+     top: 50%; transform: translate(-50%, -50%); height: 100vh; 
+    width: 100vw; z-index: 10000;
+}
+.followers_modal{
+    width: 27vw; height: 94vh; background-color: rgb(255, 255, 255); left: 50%; top: 49%; transform: translate(-50%,-50%);
+    position:absolute; border: 2px solid white; border-radius: 4px;
+}
+.single_follower{
+    background-color: white; height: 5vh; color: black; border: 1px solid black; 
+    display: flex; align-items: center;
+   
+}
+
+.following_container{
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    background-color: rgb(241, 241, 241); position: relative;
+}
+.btn_cont_followers{
+ border: 1px solid rgba(0, 0, 0, 0); display: flex; gap: 15%; justify-content: center;
+ padding:6%; background-color: rgb(49, 49, 49);
+}
+.toggle_btn_followers{
+ background-color: royalblue; height: 6vh; border: 1px solid rgb(50, 50, 50); border-radius: 5px;
+ padding: 1%;
+}
+.toggled_follow{
+    background-color: rgb(39, 61, 125) !important; border: 1px solid grey;
+}
+
+.following_containers input[type='text']{
+    background-color: aliceblue; color: black; border: 1px solid black; border-radius: 5px;
+    width: 75%; left:50%; transform: translateX(-50%); position: relative; padding-left: 1%;
+}
+.unfollow_dash_btn{
+    background-color: royalblue; position:absolute; right: 2px; color: white;
+}
+.input_cont_follower_modal{
+    background-color: rgb(99, 99, 219); padding: 2%;
+}
+/***************** FIRST LOGIN MODAL *********************************/
+
+#first_login_bg{
+        background-color: rgba(0, 0, 0, 0.29); position: absolute; left: 50%;
+     top: 50%; transform: translate(-50%, -50%); height: 100vh; 
+    width: 100vw; 
+}
+.first_login_modal{
+    width: 50vw; height: 45vh; background-color: grey; left: 50%; top: 19vh;  transform: translateX(-50%);
+    position:absolute; display: flex;  align-items: center; flex-direction: column;
+    border: 2px solid rgb(70, 70, 70);
+}
+.header_welcome_modal{
+    margin-top: 6vh; margin-bottom: 4vh;
+}
+.first_login_gotit_btn{
+    background-color: royalblue; color: white; position: absolute; bottom: 3vh;
+}
+.text_first_login{
+    width: 75%; border: 1px solid rgba(5, 5, 5, 0); padding: 2%;
+}
+.add_a_region_red{
+    color: salmon;
 }
