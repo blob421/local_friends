@@ -97,7 +97,9 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
                         <input type='hidden' name='longitude' 
                         value={coords?.longitude ? String(coords.longitude) : ""}/>
                         
-                        <button type="submit" className="post_btn_feed_modal" disabled={!edit && coords === null}>
+                        <button type="submit" className={
+                            coords ? "post_create_btn_ready post_btn_feed_modal"
+                                   :"post_btn_feed_modal"} disabled={!edit && coords === null}>
                          Post
                         </button>
                    

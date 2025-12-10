@@ -12,7 +12,7 @@ export default function Navbar(){
                    <Image width={24} height={20} src={'/home.jpg'} alt={""}>
                    </Image>
                </Link>
-               <Link href={'/map'}>Map</Link>
+               <Link href={'/map'} className='map_link'>Map</Link>
         </nav>
     )
 }

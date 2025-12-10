@@ -79,7 +79,8 @@ class UserSettings extends Model{}
 UserSettings.init(
   {
      showEmail: {type: DataTypes.BOOLEAN, defaultValue: false},
-     postScopeRegion: {type: DataTypes.BOOLEAN, defaultValue: true}
+     postScopeRegion: {type: DataTypes.BOOLEAN, defaultValue: true},
+     firstLogin: {type: DataTypes.BOOLEAN, defaultValue: true}
   },
   {
     sequelize,

@@ -145,6 +145,9 @@
     background-color: rgb(16, 16, 16); }
 
 /********************** MODAL ***********************/
+.post_create_btn_ready{
+    background-color: royalblue !important;
+}
 #feed_modal_bg{
     background-color: rgba(0, 0, 0, 0.29); width: 100vw; height: 100%; position: fixed;
     z-index: 100000000;
@@ -188,7 +191,7 @@ input[type='file']{
 }
 .post_btn_feed_modal{
      width: 10vw; background-color: grey; position: absolute; right: 33; bottom: 10;
-     border-radius: 5px; padding: 0.5%; border: 1px solid white;
+     border-radius: 5px; padding: 0.5%; border: 1px solid white; transition: background-color 1.5s ease;
 }
 .x_btn_feed_modal{
      position: absolute; right: 8; top: 9; background-color: rgb(204, 108, 108); 
