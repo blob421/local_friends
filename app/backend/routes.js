@@ -125,18 +125,10 @@ router.get('/profile/:id', authenticateToken, async (req, res)=>{
                                 }
                               ]})
                               
-  const following = await Followed.findAll({where: {followerId: req.user.id}})
-  let follows = []
-  following.forEach(follow => {
-   
-    follows.push(follow.followingId)
-  })
-
-  
-  follows.push(req.user.id)
+  const following = await Followed.findOne({where: {followerId: req.user.id, followingId: req.params.id}})
 
   const req_user = req.user.id
-  res.json({user, settings, req_user: req_user, following:follows})
+  res.json({user, settings, req_user: req_user, following:following !== null})
 })
 
 
@@ -150,21 +142,25 @@ router.post('/unfollow/user/:id', authenticateToken, async (req, res)=>{
  res.sendStatus(200)
 })
 
-router.get('/get_followers/', authenticateToken, async (req, res)=>{
+router.get('/get_followers', authenticateToken, async (req, res)=>{
   const userId = req.user.id
-  const query = req.query.name
+  
   let follower_list = []
-
-  const followers = await Followed.findAll({where: {followerId: userId}})
-
-  followers.map(f=>{
-       follower_list.push(f.followingId)
+  let followed_list = []
+  const followed = await Followed.findAll({where: {followerId: userId}})
+  const followers = await Followed.findAll({where: {followingId: userId}})
+  followed.map(f=>{
+       followed_list.push(f.followingId)
     }
   )
-   
-    const users = await User.findAll({where: {id: {[Op.in]: follower_list}, username: {[Op.iLike]: `${query}%`}}})
+  followers.map(f=>{
+       follower_list.push(f.followerId)
+    }
+  )
+    const users_follower = await User.findAll({where: {id: {[Op.in]: follower_list}}})
+    const users_followed = await User.findAll({where: {id: {[Op.in]: followed_list}}})
   
-   res.json({users})
+   res.json({users_followed, users_follower})
 
 
 
@@ -200,19 +196,8 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
    const teams = await Team.findAll()
    const settings = await UserSettings.findOne({where: {UserId: user.id}})
    const stats = await UserStat.findOne({where: {UserId: user.id}})
-
-
-     const following = await Followed.findAll({where: {followerId: req.user.id}})
-  let follows = []
-  following.forEach(follow => {
-   
-    follows.push(follow.followingId)
-  })
-
-  const following_Users = await User.findAll({where:{id: {[Op.in]: follows}},
-                                              attributes: ['username', 'id']})
-                                              
-   res.json({user, teams, settings, stats, following_Users: following_Users})
+                                
+   res.json({user, teams, settings, stats})
 });
 
 router.post('/register', async (req, res) => {

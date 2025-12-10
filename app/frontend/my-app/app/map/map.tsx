@@ -92,8 +92,9 @@ const animalIcon = (name: string) => {
 
 
   return (
+    <div className="container d-flex justify-content-center w-100 mt-3">
     <MapContainer
-      style={{ height: "85vh", width: "100%", margin:"2vh"}}
+      style={{ height: "85vh", width: "100vw"}} className="map"
       center={[45.51, -73.57]}
       zoom={13}
     >
@@ -114,5 +115,6 @@ const animalIcon = (name: string) => {
       {coords && <Polygon positions={coords} color="blue" opacity={0.01} />}
       {bbox && <FitBBox bbox={bbox} />}
     </MapContainer>
+    </div>
   );
 }

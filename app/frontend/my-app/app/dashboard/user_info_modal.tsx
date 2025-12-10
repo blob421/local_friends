@@ -34,7 +34,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
   return(
     
     <div id="profile_modal_bg">
-     <div className="profile_modal">
+     <div className="profile_modal" id="profile_modal">
         <button className="x_btn_modal_edit_dash"
         onClick={()=> $('#profile_modal_bg').hide()}>X</button>
 
@@ -123,7 +123,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
               onChange={(e)=> setPassConf(e.target.value)}
               placeholder="Confirm" autoComplete="new-password"></input>
               </div>
-                
+          
             {passConf == newPassword &&  
                         <div className="errors_cont_dash_edit">
          
@@ -145,9 +145,9 @@ export default function User_info_modal({url, username, email, firstName, lastNa
             
             {passConf == newPassword && 
              <div className="submit_cont_dash_edit">
-            <input type="submit"
-              className="submit_btn_edit_profile">
-                </input>
+            <button type="submit"
+              className="submit_btn_edit_profile">Submit
+                </button>
                 </div>}
              
 
@@ -157,7 +157,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
               <input type="submit" className="submit_btn_edit_profile" disabled>
               </input>
               </div>}
-              
+       
          </form>
      </div>
 </div>

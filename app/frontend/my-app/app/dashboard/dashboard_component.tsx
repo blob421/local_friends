@@ -61,16 +61,17 @@ export default function DashboardMain({visitor}: DashboardProps){
      const [modalTriggered, setModalTriggered] = useState(false)
      const [animalModal, setAnimalModal] = useState(false)
      const [optionsModal, setOptionsModal] = useState(false)
-     const [following, setFollowing] = useState<followers>([])
+     const [following, setFollowing] = useState(true)
      const [userStats, setStats] = useState<stats | null>(null)
      const [followClicked, setFollowClicked] = useState(false)
      const [followClicked2, setFollowClicked2] = useState(false)
      const [reqUser, setReqUser] = useState("")
      const [followerModal, setFollowerModal] = useState(false)
-     const [following_users, setFollowingUsers] = useState<following>([])
+    // const [following_users, setFollowingUsers] = useState<following>([])
 
      const [activeHint, setHint] = useState("")
-     const unfollow = async ()=>{
+
+     const unfollow = async () =>{
         const unfollow_url = `${url}/unfollow/user/${id}`
         await fetchAuth(unfollow_url, {method: 'POST'}).then(res=> res.status == 200 ? location.reload() : 
       alert('There was a problem unfollowing , try again later'))
@@ -129,7 +130,7 @@ export default function DashboardMain({visitor}: DashboardProps){
           
           setPicture(data.user.picture)
 
-          setFollowingUsers(data.following_Users)
+      //    setFollowingUsers(data.following_Users)
      
           setFollowing(data.following)
 
@@ -147,7 +148,7 @@ useEffect(()=> {
   const expand_pop_up = () => {
  
 
-        if (following && (following.length > 0 && !following.includes(parseInt(id)))){
+        if (!following){
         const popup = $('#follow_popup')
         popup.addClass('popup_expanded')
         }
@@ -168,7 +169,7 @@ const follow = async () => {
    
    
      return (
-      <div className="dash_cont">
+      <div className="dash_cont" id="dash_cont">
         {visitor && <div id="follow_popup" className={followClicked2 ? "shrink": ""} >
                           <div id="follow_href" className={followClicked? "fadeout": ""} onClick={()=>{
                              
@@ -217,7 +218,7 @@ const follow = async () => {
                        {!visitor ? `Welcome ${username}`
                                  : `You are viewing the profile of ${username}` }
 
-                      {reqUser !== id && (following && following.includes(parseInt(id))) && <button className="unfollow"
+                      {(reqUser !== id && following) && <button className="unfollow"
                       onClick={() => unfollow()}>
                         Unfollow
                         </button>
@@ -292,6 +293,7 @@ const follow = async () => {
                               ()=>{ 
                               setModalTriggered(true); 
                               $('#profile_modal_bg').show()
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
                               }
                               }/>}
 
@@ -350,7 +352,7 @@ const follow = async () => {
      </div>
 
 {Usersettings.firstLogin && <FirstLoginModal/>}
-{followerModal && <FollowersModal followers={following_users}/>}
+{followerModal && <FollowersModal closeModal={()=> setFollowerModal(false) }/>}
 {animalModal && <AnimalModal url={url}/>}
 
 {optionsModal && <Settings settings={Usersettings} hideModal={()=> setOptionsModal(false)}/>}
