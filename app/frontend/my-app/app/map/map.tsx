@@ -13,15 +13,16 @@ type Coords = [number, number][];
 type coords = {
     latitude: number
     longitude: number
-    guessed_animal: string
-    id: number
+    
 }
+
 type pins = coords[]
 
 function FitBBox({ bbox }: { bbox: BBox }) {
   const map = useMap();
   const southWest: [number, number] = [bbox[1], bbox[0]]; // [lat, lon]
   const northEast: [number, number] = [bbox[3], bbox[2]];
+  
   map.fitBounds([southWest, northEast],{
     padding: [2,2],
     maxZoom: 17
@@ -34,6 +35,7 @@ export default function Map() {
   const [bbox, setBbox] = useState<BBox | null>(null);
   const [coords, setCoords] = useState<Coords | null>(null);
   const [pinCoords, setPinCoords] = useState<pins | undefined>(undefined)
+  const [posts, setPosts] = useState<Post[]>([])
 
 ///////////////////////// CACHE AND ICON /////////////////////////////
 
@@ -41,7 +43,7 @@ const iconCache: Record<string, L.Icon> = {};
 const animalIcon = (name: string) => {
   if (!iconCache[name]) {
     iconCache[name] = new L.Icon({
-      iconUrl: `/${name}_icon.png`,
+      iconUrl: `/animal_icons/${name}_icon.png`,
       iconSize: [30, 30],
       iconAnchor: [20, 40],
       popupAnchor: [0, -40],
@@ -60,13 +62,13 @@ const animalIcon = (name: string) => {
         const pin_lists = data.pins.filter((post:Post) => post.latitude).map((post:Post)=>{
          
            const dict = {latitude: post.latitude, longitude: post.longitude,
-                         animal: post.guessed_animal, id: post.id}
+                         animal: post.guessed_animal, id: post.id, guessed_animal: post.guessed_animal}
            
            return dict
         
       })
         console.log(pin_lists)
-        setPinCoords(pin_lists)
+        setPosts(pin_lists)
         setBbox(data.region.bbox);
       } catch (err) {
         console.log(err);
@@ -103,7 +105,7 @@ const animalIcon = (name: string) => {
         attribution="© OpenStreetMap contributors"
       />
       
-      {pinCoords && pinCoords.map(pin =>{
+      {posts.length > 0 && posts.map(pin =>{
       return <Marker position={[pin.latitude, pin.longitude]} key={pin.id} icon={animalIcon(pin.guessed_animal)}>
         <Popup>
           {pin.guessed_animal || "Not verified"}

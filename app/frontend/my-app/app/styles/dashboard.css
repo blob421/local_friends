@@ -113,7 +113,39 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     color: rgb(243, 243, 243); font-size: 22px; align-items: center;
     display: flex; justify-content: center;
 }
+.badge_grid_dash{
+    grid-template-columns: repeat(5, 1fr); display: grid; overflow-y: scroll; height: 100%;
+}
+.badge_image{
+    height: 60px; width: 60px; align-self: center; justify-self: center; background-color: rgb(66, 66, 66);
+}
+.grey_badge{
+    filter: grayscale(75%);
+}
+.badge_desc_info{
+    visibility: hidden; background-color: rgb(96, 133, 242); z-index: 10000000;
+    width: 250px; position: absolute; padding-left:2%; border: 1px solid white;
+    color: rgb(255, 255, 255); bottom: 2; left: 7; border-radius: 5px;
+}
+.badge_grid_dash::-webkit-scrollbar {
+  width: 9px; 
+}
 
+/* Track (background) */
+.badge_grid_dash::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle (thumb) */
+.badge_grid_dash::-webkit-scrollbar-thumb {
+  background: #262626;
+  
+}
+
+/* Handle on hover */
+.badge_grid_dash::-webkit-scrollbar-thumb:hover {
+  background: #4776a5;
+}
 /*********************Square 3*************************/
 .account_top{
   height: 25%; background-color: rgba(59, 59, 59, 0.321); 

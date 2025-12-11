@@ -14,7 +14,7 @@ const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
 const { User, Post, Team, Badge, Region, Media, Animal, Comment, UserSettings
-  ,Addresses, Followed , SubComment,
+  ,Addresses, Followed , SubComment, UserBadge,
   UserStat} = require('./db');
 
 const router = express.Router();
@@ -193,11 +193,13 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
     attributes : ['name', 'picture', 'description']
     }
 ]})
+   const badges = await Badge.findAll()
+   const UserBadges = await UserBadge.findAll({where: {UserId: req.user.id}})
    const teams = await Team.findAll()
    const settings = await UserSettings.findOne({where: {UserId: user.id}})
    const stats = await UserStat.findOne({where: {UserId: user.id}})
                                 
-   res.json({user, teams, settings, stats})
+   res.json({user, teams, settings, stats, badges, UserBadges})
 });
 
 router.post('/register', async (req, res) => {
