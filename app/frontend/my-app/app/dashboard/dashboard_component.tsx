@@ -12,29 +12,37 @@ const UserModal = dynamic(()=> import('./user_info_modal'))
 const AnimalModal = dynamic(() => import('./animal_modal'))
 const Settings = dynamic(()=> import('./options_modal'))
 
-type Region = {
-  id : Number
-  name: string;
-  
-}
-type DashboardProps = {
-  visitor: boolean
-}
+type Region = {id : Number 
+   name: string;}
 
+type DashboardProps = {visitor: boolean}
 
-type Settings= {
-    showEmail : boolean
-    postScopeRegion: boolean
+type Settings= {showEmail : boolean 
+  postScopeRegion: boolean
     firstLogin: boolean
 }
 type stats = {
   found: number
 }
+export type UserBadge = {
+  awardedAt: string
+  UserId: number
+  BadgeId: number
+}
+export type Badge ={ 
+  description: string
+  name: string
+  picture: string
+  id: number
+  TeamId: number
+}
+
 export type User = {
     id: number
     username: string
     picture: string
 }
+
 export type following = User[]
 type followers = number[]
 
@@ -56,6 +64,11 @@ export default function DashboardMain({visitor}: DashboardProps){
 
      const [region , setRegion] = useState<Region | null >(null)
      const [pictureUrl, setPicture] = useState("")
+
+     const [badges, setBadges] = useState<Badge[]>([])
+     const [userBadge, setUserBadge]= useState<UserBadge[]>([])
+     const [obtainedBadges, setObtainedBadges] = useState<number[]>([])
+     const [hoveredBadge, setHoveredBadge] = useState<number | null>(null)
 
      const [showModal, setModal] = useState(false)
      const [modalTriggered, setModalTriggered] = useState(false)
@@ -116,7 +129,10 @@ export default function DashboardMain({visitor}: DashboardProps){
           setanimalDesc(data.user.Animal.description)
           }
 
-
+          setBadges(data.badges)
+          if (data.UserBadges.length > 0){
+            setUserBadge(data.UserBadges)
+          }
           setReqUser(data.req_user)
           console.log(data.user)
           setUsername(data.user.username)
@@ -157,6 +173,15 @@ useEffect(()=> {
 
   expand_pop_up()
 }, [following, id])
+
+useEffect(()=>{
+ 
+   const badgeIds= badges.map(b=> b.id)
+   const UserBadgeIds = userBadge.map(b=>b.BadgeId)
+   const obtained = badgeIds.filter(b=> UserBadgeIds.includes(b))
+   setObtainedBadges(obtained)
+    
+}, [badges, userBadge])
 
 const follow = async () => {
     const follow_url = `${url}/follow/${id}`
@@ -264,11 +289,9 @@ const follow = async () => {
                                           {animalName && <div className="animal_text_dash">
                                            {animalDesc}
 
-                                          </div>}
-                                 
+                                          </div>}   
                                    </div>
                                 
-                                 
                                 </div>
                           </div>
                     </div>
@@ -277,7 +300,27 @@ const follow = async () => {
                               <div className="badges_title">
                                 Badges
                               </div>
-                            
+
+                              <div className="badge_grid_dash">
+                              {badges.map(b=>{
+                                return <div className={"single_badge_div"}>
+                                        <img src={b.picture} className={obtainedBadges.includes(b.id) ? 
+                                          "badge_image": "badge_image grey_badge"}
+                                            onMouseEnter={()=>{setHoveredBadge(b.id)}}
+                                            onMouseLeave={()=>{setHoveredBadge(null)}}
+                                            onClick={()=>{setHoveredBadge(b.id)}}/>
+
+                                            <div className={hoveredBadge == b.id ? "badge_desc_info visible"
+                                                                                 : "badge_desc_info"
+                                            } 
+>
+
+                                              {b.description}
+                                            </div>
+                                       </div>        
+                              })}
+                            </div>
+
                           </div>            
                         
                     </div>

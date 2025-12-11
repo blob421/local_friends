@@ -150,8 +150,11 @@ class Badge extends Model {}
 Badge.init(
   {
     name: {type: DataTypes.STRING, allowNull: false},
+    picture: {type: DataTypes.STRING, allowNull:false},
+    description: {type: DataTypes.STRING, allowNull:false}
   },
     {
+    timestamps: false, //new
     sequelize,
     modelName: 'Badge'
   }
@@ -161,10 +164,12 @@ class UserBadge extends Model {}
 UserBadge.init(
   {
     // You can add extra fields here if needed, e.g.:
-    awardedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
+    awardedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    
   },
   {
     sequelize,
+    timestamps: false, //new
     modelName: 'UserBadge'
   }
 );
@@ -301,5 +306,5 @@ UserStat.belongsTo(User, {
 console.log(User === sequelize.models.User); // true
 
 module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment, UserSettings,
-  Addresses, UserStat, Followed, SubComment
+  Addresses, UserStat, Followed, SubComment, UserBadge,
 };
