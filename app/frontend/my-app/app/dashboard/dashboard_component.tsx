@@ -303,7 +303,7 @@ const follow = async () => {
 
                               <div className="badge_grid_dash">
                               {badges.map(b=>{
-                                return <div className={"single_badge_div"}>
+                                return <div className={"single_badge_div"} key={b.id}>
                                         <img src={b.picture} className={obtainedBadges.includes(b.id) ? 
                                           "badge_image": "badge_image grey_badge"}
                                             onMouseEnter={()=>{setHoveredBadge(b.id)}}

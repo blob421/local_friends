@@ -115,12 +115,13 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 }
 .badge_grid_dash{
     grid-template-columns: repeat(5, 1fr); display: grid; overflow-y: scroll; height: 100%;
+    grid-auto-rows: max(70px);
 }
 .badge_image{
-    height: 60px; width: 60px; align-self: center; justify-self: center; background-color: rgb(66, 66, 66);
+    height: 60px; width: 60px; align-self: center; justify-self: center; background-color: rgba(66, 66, 66, 0);
 }
 .grey_badge{
-    filter: grayscale(75%);
+    filter: grayscale(60%); opacity: 0.3;
 }
 .badge_desc_info{
     visibility: hidden; background-color: rgb(96, 133, 242); z-index: 10000000;
