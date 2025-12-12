@@ -1,7 +1,13 @@
 const {sequelize, Badge} = require('../db')
 
 const badges = {'1_star': '1 animal found and confirmed', '5_star': "5 animals found and confirmed", 
-    '25_star': "25 animals found and confirmed"}
+               '25_star': "25 animals found and confirmed", '50_star': "50 animals found and confirmed",
+              '100_star': "100 animals found and confirmed", '200_star': "200 animals found and confirmed",
+    
+              '20_followers' : "20 persons following you", '100_followers' : "100 persons following you", 
+              '1000_followers' : "1000 persons following you", 
+
+}
 
 async function name() {
     await sequelize.authenticate()
