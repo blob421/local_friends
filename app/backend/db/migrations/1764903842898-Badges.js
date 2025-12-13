@@ -16,18 +16,19 @@ module.exports = {
 
         allowNull: false,
       },
+      
+      picture: {
+        type: Sequelize.STRING,
 
-      createdAt: {
-        type: Sequelize.DATE,
+        allowNull: false,
+      },
+
+      description: {
+        type: Sequelize.STRING,
 
         allowNull: false,
       },
 
-      updatedAt: {
-        type: Sequelize.DATE,
-
-        allowNull: false,
-      },
       TeamId: {
         type: Sequelize.INTEGER,
         references: {

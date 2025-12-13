@@ -23,6 +23,8 @@ type Settings= {showEmail : boolean
 }
 type stats = {
   found: number
+  followers: number
+  following: number
 }
 export type UserBadge = {
   awardedAt: string
@@ -128,9 +130,11 @@ export default function DashboardMain({visitor}: DashboardProps){
           setanimalPic(data.user.Animal.picture)
           setanimalDesc(data.user.Animal.description)
           }
-
-          setBadges(data.badges)
-          if (data.UserBadges.length > 0){
+          if(data.badges){
+             setBadges(data.badges)
+          }
+   
+          if (data.UserBadges && data.UserBadges.length > 0){
             setUserBadge(data.UserBadges)
           }
           setReqUser(data.req_user)
@@ -162,8 +166,8 @@ export default function DashboardMain({visitor}: DashboardProps){
 
 useEffect(()=> {
   const expand_pop_up = () => {
- 
-
+       console.log(following)
+      
         if (!following){
         const popup = $('#follow_popup')
         popup.addClass('popup_expanded')
@@ -172,7 +176,7 @@ useEffect(()=> {
        }
 
   expand_pop_up()
-}, [following, id])
+}, [following])
 
 useEffect(()=>{
  
@@ -192,7 +196,8 @@ const follow = async () => {
     })
    }
    
-   
+   console.log("reqUser:", reqUser, "id:", id, "following:", following);
+
      return (
       <div className="dash_cont" id="dash_cont">
         {visitor && <div id="follow_popup" className={followClicked2 ? "shrink": ""} >
@@ -214,22 +219,24 @@ const follow = async () => {
            <div className="col-md-1 d-flex flex-row flex-md-column
                align-items-center pt-2 pb-2 pt-md-4 pb-md-0 menu_options">
 
-              <div className="dash_img_menu_cont">
 
-                   <Image src="/person.jpg" alt="person_icon" 
-                    width={30} height={30}/>
-
-                    <div className={"hint_div_dash"}>Profile</div>
-                  
-              </div>
 
         
-              {!visitor && <Image src="/group_icon.png" alt="stats_icon" 
-              width={30} height={30} onClick={()=> setFollowerModal(true)}/>}
-             
-              {!visitor && <Image src="/gear_icon.png" alt="gear_icon" 
-              className={optionsModal ? 'selected_tab_dash dash_tab_icon': "dash_tab_icon"}
-              width={30} height={30} onClick={()=> setOptionsModal(true)}/>}
+              {!visitor && <div className="dash_img_menu_cont">
+                                  <Image src="/group_icon.png" alt="stats_icon" 
+                                  className={followerModal ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
+                                  width={30} height={30} onClick={()=> setFollowerModal(true)}/>
+                                  <div className={"hint_div_dash"}>Followers</div>
+                          </div>
+              }
+              
+              {!visitor && <div className="dash_img_menu_cont">
+                                <Image src="/gear_icon.png" alt="gear_icon" 
+                                className={optionsModal ? 'selected_tab_dash dash_tab_icon': "dash_tab_icon"}
+                                width={30} height={30} onClick={()=> setOptionsModal(true)}/>
+                                <div className={"hint_div_dash"}>Settings</div>
+                          </div>
+              }
           
               
 
@@ -305,7 +312,7 @@ const follow = async () => {
                               {badges.map(b=>{
                                 return <div className={"single_badge_div"} key={b.id}>
                                         <img src={b.picture} className={obtainedBadges.includes(b.id) ? 
-                                          "badge_image": "badge_image grey_badge"}
+                                          "badge_image": "badge_image"}
                                             onMouseEnter={()=>{setHoveredBadge(b.id)}}
                                             onMouseLeave={()=>{setHoveredBadge(null)}}
                                             onClick={()=>{setHoveredBadge(b.id)}}/>
@@ -382,7 +389,9 @@ const follow = async () => {
                                </div>
                                 <div className="stats_bot">
                                    <ul>
-                                        <li>Animals found: {userStats?.found ? userStats.found: '0'}</li>
+                                        <li>Animals found: {userStats?.found ?? '-'}</li>
+                                        <li>Followed : {userStats?.following ?? '-'}</li>
+                                        <li>Followers : {userStats?.followers ?? '-'}</li>
                                    </ul>
                                </div>
                             

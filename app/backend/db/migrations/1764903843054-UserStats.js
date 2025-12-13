@@ -13,6 +13,16 @@ module.exports = {
 
       found: {
         type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      followers: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
+      following: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+
       },
 
       createdAt: {

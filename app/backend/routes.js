@@ -13,9 +13,10 @@ const {getChannel} = require('./rabbit')
 const amqp = require('amqplib/callback_api')
 /////////////////////////////////////////////////////
 
-const { User, Post, Team, Badge, Region, Media, Animal, Comment, UserSettings
+const { User, Post, Team, Badge, Region, Media, Animal, Comment
   ,Addresses, Followed , SubComment, UserBadge,
-  UserStat} = require('./db');
+  UserStat,
+  UserSettings} = require('./db');
 
 const router = express.Router();
 router.use(express.json());
@@ -136,10 +137,17 @@ router.post('/unfollow/user/:id', authenticateToken, async (req, res)=>{
   const userid = req.params.id
   try {
      await Followed.destroy({where: {followerId: req.user.id, followingId: userid}})
+     const Stats = await UserStat.findOne({where: {UserId: userid}})
+     const Stats2 = await UserStat.findOne({where: {UserId: req.user.id}})
+     Stats.followers -= 1
+     Stats2.following -= 1
+     await Stats.save()
+     await Stats2.save()
+      res.sendStatus(200)
   }catch(err){
     res.sendStatus(404)
   }
- res.sendStatus(200)
+
 })
 
 router.get('/get_followers', authenticateToken, async (req, res)=>{
@@ -173,6 +181,13 @@ router.post('/follow/:target_user', authenticateToken, async (req, res)=>{
       const target_user = parseInt(params.target_user)
       
       await Followed.create({followerId: req.user.id, followingId: target_user})
+
+      const Stats = await UserStat.findOne({where: {UserId: req.user.id}})
+      const Stats2 = await UserStat.findOne({where: {UserId: target_user}})
+      Stats.following += 1
+      Stats2.followers += 1
+      await Stats.save()
+      await Stats2.save()
       res.sendStatus(200)
       
   }catch(err){
@@ -222,7 +237,7 @@ router.post('/register', async (req, res) => {
   const newUser = await User.create({username: data.username, password: hashed, 
     email:data.email})
   await UserSettings.create({UserId: newUser.id})
-  
+  await UserStat.create({UserId: newUser.id})
   const token = jwt.sign({id: newUser.id, username: newUser.username},
     process.env.JWT_SECRET, 
     {expiresIn: '2d'}
@@ -428,18 +443,18 @@ router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) =
   const feed = req.params.feed
   const data = req.body
   const userId = req.user.id
-  console.log(data.comment)
+ 
   const parentSubcomment = data.parentSub
   const parentComment = data.parent
   let commentId
   let comment
   if (parentComment){
     comment = await SubComment.create({content: data.comment, CommentId: parentComment, UserId: req.user.id})
-    comment = `subcomment_${comment.id}`
+    commentId = `subcomment_${comment.id}`
   }
   else if (parentSubcomment){
      comment = await SubComment.create({content: data.comment, ParentId: parentSubcomment, UserId: req.user.id})
-     comment = `subcomment_${comment.id}`
+     commentId = `subsub_${comment.id}`
   } 
   else{
      comment = await Comment.create({content: data.comment, UserId: userId, PostId: postId})
@@ -447,9 +462,14 @@ router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) =
   }
  
   
-
-  res.redirect(process.env.FRONT_END_URL + 
+  if (feed == 'map'){
+ res.redirect(process.env.FRONT_END_URL + 
+    `/map?post=${encodeURIComponent(postId)}&comment=${commentId}` )
+  }else{
+ res.redirect(process.env.FRONT_END_URL + 
     `/home?post=${encodeURIComponent(postId)}&feed=${feed}&comment=${commentId}` )
+  }
+ 
 })
 router.delete('/post/:id', authenticateToken, async (req, res)=>{
   const id = req.params.id
@@ -622,13 +642,14 @@ router.get('/map', authenticateToken, async (req, res)=>{
   const region = await Region.findOne({where: {id: user.RegionId}})
   const now = new Date()
   const oneYearAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 365 )
-  const pins = await Post.findAll({
+  const pins = await Post.findAll({ include: [{model: User, attributes: ['username', 'id']}, {model:Media}] ,
                                     where: {RegionId: region.id, guessed_animal: {[Op.ne]: null},
                                     createdAt: {
-                                                   [Op.between]: [oneYearAgo, now]}
+                                                   [Op.between]: [oneYearAgo, now]},
+                                                   
                                     
                                   }}
   )
-  res.json({region, pins})
+  res.json({region, pins, user : req.user.username})
 })
 module.exports = router;

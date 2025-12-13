@@ -30,8 +30,15 @@ function FitBBox({ bbox }: { bbox: BBox }) {
   );
   return null;
 }
+
+type MapComponentProps = {
+  setPost: (post:Post) => void
+  setUser: (username:string) => void
+  setCommentReload: (id:string) => void
+}
+
 import type {Post, Media, User, Region } from "../home/page.tsx"
-export default function Map() {
+export default function Map({setPost, setUser, setCommentReload}: MapComponentProps) {
   const [bbox, setBbox] = useState<BBox | null>(null);
   const [coords, setCoords] = useState<Coords | null>(null);
   const [pinCoords, setPinCoords] = useState<pins | undefined>(undefined)
@@ -58,16 +65,19 @@ const animalIcon = (name: string) => {
       try {
         const res = await fetchAuth(`${url}/map`, { method: "GET" });
         const data = await res.json();
-        console.log(data.pins)
+    
+        setUser(data.user)
         const pin_lists = data.pins.filter((post:Post) => post.latitude).map((post:Post)=>{
-         
+   
            const dict = {latitude: post.latitude, longitude: post.longitude,
-                         animal: post.guessed_animal, id: post.id, guessed_animal: post.guessed_animal}
+                         animal: post.guessed_animal, id: post.id, guessed_animal: post.guessed_animal,
+                        User: {id: post.User.id, username: post.User.username}, Media: post.Media, 
+                          content: post.content, title: post.title}
            
            return dict
         
       })
-        console.log(pin_lists)
+    
         setPosts(pin_lists)
         setBbox(data.region.bbox);
       } catch (err) {
@@ -77,6 +87,23 @@ const animalIcon = (name: string) => {
 
     fetchData();
   }, []);
+
+  useEffect(()=>{
+     const params = new URLSearchParams(window.location.search)
+     const postId = params.get('post')
+     const comment= params.get('comment')
+
+     if (postId){
+      const activePost = posts.filter(post => post.id == parseInt(postId))
+      
+      setPost(activePost[0])
+    if(comment){
+         setCommentReload(comment)
+      }
+      
+     }
+
+  },[posts])
 
   // derive coords whenever bbox changes
   useEffect(() => {
@@ -106,8 +133,25 @@ const animalIcon = (name: string) => {
       />
       
       {posts.length > 0 && posts.map(pin =>{
-      return <Marker position={[pin.latitude, pin.longitude]} key={pin.id} icon={animalIcon(pin.guessed_animal)}>
-        <Popup>
+      return <Marker position={[pin.latitude, pin.longitude]} key={pin.id} 
+      icon={animalIcon(pin.guessed_animal)}  eventHandlers={{
+      click: () => {
+         
+      
+        setPost(pin); 
+     
+      },
+      mouseover: (e) => {
+        e.target.openPopup();  
+      },
+      mouseout: (e) => {
+        e.target.closePopup();  
+      }
+
+    }}
+  >
+
+        <Popup closeButton={false} autoClose={false} closeOnClick={false}>
           {pin.guessed_animal || "Not verified"}
         </Popup>
       </Marker>

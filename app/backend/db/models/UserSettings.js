@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   const UserSettings = sequelize.define('UserSettings', {
      showEmail: {type: DataTypes.BOOLEAN, defaultValue: false},
-     postScopeRegion: {type: DataTypes.BOOLEAN, defaultValue: true}
+     postScopeRegion: {type: DataTypes.BOOLEAN, defaultValue: true},
+      firstLogin: {type: DataTypes.BOOLEAN, defaultValue: true}
   },
 {
   timestamps: false
