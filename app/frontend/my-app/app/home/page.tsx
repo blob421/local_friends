@@ -91,6 +91,7 @@ const getResponse = async (scope:string | null) => {
         setUser(data.user)
  } 
 const url = process.env.NEXT_PUBLIC_API_URL
+
  useEffect(()=>{
   if (!activePost){
     return;

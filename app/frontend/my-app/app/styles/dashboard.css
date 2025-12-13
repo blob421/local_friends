@@ -14,10 +14,14 @@
     background-color: aliceblue; color: black; text-align: center;
 }
 .selected_tab_dash{
-    background-color: rgb(46, 61, 117);
+    background-color: rgba(101, 103, 110, 0.431); border-radius: 15%;
 }
 .dash_tab_icon{
-    cursor: pointer;
+    cursor: pointer; transition: transform ease 1s;transform-origin: center center; width: 36px;
+    margin-bottom: 5px;
+}
+.dash_tab_icon:hover{
+    transform: scale(1.2); 
 }
 .unfollow{
     position: absolute; right: 100; background-color: rgb(0, 162, 255); color: white; 
@@ -30,7 +34,7 @@
 }
 .dash_img_menu_cont{
     justify-content: center; display: flex; flex-direction: column; align-items: center;
-    font-size: small; padding: 2%;
+    font-size: small; padding: 2%; width: 36px; gap: 2%;
 }
 /*********************Follow popup*************************/
 
@@ -115,10 +119,14 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 }
 .badge_grid_dash{
     grid-template-columns: repeat(5, 1fr); display: grid; overflow-y: scroll; height: 100%;
-    grid-auto-rows: max(70px);
+    grid-auto-rows: max(70px); padding-top: 1.6vh;
 }
 .badge_image{
-    height: 60px; width: 60px; align-self: center; justify-self: center; background-color: rgba(66, 66, 66, 0);
+    height: 60px; width: 60px; align-self: center; justify-self: center;
+     background-color: rgba(66, 66, 66, 0); border-radius: 50%;
+}
+.badge_image:hover{
+    outline: 1.5px solid rgba(0, 251, 255, 0.384);
 }
 .grey_badge{
     filter: grayscale(60%); opacity: 0.3;
@@ -185,10 +193,13 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     color: rgb(243, 243, 243); font-size: 22px; align-items: center;
     display: flex; justify-content: center;
 }
-.stats_bot{
-
+.stats_bot li{
+ background-color: #4176da97;width: fit-content; margin-top: 2vh; padding: 0.5%; padding-left: 1%;
+ padding-right: 1%;
 }
-
+.stats_bot{
+    background-color: rgba(57, 96, 193, 0.116); height: 100%; padding-top:2vh ;
+}
 /*********************** PROFILE MODAL **************************/
 
 #profile_modal_bg{
@@ -327,6 +338,10 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 /******************** Followers Modal *******************************/
 .picture_user_follower_modal{
    height:100%
+}
+.follow_div_stats{
+    display: flex; color: black; justify-content: center; gap: 13%; font-size: small;
+    background-color: rgb(55, 55, 55); position: absolute; bottom: 0;
 }
 .no_match_follower{
  color: black; display: flex; justify-content: center; margin-top: 2vh; align-items: center;

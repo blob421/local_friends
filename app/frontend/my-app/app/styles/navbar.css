@@ -1,16 +1,19 @@
 .nav_main{
     position: sticky; left: 0; width: 100vw; height: 8vh;
      background-color: rgb(88, 88, 197); top: 0; z-index: 1000; color: black;
-     margin-bottom: 1vh;  display: flex; align-items: center; gap: 3%;
+     margin-bottom: 1vh;  display: flex; align-items: center; gap: 5%;
      justify-content: center;
 }
 html{
     overflow-x: hidden; 
 }
 a{
-    text-decoration: none; color: white;
+    text-decoration: none; color: white; padding: 0.5%; padding-left: 1%; padding-right: 1%;
 }
 .home_link{
-    display: flex; gap: 7%; 
+    display: flex; gap: 9%; 
+}
+.toggled_nav{
+    background-color: rgb(100, 82, 239); 
 }
 

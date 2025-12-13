@@ -33,7 +33,7 @@ for attempt in range(5):
                                                                         credentials=credentials))
             channel = connection.channel()
             channel.queue_declare(queue="detect_animal", durable=True)
-            channel.basic_consume(queue="detect_animal", on_message_callback=callback)
+            channel.basic_consume("detect_animal", callback)
             channel.start_consuming()
      except pika.exceptions.AMQPConnectionError:
 

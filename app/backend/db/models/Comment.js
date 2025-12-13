@@ -4,10 +4,14 @@ module.exports = (sequelize, DataTypes) => {
       content: {type: DataTypes.STRING, allowNull: false}
   });
 
-  Comment.associate= models=>{
-    Comment.belongsTo(models.User, {
-         onDelete: "CASCADE"
-})
+    Comment.associate= models=>{
+      Comment.belongsTo(models.User, {
+          onDelete: "CASCADE"
+  })
+
+    Comment.hasMany(models.SubComment, {
+      onDelete: 'CASCADE'
+    })
   }
   return Comment
 }

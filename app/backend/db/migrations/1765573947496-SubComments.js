@@ -1,6 +1,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Comments", {
+    await queryInterface.createTable("SubComments", {
       id: {
         type: Sequelize.INTEGER,
 
@@ -28,30 +28,30 @@ module.exports = {
 
         allowNull: false,
       },
-       UserId: {
+      CommentId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "Users",
-          key: id
-        },
-       
-         onDelete: "CASCADE",
-         onUpdate: "CASCADE",
-
+        allowNull: false,
+        references: { model: "Comments", key: "id" }, 
+        onDelete: "CASCADE",
+      },
+      UserId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+         references: { model: "Users", key: "id" },      
+        onDelete: "CASCADE",
 
       },
-       PostId: {
+      ParentId: {
         type: Sequelize.INTEGER,
-        references: { model: 'Posts', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-
+        allowNull: true,
+        references: {model: "SubComments", key: "id"},
+        onDelete: "CASCADE",  
+      }
     });
   },
 
   down: async (queryInterface) => {
-    await queryInterface.dropTable("Comments");
+    await queryInterface.dropTable("SubComments");
   },
 };
 

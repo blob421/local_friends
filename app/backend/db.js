@@ -129,7 +129,9 @@ Post.init(
 class UserStat extends Model {}
 UserStat.init(
   {
-    found: {type: DataTypes.INTEGER}
+    found: {type: DataTypes.INTEGER, defaultValue: 0},
+    followers: {type: DataTypes.INTEGER, defaultValue: 0},
+    following: {type: DataTypes.INTEGER, defaultValue: 0}
   },
   {
     sequelize,

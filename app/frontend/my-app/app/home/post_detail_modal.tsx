@@ -49,9 +49,18 @@ export default function PostDetailModal({post, comments, onClose, user, feed,
 const DelComment = async () =>{
   const del_url = `${url}/comment/delete/${commentDelType}/${CommentDelId}`
   await fetchAuth(del_url, {method: 'DELETE'}).then(res=> {
-    res.status == 200 ? window.location.href= `/home?post=${post.id}&feed=${feed}`
-                      : alert('Oops we could not delete your comment , try again later'); 
+   if (res.status == 200){
+
+    if(feed == 'map'){
+         window.location.href= `/map?post=${post.id}`
+    }else{
+       window.location.href= `/home?post=${post.id}&feed=${feed}`
+    } }else{
+                       alert('Oops we could not delete your comment , try again later'); 
                         showDeleteCommentModal(false)
+    }
+    
+
   })
 }
 const expandComments = ()=>{
@@ -316,11 +325,11 @@ useEffect(() => {
 
                                       }
                                     {/************************ SUBCOMMENT ***************************/}
-                                      {c.SubComments && c.SubComments.map((sub, index)=>{
+                                      {c.SubComments.length > 0 && c.SubComments.map((sub, index)=>{
                                         const encoded = encodeUrlSafe(String(sub.User.id));
 
                                         return <div className='subcomments_subcomments_cont' key={`subcomment_${sub.id}`}>
-                                        <div  className={'reply_input_cont single_comment' 
+                                        <div className={'reply_input_cont single_comment' 
                                               + " " + getCommentSize(`top_comment_${c.id}`)}
                                             id={`subcomment_${sub.id}`}>
 

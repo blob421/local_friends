@@ -28,6 +28,11 @@ module.exports = {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     },
+      firstLogin: {
+        type: Sequelize.BOOLEAN,
+
+        defaultValue: true,
+      },
 
     });
   },

@@ -74,6 +74,7 @@ const clearInput = ()=>{
                     onClick={()=>{setFollowingToggled(true); setFollowerToggled(false);clearInput()}}>
                         Following
                     </button>
+                    
                     <button className={followingToggled?'toggle_btn_followers toggled_follow'
                                                        : 'toggle_btn_followers ' }
                     onClick={()=>{setFollowerToggled(true); setFollowingToggled(false); clearInput()}}>
@@ -81,6 +82,7 @@ const clearInput = ()=>{
                     </button>
 
                 </div>
+
                 
                 <div className='input_cont_follower_modal'>
                        <input type='text' name='following' placeholder='Search ...' id='search_input' 
