@@ -1,8 +1,8 @@
 /************************ BAR *****************************/
 .feed_top_bar_create{
-    background-color: rgba(48, 49, 50, 0.954); top:0; position: sticky; border-radius: 5px;
+    background-color: rgba(48, 49, 50, 0.924); top:0; position: sticky; border-radius: 5px;
     height: 9vh; display: flex; align-items: center; gap: 1%;  justify-content: flex-end;
-    margin-bottom: 1%; border: 1px solid grey; z-index: 1000;
+    margin-bottom: 1%; border: 1px solid grey; z-index: 1000; 
     
 }
 .new_post_btn:hover{
@@ -50,7 +50,7 @@
     width: fit-content; padding: 17%; visibility: hidden; position: absolute;
 } 
 .web_icon_cont{
- height: 20px; width: 20px;   position:absolute; left: 4;
+ height: 20px; width: 20px;   position:absolute; left: 0.84vw;
 }
 
 .no_posts_div{
@@ -69,9 +69,33 @@
     background-color: rgb(16, 16, 16); 
 }
 .feed_middle{
- overflow-y: scroll; overflow-x: hidden;  background-color: rgb(42, 139, 199); height: 90vh;
+ overflow-y: scroll; overflow-x: hidden;  background-color: rgb(87, 148, 228); height: 90vh;
  
+
 }
+.noMorePosts{
+    height: 13vh; display: flex; justify-content: center; align-items: center; margin-top: 7vh;
+}
+.feed_middle::-webkit-scrollbar {
+  width: 10px; 
+}
+
+/* Track (background) */
+.feed_middle::-webkit-scrollbar-track {
+    background-color: rgb(87, 148, 228);border-radius: 6px;
+}
+
+/* Handle (thumb) */
+.feed_middle::-webkit-scrollbar-thumb {
+  background: #fafafa9d; 
+  border-radius: 6px;
+}
+
+/* Handle on hover */
+.feed_middle::-webkit-scrollbar-thumb:hover {
+  background: #c9c9c9;
+}
+
 .images_cont_feed{
     max-width: 300px;  display: flex; align-items: center; justify-content: center;
     
@@ -82,14 +106,15 @@
 }
 .post_unit_feed{
   background-color: rgb(50, 50, 50); color: rgb(244, 244, 244); display: flex; 
-   margin-bottom: 20px; padding: 2%; border: 2px solid rgb(105, 105, 105);
+   margin-bottom: 2px; padding: 2%; border: 2px solid rgb(105, 105, 105);
   border-radius: 10px;  justify-content: center; position: relative;
 }
 .post_unit_feed:hover{
     background-color: rgb(62, 62, 62); cursor: pointer;
 }
+
 .posts_cont{
-    background-color: rgb(45, 45, 45); padding: 6%; border-radius: 5px; padding-top:4%
+    background-color: rgba(45, 45, 45, 0.923); padding: 6%; border-radius: 5px; padding-top:3%
 }
 .see_more_main_feed{
     color: rgb(164, 164, 164);
@@ -99,7 +124,12 @@
 }
 .post_title{
     text-align: center; margin-bottom: 1.5vh; display: flex; justify-content: center; align-items: center;
-    position: relative;
+    position: relative;  margin-top: 0.2vh;
+    
+   
+}
+.post_title_text_home{
+ width: fit-content; max-width: 77%; padding-left: 1.8vw;  text-align: left; overflow: hidden;
 }
 .post_content{
      font-size: small; color: rgb(215, 215, 215); padding: 3%;

@@ -107,12 +107,19 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/profile/:id', authenticateToken, async (req, res)=>{
-
+  const targetId = req.params.id
   const settings = await UserSettings.findOne({where: {UserId: req.params.id}})
- const attr = settings.showEmail
+  const attr = settings.showEmail
   ? { exclude: [] }
   : { exclude: ['email'] };
+  
 
+   const badges = await Badge.findAll()
+   const UserBadges = await UserBadge.findAll({where: {UserId: targetId}})
+   
+   const stats = await UserStat.findOne({where: {UserId: targetId}})
+                                
+ 
   const user = await User.findOne({where: {id: req.params.id},
                              attributes : attr,
                              include: [
@@ -125,11 +132,11 @@ router.get('/profile/:id', authenticateToken, async (req, res)=>{
                                   attributes: ['name', 'picture', 'description']
                                 }
                               ]})
-                              
+           
   const following = await Followed.findOne({where: {followerId: req.user.id, followingId: req.params.id}})
 
   const req_user = req.user.id
-  res.json({user, settings, req_user: req_user, following:following !== null})
+  res.json({user, settings, req_user: req_user, following:following !== null, stats, badges, UserBadges})
 })
 
 
@@ -344,7 +351,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
           const mainstreamPosts = 
                         await Post.findAll({
                         where: region ? { RegionId: region} : {}, 
-                        order: [['id', 'DESC']], limit : 40, include:[ {
+                        order: [['id', 'DESC']], limit : 5, include:[ {
                           
                           model: Media,
                           attributes: ['url']
@@ -387,6 +394,43 @@ router.get('/home', authenticateToken, async (req, res) =>{
   }
 
 
+})
+router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>{
+  const data = req.body.ids
+  console.log(req.body)
+  const feed = req.params.feed
+  const regionId = req.params.regionId
+  const region = feed === 'Region'
+  let posts
+  try{
+
+  
+  posts = await Post.findAll({where: region ? {RegionId: regionId, id: {[Op.notIn]: data} }
+                                            : {id: {[Op.notIn]: data}},
+                                    
+                                    limit: 15,
+                            include: [{
+                          
+                          model: Media,
+                          attributes: ['url']
+                        },
+                        {
+                          model: Region,
+                          attributes: ['display_name']
+                        },
+                        {model: User, 
+                        attributes: ['username', 'picture', 'id']}]
+
+                      }, )
+ }catch(err){
+  console.log(err)
+ }
+ if (posts){
+ res.json({posts})
+ }else{
+  res.sendStatus(400)
+ }
+ 
 })
 router.get('/images', async (req, res)=>{
 
@@ -462,7 +506,7 @@ router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) =
   }
  
   
-  if (feed == 'map'){
+if (feed == 'map'){
  res.redirect(process.env.FRONT_END_URL + 
     `/map?post=${encodeURIComponent(postId)}&comment=${commentId}` )
   }else{

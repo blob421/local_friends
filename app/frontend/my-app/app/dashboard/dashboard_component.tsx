@@ -223,7 +223,7 @@ const follow = async () => {
 
         
               {!visitor && <div className="dash_img_menu_cont">
-                                  <Image src="/group_icon.png" alt="stats_icon" 
+                                  <img src="/group_icon.png" alt="stats_icon" 
                                   className={followerModal ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
                                   width={30} height={30} onClick={()=> setFollowerModal(true)}/>
                                   <div className={"hint_div_dash"}>Followers</div>
@@ -312,7 +312,7 @@ const follow = async () => {
                               {badges.map(b=>{
                                 return <div className={"single_badge_div"} key={b.id}>
                                         <img src={b.picture} className={obtainedBadges.includes(b.id) ? 
-                                          "badge_image": "badge_image"}
+                                          "badge_image": "badge_image grey_badge"}
                                             onMouseEnter={()=>{setHoveredBadge(b.id)}}
                                             onMouseLeave={()=>{setHoveredBadge(null)}}
                                             onClick={()=>{setHoveredBadge(b.id)}}/>

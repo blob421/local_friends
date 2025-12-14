@@ -52,8 +52,10 @@ const [comments, setComments] = useState<Comment[]>([])
 const [activePost, setActivePost] = useState<Post | undefined>(undefined)
 const [requestUser, setUser] = useState("")
 const [commentReload, setCommentReload] = useState("")
-
-
+const [regionId, setRegionId] = useState("")
+const [bottomReached, setBottomReached]= useState(false)
+const [noMorePosts, setNoMorePosts] = useState(false)
+const [viewedPostsId, setViewedPostsId] = useState<number[]>([])
 const [overflowingIds, setOverflowingIds] = useState<string[]>([]);
 
 const removeOverflowingId = (id: string) => {
@@ -68,7 +70,8 @@ const getResponse = async (scope:string | null) => {
         })
         const data = await response.json()
         console.log(data)
-
+        setRegionId(data.region)
+        console.log(regionId)
         if (data.posts && data.posts.length > 0){
             setPosts(data.posts)
             setPostsNull(false)
@@ -109,6 +112,7 @@ const url = process.env.NEXT_PUBLIC_API_URL
     if (isPost){
   const postId = parseInt(isPost)
   setPostDetailModal(true)
+ 
   setActivePost(posts.find(obj=> obj.id === postId))
 
    const text_contents = $('.post_content').toArray()
@@ -139,9 +143,54 @@ useEffect(()=>{
      newPostIcon.removeClass('newPostButtonRight')
  })
 
+const feed_middle= document.getElementById('feed_middle')
 
+let handleFeedGen = () =>{
+
+  if (!feed_middle) return;
+     const { scrollTop, scrollHeight, clientHeight } = feed_middle;
+
+  if (scrollTop + clientHeight >= scrollHeight - 10) {
+    setBottomReached(true)
+    console.log('Bottom reached');
+  }
+};
+
+if (feed_middle){
+  feed_middle.addEventListener('scroll', handleFeedGen)
+
+}
 
 }, [])
+
+
+useEffect(()=>{
+   if (!bottomReached || noMorePosts){ return}
+   
+   const posts_ids = posts.map(post => post.id)
+   setViewedPostsId(prev=> [ ...prev, ...posts_ids])
+ 
+
+}, [bottomReached])
+
+/// Runs when bottom reached
+useEffect(()=>{
+  const morePosts_url = url + `/more_posts/${postScope}/${regionId}`
+ fetchAuth(morePosts_url, {method:'POST', 
+                             headers: {'Content-Type': 'application/json'},
+                             body: JSON.stringify({ids: viewedPostsId})})
+                             .then(res => res.json()).then(data =>{ 
+                              console.log(data)
+                              if (data.posts.length < 1 ){
+                                setNoMorePosts(true)
+                              }
+                              setPosts(prev => [...prev, ...data.posts])
+                              setBottomReached(false)
+                             })
+}, [viewedPostsId])
+
+
+
 
 useEffect(() => {
   const newOverflowing: string[] = [];
@@ -159,6 +208,11 @@ useEffect(() => {
   setOverflowingIds(newOverflowing);
   handle_popups()
 
+   /// Handles trimming posts after reaching the bottom
+  if (posts.length > 25){
+    setPosts(prev=> prev.filter((p, index) => index >= (posts.length - 15))) // keeping only the last 15 posts
+  }
+
 }, [posts]);
 
 
@@ -166,7 +220,10 @@ useEffect(() => {
 const handle_popups = ()=>{
 
 
+
+
 const popUps = document.querySelectorAll('[id^="web_icon"]')
+
 
 
 document.addEventListener('click', (e) => {
@@ -211,7 +268,7 @@ return (
         
 
 
-            <div className="feed_middle col-12 col-lg-8 col-ipad-pro" id='feed_middle'>
+            <div className="feed_middle col-12 col-lg-7 col-ipad-pro" id='feed_middle'>
                
               <div className='row d-flex justify-content-center'>
                   
@@ -281,8 +338,8 @@ return (
                               </div>
                             </div>
                             }
-                            
-                            {post.title}
+                            <div className='post_title_text_home'>{post.title}</div>
+                        
                             </div>
                           
                                     
@@ -324,11 +381,14 @@ return (
                         </div>
                      
               </div>                   
-      
+                       
                       </div>
                   )}
                   )
+                  
                   }
+
+                       {noMorePosts && <div className='noMorePosts'> No more posts for the moment</div>}
                   </div>
             }  </div>
 
