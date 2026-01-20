@@ -1,3 +1,5 @@
+//////////////// Adds animals and their pictures to the database and in animal description.json
+
 const {sequelize, Animal, Team} = require('../db')
 const fs = require('fs')
 const path = require('path')

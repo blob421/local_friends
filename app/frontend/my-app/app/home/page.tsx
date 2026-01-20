@@ -9,6 +9,7 @@ import { encodeUrlSafe } from '../components/encode';
 const CreateModal = dynamic(()=> import('./create_modal'))
 const PostDetailModal = dynamic(()=> import('./post_detail_modal'))
 export type Region = {
+  id: Number
   display_name: string
 }
 export type Post = {
@@ -26,6 +27,10 @@ export type Post = {
 };
 export type Media = {
   url: string;
+  idx: Number;
+  filename: String;
+  mimeType: String;
+  
 };
 export type Comment = {
   content : string

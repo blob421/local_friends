@@ -1,3 +1,5 @@
+
+
 //////////////////REDIS///////////////////
 const Redis = require("ioredis");
 const redis = new Redis({ host: "localhost", port: 6379 });
@@ -16,7 +18,14 @@ const amqp = require('amqplib/callback_api')
 const { User, Post, Team, Badge, Region, Media, Animal, Comment
   ,Addresses, Followed , SubComment, UserBadge,
   UserStat,
-  UserSettings} = require('./db');
+  UserSettings, sequelize} = require('./db');
+let Posts
+const initMongoRoutes = () =>{
+  const {mongoDb} = require('./mongo.js')
+  const mongo = mongoDb.db('local_friends')
+  Posts = mongo.collection('posts')
+}
+
 
 const router = express.Router();
 router.use(express.json());
@@ -55,30 +64,44 @@ const upload = multer({ storage : storage });
 const uploadUser = multer({storage : storageUser})
 
 
-const handleFiles = async (files, post)=>{
-  try{
+const handlePost = async (files, post) => {
+  try {
+    if (files && files.length > 0) {
+      const media_arr = [];
 
-  
-  
-  if (files && files.length > 0){
-    await Promise.all(
-      files.map(async file => {
-      Media.create({
-            filename: file.filename,
-            mimeType: file.mimetype,
-            url: file.path,
-            PostId: post.id
-          })
-      const channel = await getChannel()
-      const payload = JSON.stringify({'path':file.path, 'postId': post.id})
-      channel.sendToQueue('detect_animal', Buffer.from(payload))
-      
-    })
-)}
-   }catch(err2){
-    console.log(err2)
-   }
-}
+      files.forEach((file, idx) => {
+        media_arr.push({
+          idx,
+          filename: file.filename,
+          mimeType: file.mimetype,
+          url: file.path
+        });
+      });
+
+      post.Media = media_arr;
+
+      const status = await Posts.insertOne(post);
+      if (!status.acknowledged) {
+        console.log('Insert failed mongodb, handlefiles');
+      }
+
+      const channel = await getChannel();
+
+      media_arr.forEach(media => {
+        const payload = JSON.stringify({
+          path: media.url,
+          postId: post.id,
+          arr_idx: media.idx
+        });
+
+        channel.sendToQueue('detect_animal', Buffer.from(payload));
+      });
+    }
+  } catch (err2) {
+    console.log(err2);
+  }
+};
+
 //////////////////// AUTH ///////////////////////////
 
 router.post('/login', async (req, res) => {
@@ -118,6 +141,7 @@ router.get('/profile/:id', authenticateToken, async (req, res)=>{
    const UserBadges = await UserBadge.findAll({where: {UserId: targetId}})
    
    const stats = await UserStat.findOne({where: {UserId: targetId}})
+
                                 
  
   const user = await User.findOne({where: {id: req.params.id},
@@ -218,8 +242,8 @@ router.get('/dashboard', authenticateToken, async (req, res) => {
    const badges = await Badge.findAll()
    const UserBadges = await UserBadge.findAll({where: {UserId: req.user.id}})
    const teams = await Team.findAll()
-   const settings = await UserSettings.findOne({where: {UserId: user.id}})
-   const stats = await UserStat.findOne({where: {UserId: user.id}})
+   const [settings, created_settings] = await UserSettings.findOrCreate({where: {UserId: user.id}, defaults: { UserId: user.id }})
+   const [stats, created] = await UserStat.findOrCreate({ where: { UserId: user.id }, defaults: { UserId: user.id }})
                                 
    res.json({user, teams, settings, stats, badges, UserBadges})
 });
@@ -267,9 +291,19 @@ router.post('/post', authenticateToken,
   const data = req.body
   
   const user = await User.findOne({where: {id: req.user.id}})
-  
-  const post = await Post.create({title: data.title, content: data.content, 
-    RegionId: user.RegionId, UserId: user.id, longitude: data.longitude, latitude: data.latitude })
+
+  const [post_idx] = await sequelize.query( `INSERT INTO "Posts" DEFAULT VALUES RETURNING id` ); 
+  const postId = post_idx[0].id;
+  const region = Region.findOne({where: {id: user.RegionId}})
+
+  const post = {id: postId ,title: data.title, content: data.content, 
+                Region: {id: user.RegionId, display_name: region.display_name}, 
+                User: {id: user.id, username:user.username, picture:user.picture}, 
+                longitude: data.longitude, latitude: data.latitude}
+
+
+ // const post = await Post.create({title: data.title, content: data.content, 
+  // RegionId: user.RegionId, UserId: user.id, longitude: data.longitude, latitude: data.latitude })
 
   try {
 
@@ -281,8 +315,8 @@ router.post('/post', authenticateToken,
   }
 
   const files = req.files
-  await handleFiles(files, post)
-
+  await handlePost(files, post)
+ 
 
   res.redirect(`${process.env.FRONT_END_URL}/home`)
 })
@@ -332,38 +366,27 @@ router.get('/home', authenticateToken, async (req, res) =>{
           const arr = followed.map(follow => follow.followingId)
 
           const followedPostsNested = await Promise.all(
-                arr.map(ar =>
-                  Post.findAll({
-                    where: region ? { RegionId: region, UserId: ar } : { UserId: ar },
-                    order: [['id', 'DESC']],
-                    limit: 2,
-                    include: [
-                      { model: Media, attributes: ['url'] },
-                      { model: Region, attributes: ['display_name'] },
-                      { model: User, attributes: ['username', 'picture', 'id'] }
-                    ]
-                  })
-                )
-              );
+            arr.map(async userId => {
+              const query = region
+                ? { "User.id": userId, "Region.id": region }
+                : { "User.id": userId };
+
+              return Posts
+                .find(query)
+                .sort({ id: -1 })
+                .limit(2)
+                .toArray();
+            })
+          );
+
               const followedPosts = followedPostsNested.flat();
 
-
-          const mainstreamPosts = 
-                        await Post.findAll({
-                        where: region ? { RegionId: region} : {}, 
-                        order: [['id', 'DESC']], limit : 5, include:[ {
-                          
-                          model: Media,
-                          attributes: ['url']
-                        },
-                        {
-                          model: Region,
-                          attributes: ['display_name']
-                        },
-                        {model: User, 
-                        attributes: ['username', 'picture', 'id']}]
-
-                      })
+          const mainPostsQuery = region ? { "Region.id": region}: {}
+          const mainstreamPosts =  await Posts
+                                             .find(mainPostsQuery)
+                                             .sort({id: -1})
+                                             .limit(5)
+                                             .toArray()
 
         const personalizedPosts = [...mainstreamPosts, ...followedPosts]
         const uniquePosts = Array.from(
@@ -486,21 +509,46 @@ router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) =
   const postId = req.params.id
   const feed = req.params.feed
   const data = req.body
-  const userId = req.user.id
- 
+
+  const user = User.findOne({where: {id: req.user.id}})
+
   const parentSubcomment = data.parentSub
   const parentComment = data.parent
   let commentId
   let comment
+  let query_str
+  parentComment || parentSubcomment ? query_str = "SubComment":  query_str = "Comment"
+     
+
+  const [comment_idx] = await sequelize.query(`INSERT INTO ${query_str} DEFAULT VALUES RETURNING id` ); 
+  const CommentId = comment_idx[0].id;
+
   if (parentComment){
+ 
+    await Posts.updateOne(
+  { id: postId },
+  {
+    $push: {
+      SubComments: {
+        id: CommentId,
+        User: { id: user.id, username: user.username, picture: user.picture },
+        content,
+        createdAt: new Date()
+      }
+    }
+  }
+);
+
     comment = await SubComment.create({content: data.comment, CommentId: parentComment, UserId: req.user.id})
     commentId = `subcomment_${comment.id}`
   }
   else if (parentSubcomment){
+
      comment = await SubComment.create({content: data.comment, ParentId: parentSubcomment, UserId: req.user.id})
      commentId = `subsub_${comment.id}`
   } 
   else{
+  
      comment = await Comment.create({content: data.comment, UserId: userId, PostId: postId})
      commentId = `top_comment_${comment.id}`
   }
@@ -696,4 +744,4 @@ router.get('/map', authenticateToken, async (req, res)=>{
   )
   res.json({region, pins, user : req.user.username})
 })
-module.exports = router;
+module.exports = {router, initMongoRoutes};

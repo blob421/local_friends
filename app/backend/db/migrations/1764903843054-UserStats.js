@@ -16,11 +16,11 @@ module.exports = {
         defaultValue: 0
       },
       followers: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         defaultValue: 0
       },
       following: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         defaultValue: 0
 
       },
@@ -36,7 +36,7 @@ module.exports = {
 
         allowNull: false,
       },
-      UserId: {
+      UserId: {                       
       type: Sequelize.INTEGER,
       references: { model: "User", key: "id" },
       onDelete: "CASCADE",

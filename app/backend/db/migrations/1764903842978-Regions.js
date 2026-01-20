@@ -52,11 +52,11 @@ module.exports = {
       },
 
       bbox: {
-        type: Sequelize.ARRAY,
+        type: Sequelize.ARRAY(Sequelize.FLOAT),
       },
 
       location: {
-        type: Sequelize.ARRAY,
+        type: Sequelize.ARRAY(Sequelize.FLOAT),
       },
     });
   },

@@ -1,11 +1,12 @@
 const { sequelize, User, Region } = require('./db.js');
+const {mongoDb} = require('./mongo.js')
 const {connectRabbit, getChannel} = require('./rabbit.js')
 
 require('dotenv').config();
 
 const express = require('express');
 const app = express();
-const router = require('./routes')
+
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const queryInterface = sequelize.getQueryInterface();
@@ -17,7 +18,7 @@ const bcrypt = require('bcrypt');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use('/', router);
+
 app.use('/usr/src/app/media', express.static('/usr/src/app/media'));
 /////////////////////////////// RATE LIMITER ///////////////////////////////////
 const {rateLimit} = require('express-rate-limit')
@@ -30,6 +31,7 @@ const limit = rateLimit({windowMs: 1000 * 60,
 })
 app.use(limit)
 app.set('trust proxy', 1); // for nginx or real ips instead of the proxy
+
 
 /////////////////////////////// MAIN LOOP //////////////////////////////////////
 async function main() {
@@ -49,6 +51,12 @@ async function main() {
 `);
 
   await connectRabbit()
+  await mongoDb.connect()
+   const {router, initMongoRoutes} = require('./routes')
+  initMongoRoutes()
+  
+ 
+  app.use('/', router);
 
   app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
@@ -81,4 +89,6 @@ async function main() {
  
 }
 main();
+
+
 

@@ -2,7 +2,7 @@
   "name": "local-friends",
   "private": true,
   "workspaces": [
-    "app/backend",
+    "app/backend/",
     "app/frontend/my-app",
     "app/scheduler"
   ],
@@ -12,12 +12,8 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
-  "makemigrations": "cd app/backend/db && npx sequelize-migration-builder create-migration --models ./db/models",
-  "undomigrations": "npx sequelize-cli db:migrate:undo",
-  "migrate": "npx sequelize-cli db:migrate"
-
-}
-
-
-
+    "makemigrations": "cd app/backend/db && npx sequelize-migration-builder create-migration --models ./db/models",
+    "undomigrations": "npx sequelize-cli db:migrate:undo",
+    "migrate": "npx sequelize-cli db:migrate"
+  }
 }
