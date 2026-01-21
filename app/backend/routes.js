@@ -299,7 +299,7 @@ router.post('/post', authenticateToken,
   const post = {id: postId ,title: data.title, content: data.content, 
                 Region: {id: user.RegionId, display_name: region.display_name}, 
                 User: {id: user.id, username:user.username, picture:user.picture}, 
-                longitude: data.longitude, latitude: data.latitude}
+                longitude: data.longitude, latitude: data.latitude, Comments:[], SubComments:[]}
 
 
  // const post = await Post.create({title: data.title, content: data.content, 
@@ -473,45 +473,13 @@ router.delete('/comment/delete/:commentType/:commentId', authenticateToken, asyn
 })
 
 
-router.get('/post/:id/comments',authenticateToken, async (req, res) => {
-  const postId = parseInt(req.params.id)
- const comments = await Comment.findAll({
-  where: { PostId: postId },
-  include: [
-    {
-      model: User,
-      attributes: ['picture', 'username', 'id']
-    },
-    {
-      model: SubComment,
-      include: [
-        { model: User, attributes: ['picture', 'username', 'id'] },
-        {
-          association: 'children',   // subcomments of subcomments
-          include: [
-            { model: User, attributes: ['picture', 'username', 'id'] }
-          ],
-          distinct: true
-        }
-      ],
-      distinct: true
-    }
-  ],
-  order: [['id', 'DESC']],
-  distinct: true
-});
-
-  
-  res.json({comments})
-})
-
 router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) => {
   const postId = req.params.id
   const feed = req.params.feed
   const data = req.body
-
-  const user = User.findOne({where: {id: req.user.id}})
-
+  console.log(data)
+  const user = await User.findOne({where: {id: req.user.id}})
+  console.log(user)
   const parentSubcomment = data.parentSub
   const parentComment = data.parent
   let commentId
@@ -520,38 +488,60 @@ router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) =
   parentComment || parentSubcomment ? query_str = "SubComment":  query_str = "Comment"
      
 
-  const [comment_idx] = await sequelize.query(`INSERT INTO ${query_str} DEFAULT VALUES RETURNING id` ); 
+  const [comment_idx] = await sequelize.query(`INSERT INTO "${query_str}" DEFAULT VALUES RETURNING id` ); 
   const CommentId = comment_idx[0].id;
 
   if (parentComment){
  
     await Posts.updateOne(
-  { id: postId },
+  { id: parseInt(postId) },
   {
     $push: {
       SubComments: {
         id: CommentId,
+        CommentId: parentComment,
         User: { id: user.id, username: user.username, picture: user.picture },
-        content,
+        content: data.comment,
         createdAt: new Date()
       }
     }
   }
 );
-
-    comment = await SubComment.create({content: data.comment, CommentId: parentComment, UserId: req.user.id})
-    commentId = `subcomment_${comment.id}`
+    commentId = `subcomment_${CommentId}`
   }
   else if (parentSubcomment){
-
-     comment = await SubComment.create({content: data.comment, ParentId: parentSubcomment, UserId: req.user.id})
-     commentId = `subsub_${comment.id}`
+ await Posts.updateOne(
+  { id: parseInt(postId) },
+  {
+    $push: {
+      SubComments: {
+        id: CommentId,
+        ParentId: parentSubcomment,
+        User: { id: user.id, username: user.username, picture: user.picture },
+        content: data.comment,
+        createdAt: new Date()
+      }
+    }
+  }
+);
+     commentId = `subsub_${CommentId}`
   } 
   else{
-  
-     comment = await Comment.create({content: data.comment, UserId: userId, PostId: postId})
-     commentId = `top_comment_${comment.id}`
-  }
+    await Posts.updateOne(
+    { id: parseInt(postId) },
+    {
+      $push: {
+        Comments: {
+          id: CommentId,
+          User: { id: user.id, username: user.username, picture: user.picture },
+          content: data.comment,
+          createdAt: new Date(),
+          
+        }
+      }
+    }
+  );
+}
  
   
 if (feed == 'map'){

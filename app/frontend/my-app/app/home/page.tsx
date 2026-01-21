@@ -18,6 +18,8 @@ export type Post = {
   content: string;
   Media: Media[]
   User: User
+  Comments: Comment[]
+  SubComments: SubComment[]
   Region: Region
   latitude: number
   guessed_animal: string
@@ -36,10 +38,18 @@ export type Comment = {
   content : string
   id: string
   User: User
-  PostId: string
-  UserId: string
-  SubComments: Comment[]
   children: Post[]
+  SubComments: SubComment[]
+  createdAt: String
+}
+export type SubComment = {
+  content : string
+  id: string
+  User: User
+  SubComments: SubComment[]
+  createdAt: String
+  CommentId ? : Number
+  ParentId ? : Number
 }
 export type User = {
   picture: string
@@ -54,6 +64,7 @@ const [postScope, setPostScope] = useState("")
 const [createModal, setModal] = useState(false)
 const [postDetailModal, setPostDetailModal] = useState(false)
 const [comments, setComments] = useState<Comment[]>([])
+const [subcomment, setSubComments] = useState<SubComment[]>([])
 const [activePost, setActivePost] = useState<Post | undefined>(undefined)
 const [requestUser, setUser] = useState("")
 const [commentReload, setCommentReload] = useState("")
@@ -104,8 +115,33 @@ const url = process.env.NEXT_PUBLIC_API_URL
   if (!activePost){
     return;
   }
-        fetchAuth(`${url}/post/${activePost?.id}/comments`).then(res => res.json()).then(
-          data => {setComments(data.comments); console.log(data)})
+     
+  const map = new Map();
+
+      // Add comments
+      activePost.Comments.forEach(c => {
+        c.SubComments = [];
+        map.set(`c_${c.id}`, c);
+      });
+
+      // Add subcomments
+      activePost.SubComments.forEach(s => {
+        s.SubComments = [];
+       map.set(`s_${s.id}`, s);
+});
+
+  const roots = new Array;
+
+  activePost.SubComments.forEach(s => {
+  if (s.ParentId) {
+    map.get(`s_${s.ParentId}`).SubComments.push(s);
+ } else if (s.CommentId) {
+    map.get(`c_${s.CommentId}`).SubComments.push(s);
+  }
+});
+ activePost.Comments.forEach(c => roots.push(c));
+  
+  setComments(roots);
     }, [activePost])
 
 
@@ -402,7 +438,8 @@ return (
             
           {createModal && <CreateModal url={url} onClose={()=> setModal(false)}/>}    
           {postDetailModal && (activePost && <PostDetailModal feed={postScope} commentReload={commentReload}
-          comments={comments} post={activePost} user={requestUser} onClose={() => setPostDetailModal(false)}/>)}                 
+          comments={comments}
+          post={activePost} user={requestUser} onClose={() => setPostDetailModal(false)}/>)}                 
         </div>
 
 

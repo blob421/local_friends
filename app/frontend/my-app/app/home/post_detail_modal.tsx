@@ -391,7 +391,7 @@ useEffect(() => {
                                           </div>
                                            }
 
-                                         {sub.children && sub.children.map((s, index)=>{
+                                         {sub.SubComments && sub.SubComments.map((s, index)=>{
                                            const encoded = encodeUrlSafe(String(s.User.id));
                                           return <div className={'single_comment' + " " + 
                                             getCommentSize(`subcomment_${sub.id}`)} key={`sub_sub_${s.id}`}
