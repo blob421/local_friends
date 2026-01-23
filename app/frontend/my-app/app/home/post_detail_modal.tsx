@@ -15,9 +15,11 @@ type PostDetailModalProps = {
   post: Post
   comments: Comment[] 
   onClose :() => void
-  user: string
+  user?: User
   feed: string
   commentReload: string
+  delComment: (commentId:any, type: String, subComments:Number[]) => void
+  setComment: (type:String, content:string, id?:any, commentId?:any, parentId?:any) => void
 }
 
 type Image = {
@@ -25,7 +27,7 @@ type Image = {
 }
 
 
-export default function PostDetailModal({post, comments, onClose, user, feed, 
+export default function PostDetailModal({post, comments, delComment,setComment, onClose, user, feed, 
   commentReload}:PostDetailModalProps){
 
     const url = process.env.NEXT_PUBLIC_API_URL
@@ -34,31 +36,41 @@ export default function PostDetailModal({post, comments, onClose, user, feed,
 
     const [parentComment, setParentComment] = useState("")
     const [replyInput, setReplyInput] = useState(false)
+    const [textInputValue, setTextInputValue] = useState("")
     const [parentSubcomment, setParentSubcomment] = useState("")
     const [SubcommentInput, setSubcommentInput] = useState(false)
     const [activeInput, setActiveInput] = useState('')
     const [emoteModal, setEmoteModal] = useState(false)
     const [selectedEmoji, setSelectedEmoji] = useState("")
-    
+    const [newCommentId , setNewCommentId] = useState(0)
     const textRef = useRef<HTMLDivElement>(null);
     const [overflowingIds, setOverflowingIds] = useState<string[]>([]);
     const [commentDelModal,showDeleteCommentModal] = useState(false)
     const [CommentDelId, setCommentDelete] = useState("")
     const [commentDelType, setCommentDelType] = useState("")
 
+async function submitComment(parent:any, parentSub:any, type:String){
+  const commenturl = url + `/post/${post.id}/comment/feed/${feed}`
+  await fetchAuth(commenturl, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({comment: textInputValue, parent:parent, parentSub:parentSub})
+  }).then(res=> res.json()).then(data=>  setComment(type, 
+                                                textInputValue, data.id, data.commentId, data.parentId))
+}
 const DelComment = async () =>{
-  const del_url = `${url}/comment/delete/${commentDelType}/${CommentDelId}`
-  await fetchAuth(del_url, {method: 'DELETE'}).then(res=> {
-   if (res.status == 200){
-
-    if(feed == 'map'){
-         window.location.href= `/map?post=${post.id}`
-    }else{
-       window.location.href= `/home?post=${post.id}&feed=${feed}`
-    } }else{
-                       alert('Oops we could not delete your comment , try again later'); 
-                        showDeleteCommentModal(false)
-    }
+  const del_url = `${url}/comment/delete/`
+  await fetchAuth(del_url, {
+    method: 'POST',
+    body: JSON.stringify({commentId: CommentDelId, commentType: commentDelType, postId: post.id }),
+    headers: {'Content-Type': 'application/json'}
+   
+  }).then(res=> res.json()).then(data => {
+   
+   
+      delComment(CommentDelId, commentDelType, data.subComments)
+      comments.filter(c => c.id !== CommentDelId)
+      showDeleteCommentModal(false)
     
 
   })
@@ -206,7 +218,7 @@ useEffect(() => {
                                       </div>
                                               }
 
-              {post.User.username == user && 
+              {post.User.username == user?.username && 
               <div className='menu_post_detail_cont'>
               <button id='three_dots_post_detail' onClick={()=>set_visible('option_menu_post_detail')}>...</button>
 
@@ -271,10 +283,10 @@ useEffect(() => {
 
                           <div className='single_comment' id={`top_comment_${c.id}`} >
 
-                            {user == c.User.username && <button className='x_btn_comment'
+                            {user?.username == c.User.username && <button className='x_btn_comment'
                             onClick={()=>{ showDeleteCommentModal(true); 
                                            setCommentDelete(c.id);
-                                           setCommentDelType('comment')}
+                                           setCommentDelType('Comments')}
                                            }>X</button>}
 
                               <div className='left_side_comment'>
@@ -293,7 +305,8 @@ useEffect(() => {
 
                                       <div className={'reply_comment'} 
                                       onClick={()=> {setSubcommentInput(false);setReplyInput(true); 
-                                      setParentComment(c.id);setActiveInput(`comment_${c.id}`)} }>Reply</div>
+                                      setParentComment(c.id);setActiveInput(`comment_${c.id}`);
+                                      document.getElementById(`input_${c.id}`)?.scrollIntoView()} }>Reply</div>
 
 
                                     </div>
@@ -312,15 +325,23 @@ useEffect(() => {
                                         } id={`input_${c.id}`}>    
 
                                      
-                                        <form className="comment_form" method="POST" 
-                                                 action={url + `/post/${post.id}/comment/feed/${feed}`}>
+                                        <div className="comment_form">
                                               <input type='text' name='comment' className='reply_input'
-                                              placeholder='Write here ...' id='c_input'/>
+                                              placeholder='Write here ...' id='c_input' 
+                                              onChange={(e) => setTextInputValue(e.target.value)}
+                                              onKeyDown={(e)=>{
+                                                 if (e.key === "Enter" && textInputValue.trim() !== ""){
+                                               
+                                                submitComment(c.id, null, "SubComments");
+                                                setReplyInput(false)
+                                               } }}  
+
+                                                />
                                               <input type='hidden' name='parent' value={parentComment}/>
                                               <img src={'/smile_icon.png'} className='smile_emote_comment'
                                               onClick={()=>{!emoteModal ? setEmoteModal(true): setEmoteModal(false)}}/>
-                                            
-                                        </form>
+                                              
+                                        </div>
                                           </div>
 
                                       }
@@ -333,10 +354,10 @@ useEffect(() => {
                                               + " " + getCommentSize(`top_comment_${c.id}`)}
                                             id={`subcomment_${sub.id}`}>
 
-                          {user == sub.User.username && <button className='x_btn_comment'
+                          {user?.username == sub.User.username && <button className='x_btn_comment'
                             onClick={()=>{ showDeleteCommentModal(true); 
                                            setCommentDelete(sub.id);
-                                           setCommentDelType('subcomment')}
+                                           setCommentDelType('SubComments')}
                                            }>X</button>}
 
                                     <div className='left_side_comment'>
@@ -376,17 +397,23 @@ useEffect(() => {
                                         } id={`input_sub_${sub.id}`}>     
 
 
-                                              <form className="comment_form" method="POST" 
-                                                      action={url + `/post/${post.id}/comment/feed/${feed}`}>
+                                              <div className="comment_form"
+                                                     >
                                                     <input type='text' name='comment' className='reply_input'
-                                                    placeholder='Write here ...' id='sub_input'/>
+                                                    placeholder='Write here ...' id='sub_input'
+                                                    onChange={(e) => setTextInputValue(e.target.value)}
+                                                     onKeyDown={(e)=>{
+                                                       if (e.key === "Enter" && textInputValue.trim() !== ""){
+                                                   
+                                                submitComment(null, sub.id, "SubSubComments");
+                                                setSubcommentInput(false)}}}/>
 
                                                     <img src={'/smile_icon.png'} className='smile_emote_comment'
                                               onClick={()=> {!emoteModal ? setEmoteModal(true): setEmoteModal(false)}}/>
 
 
                                                     <input type='hidden' name='parentSub' value={parentSubcomment}/>
-                                              </form>
+                                              </div>
 
                                           </div>
                                            }
@@ -395,12 +422,12 @@ useEffect(() => {
                                            const encoded = encodeUrlSafe(String(s.User.id));
                                           return <div className={'single_comment' + " " + 
                                             getCommentSize(`subcomment_${sub.id}`)} key={`sub_sub_${s.id}`}
-                                            id={`subcomment_${sub.id}`}>
+                                            id={`sub_sub_${s.id}`}>
 
-                          {user == s.User.username && <button className='x_btn_comment'
+                          {user?.username == s.User.username && <button className='x_btn_comment'
                             onClick={()=>{ showDeleteCommentModal(true); 
                                            setCommentDelete((s.id).toString());
-                                           setCommentDelType('subcomment')}
+                                           setCommentDelType('SubComments')}
                                            }>X</button>}
 
 
@@ -443,18 +470,25 @@ useEffect(() => {
                    
                             
                     </div>
-                    <form className="comment_form" method="POST" 
-                            action={url + `/post/${post.id}/comment/feed/${feed}`}>
+                    <div className="comment_form"
+                            >
                             
                                 <textarea placeholder="Type here ..." 
                                 className="comment_bar" 
-                                name='comment' id='text_input_comment'>
+                                name='comment' id='text_input_comment'
+                                onChange={(e) => setTextInputValue(e.target.value)}
+                                >
+                                  
                                 </textarea>
                                 <img src={'/smile_icon.png'} className='smile_emote_comment'
                                     onClick={()=> {!emoteModal ? setEmoteModal(true): setEmoteModal(false)}}/>
-                                <button type='submit' className='submit_comment_post'>Go</button>
+                                <button onClick={()=>{
                               
-                    </form>
+                                submitComment(null, null, 'Comments');
+                                }}
+                                type='submit' className='submit_comment_post'>Go</button>
+                              
+                    </div>
                     
              </div>
              
@@ -466,9 +500,13 @@ useEffect(() => {
       {commentDelModal && <div id='commentDelBg'>
                                <div className='commentDelForm'>
                                 <button className='x_btn_comment_modal' 
-                                onClick={()=>showDeleteCommentModal(false)}>X</button>
+                                onClick={()=> {showDeleteCommentModal(false);
+                                             setCommentDelType("")
+                                             setCommentDelete("")}
+                                              }>X</button>
                                   Delete comment ?
-                                 <button className='btn btn-danger' onClick={()=> DelComment()}>Delete</button>
+                                 <button className='btn btn-danger' 
+                                 onClick={()=> DelComment()}>Delete</button>
                                </div>
         
                           </div>}

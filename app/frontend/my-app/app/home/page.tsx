@@ -38,7 +38,6 @@ export type Comment = {
   content : string
   id: string
   User: User
-  children: Post[]
   SubComments: SubComment[]
   createdAt: String
 }
@@ -57,6 +56,11 @@ export type User = {
   username: string
 }
 export default function Home(){
+  const default_user:User = {
+    id:0,
+    username:'defaultUser',
+    picture:'null'
+  }
 const [posts, setPosts] = useState<Post[]>([])
 const [noPosts, setPostsNull] = useState(false)
 const [postScope, setPostScope] = useState("")
@@ -64,9 +68,12 @@ const [postScope, setPostScope] = useState("")
 const [createModal, setModal] = useState(false)
 const [postDetailModal, setPostDetailModal] = useState(false)
 const [comments, setComments] = useState<Comment[]>([])
+const [commentDeleted, setCommentDeleted] = useState(false)
 const [subcomment, setSubComments] = useState<SubComment[]>([])
+const [commentDone, setCommentDone] = useState(false)
+const [newComment, setNewComment] = useState("")
 const [activePost, setActivePost] = useState<Post | undefined>(undefined)
-const [requestUser, setUser] = useState("")
+const [requestUser, setUser] = useState<User>(default_user);
 const [commentReload, setCommentReload] = useState("")
 const [regionId, setRegionId] = useState("")
 const [bottomReached, setBottomReached]= useState(false)
@@ -145,22 +152,33 @@ const url = process.env.NEXT_PUBLIC_API_URL
     }, [activePost])
 
 
+/////////////////// HANDLE REFRESH WHEN MAKING A COMMENT AND A POST IS UPDATED 
+
  useEffect(()=>{
-  const params = new URLSearchParams(window.location.search)
-  const isPost = params.get('post')
+  
+    if (commentDone){
+
+    setCommentDone(false)
+    document.getElementById(newComment)?.scrollIntoView()
   
 
-    if (isPost){
-  const postId = parseInt(isPost)
-  setPostDetailModal(true)
- 
-  setActivePost(posts.find(obj=> obj.id === postId))
+    const post = posts.find(obj => obj.id === activePost?.id);
+    if (!post) return;
 
-   const text_contents = $('.post_content').toArray()
-  text_contents.forEach(c=>{
+    setActivePost({ ...post }); // post is Post, spread is still Post
+
+    const text_contents = $('.post_content').toArray()
+    text_contents.forEach(c=>{
     truncateText(c, 5)
   })
   
+ }
+ else if (commentDeleted){
+   setCommentDeleted(false); 
+    const post = posts.find(obj => obj.id === activePost?.id);
+    if (!post) return;
+
+    setActivePost({ ...post }); // post is Post, spread is still Post
  }
 
     }, [posts])
@@ -234,11 +252,13 @@ useEffect(()=>{
 
 
 useEffect(() => {
+  if(commentDeleted) return
+  console.log('posts triggered')
   const newOverflowing: string[] = [];
   const allComments = document.querySelectorAll<HTMLDivElement>(
     ".post_text"
   );
-
+  
   allComments.forEach(el => {
     const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
     const maxHeight = lineHeight * 8; // 2 lines
@@ -438,7 +458,86 @@ return (
             
           {createModal && <CreateModal url={url} onClose={()=> setModal(false)}/>}    
           {postDetailModal && (activePost && <PostDetailModal feed={postScope} commentReload={commentReload}
-          comments={comments}
+          comments={comments} 
+          delComment={(commentId, type, subComments) => {
+          
+          setPosts(prev =>
+              prev.map(p =>
+                p.id === activePost.id
+                  ? {
+                      ...p,
+                      Comments:
+                        type === "Comments"
+                          ? p.Comments.filter(c => c.id !== commentId)
+                          : p.Comments,
+                      SubComments:
+                        type === "SubComments"
+                          ? p.SubComments.filter(s => !subComments.includes(parseInt(s.id)))
+                          : 
+                        type === "Comments" ? p.SubComments.filter(s => !subComments.includes(parseInt(s.id)))
+                          :
+                          p.SubComments
+                    }
+                  : p
+              )
+            );
+              console.log(posts)
+              setCommentDeleted(true)
+          }}
+          //////////////////////// ADDING COMMENTS DYNAMICALLY
+            setComment={(type, content, id, commentId, parentId) => {
+           
+       
+             
+              setPosts(prev =>
+                prev.map(p => {
+                  if (p.id === activePost.id) {
+    
+
+                    return {
+                      ...p,
+                      Comments: 
+                      type == "Comments" ?
+                      [
+                        ...p.Comments,
+                        {
+                          User: requestUser,
+                          content,
+                          createdAt: new Date().toISOString(),
+                          id: id,
+                          SubComments: []
+                        }
+                      ] : p.Comments,
+                      SubComments: type == "SubComments" ?
+                      [...p.SubComments, { User: requestUser,
+                                            CommentId: commentId,
+                                            content,
+                                            createdAt: new Date().toISOString(),
+                                            id: id,
+                                            SubComments: []}
+                        ]: type == "SubSubComments" ?
+                         [...p.SubComments, { User: requestUser,
+                                            ParentId: parentId,
+                                            content,
+                                            createdAt: new Date().toISOString(),
+                                            id: id,
+                                            SubComments: []}
+                        ]: p.SubComments
+                    };
+                  }
+
+                  return p;
+                })
+              );
+              setCommentDone(true);
+              type == 'Comments' ? setNewComment(`top_comment_${id}`)
+                                 : type == "SubComments" ? setNewComment(`subcomment_${id}`):
+                                 setNewComment(`sub_sub_${id}`)
+              }
+              }           
+
+      
+          
           post={activePost} user={requestUser} onClose={() => setPostDetailModal(false)}/>)}                 
         </div>
 

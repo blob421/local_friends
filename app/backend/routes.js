@@ -406,7 +406,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
       
     }
   
-    res.json({posts, user: user.username, settings: user.UserSetting, region: region})
+    res.json({posts, user: user, settings: user.UserSetting, region: region})
    
 
   
@@ -458,18 +458,60 @@ router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>
 router.get('/images', async (req, res)=>{
 
 })
-router.delete('/comment/delete/:commentType/:commentId', authenticateToken, async (req, res)=>{
-  const commentId = req.params.commentId
-  const commentType = req.params.commentType
+router.post('/comment/delete/', authenticateToken, async (req, res)=>{
+  
+  const data = req.body
+  console.log(data)
+  const commentId = data.commentId
+  const commentType = data.commentType
+  const postId = data.postId
+  let merged
   try{
-   commentType == 'comment' ? await Comment.destroy({where: {id: commentId}})
-                            : await SubComment.destroy({where: {id: commentId}})
-  }catch(err){
+    const post = await Posts.findOne({id: parseInt(postId)})
+
+ 
+
+    if (commentType == "Comments"){
+          const subToDelete = post.SubComments.filter(s=> s.CommentId == commentId)
+                                        .map(s => s.id)
+          const subSubToDelete = post.SubComments.filter(ss => subToDelete.includes(ss.ParentId))
+                                           .map(ss => ss.id)
+
+          merged = [...subToDelete, ... subSubToDelete]
+
+      await Posts.updateOne(
+          {id: parseInt(postId)},
+          {
+          $pull:{
+            "Comments": {id: parseInt(commentId) },
+            'SubComments': { id: {$in: merged}},
+           
+          }
+        
+          }
+        )
+    }
+    else if (commentType == 'SubComments'){
+     const subSubToDelete = Array.from(post.SubComments.filter(ss => ss.ParentId == commentId)
+                             .map(ss => ss.id))
+     merged = [...subSubToDelete, commentId];
+     await Posts.updateOne(
+       {id: parseInt(postId)},
+          {
+          $pull:{
+            'SubComments': { id: {$in: merged}},
+           
+          }
+        
+          }
+)}
+
+}catch(err){
   
     console.log(err)
     res.sendStatus(404)
   }
-  res.sendStatus(200)
+  res.json({subComments: merged})
 })
 
 
@@ -480,17 +522,17 @@ router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) =
   console.log(data)
   const user = await User.findOne({where: {id: req.user.id}})
   console.log(user)
-  const parentSubcomment = data.parentSub
-  const parentComment = data.parent
+  const parentSubcomment = parseInt(data.parentSub)
+  const parentComment = parseInt(data.parent)
   let commentId
-  let comment
+
   let query_str
   parentComment || parentSubcomment ? query_str = "SubComment":  query_str = "Comment"
      
 
   const [comment_idx] = await sequelize.query(`INSERT INTO "${query_str}" DEFAULT VALUES RETURNING id` ); 
   const CommentId = comment_idx[0].id;
-
+try{
   if (parentComment){
  
     await Posts.updateOne(
@@ -541,17 +583,12 @@ router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) =
       }
     }
   );
+}}catch(err){
+  res.sendStatus(304)
 }
- 
+res.json({id: CommentId, parentId: parentSubcomment, commentId:parentComment})
   
-if (feed == 'map'){
- res.redirect(process.env.FRONT_END_URL + 
-    `/map?post=${encodeURIComponent(postId)}&comment=${commentId}` )
-  }else{
- res.redirect(process.env.FRONT_END_URL + 
-    `/home?post=${encodeURIComponent(postId)}&feed=${feed}&comment=${commentId}` )
-  }
- 
+
 })
 router.delete('/post/:id', authenticateToken, async (req, res)=>{
   const id = req.params.id
