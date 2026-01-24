@@ -1,8 +1,10 @@
-const {redis, Posts} = require('./redis_mongodb')
+const {redis, getPosts} = require('./redis_mongodb')
 const {Followed} = require('./db')
+const { ObjectId } =  require("mongodb");
 
 
-async function fetchPosts(Posts, req, cached, region){
+async function fetchPosts(req, cached, region){
+    let Posts = getPosts()
     let posts
     let query_follow
     let query_main

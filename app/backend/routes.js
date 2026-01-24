@@ -381,11 +381,11 @@ router.get('/home', authenticateToken, async (req, res) =>{
         region = user.UserSetting.postScopeRegion ? user.RegionId : null
        }    
 
-     posts = await fetchPosts(Posts, req, true, region)
+     posts = await fetchPosts(req, true, region)
 
      if (posts.length < 5){
-      await redis.set(`seen:${userId}`, [])
-      posts = await fetchPosts(Posts, req, false, region)
+      await redis.del(`seen:${userId}`);
+      posts = await fetchPosts(req, false, region)
     
      }
 
@@ -419,8 +419,8 @@ router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>
   posts = await Posts.find(query).sort({id: -1}).limit(15).toArray()
   if (posts.length < 5){
 
-     await redis.set(`seen:${userId}`, [])
-     posts = await fetchPosts(Posts, req, false, region)
+     await redis.del(`seen:${userId}`);
+     posts = await fetchPosts(req, false, region)
   }
  }catch(err){
   console.log(err)

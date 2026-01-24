@@ -7,4 +7,9 @@ const initMongoRoutes = () =>{
   Posts = mongo.collection('posts')
 }
 
-module.exports = {redis, Posts, initMongoRoutes}
+const getPosts = () =>{
+    if(Posts){
+        return Posts
+    }
+}
+module.exports = {redis, getPosts, initMongoRoutes}
