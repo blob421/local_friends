@@ -3,7 +3,7 @@
 //////////////////REDIS///////////////////
 const Redis = require("ioredis");
 const redis = new Redis({ host: "localhost", port: 6379 });
-
+const { ObjectId } =  require("mongodb");
 /////////////////////////////////////////
 
 const express = require('express');
@@ -64,10 +64,11 @@ const upload = multer({ storage : storage });
 const uploadUser = multer({storage : storageUser})
 
 
-const handlePost = async (files, post) => {
+const handlePost = async (files, post, data, userId) => {
   try {
+    const media_arr = [];
     if (files && files.length > 0) {
-      const media_arr = [];
+      
 
       files.forEach((file, idx) => {
         media_arr.push({
@@ -77,13 +78,53 @@ const handlePost = async (files, post) => {
           url: file.path
         });
       });
+   
+     !data ? post.Media = media_arr : ""
+     
+    }else{
 
-      post.Media = media_arr;
-
-      const status = await Posts.insertOne(post);
-      if (!status.acknowledged) {
-        console.log('Insert failed mongodb, handlefiles');
+      if (data){
+           media_arr = post.Media
       }
+      else{
+           post.Media = new Array
+      }
+     
+    }
+      if (data){
+        console.log(data)
+
+        const longitude = data.longitude ? data.longitude : post.longitude
+        const latitude = data.latitude ? data.latitude : post.latitude
+        const status=  await Posts.updateOne({_id: post._id, "User.id": parseInt(userId)}, 
+          {$set : {Media: media_arr, 
+                   longitude: longitude, 
+                   latitude: latitude,
+                   content: data.content,
+                   title: data.title
+                  }, 
+
+        }
+        )
+        console.log(status)
+        if (!status.acknowledged){
+          console.log('post not modified in MongoDb err')
+        }
+       
+    
+      }
+      else{
+            const status = await Posts.insertOne(post);
+            console.log(status)
+            if (!status.acknowledged) {
+              console.log('Insert failed mongodb, handlefiles');
+
+            }else{
+              await redis.zadd(`region:${post.Region.id}`, status.insertedId.toString())
+            }
+      }
+
+
 
       const channel = await getChannel();
 
@@ -96,7 +137,7 @@ const handlePost = async (files, post) => {
 
         channel.sendToQueue('detect_animal', Buffer.from(payload));
       });
-    }
+    
   } catch (err2) {
     console.log(err2);
   }
@@ -315,7 +356,7 @@ router.post('/post', authenticateToken,
   }
 
   const files = req.files
-  await handlePost(files, post)
+  await handlePost(files, post, null, null)
  
 
   res.redirect(`${process.env.FRONT_END_URL}/home`)
@@ -467,18 +508,21 @@ router.post('/comment/delete/', authenticateToken, async (req, res)=>{
   const postId = data.postId
   let merged
   try{
-    const post = await Posts.findOne({id: parseInt(postId)})
+    const post = await Posts.findOne({_id: new ObjectId(postId)})
 
  
 
     if (commentType == "Comments"){
+      if(post.SubComments && post.SubComments.length > 0){
           const subToDelete = post.SubComments.filter(s=> s.CommentId == commentId)
                                         .map(s => s.id)
           const subSubToDelete = post.SubComments.filter(ss => subToDelete.includes(ss.ParentId))
                                            .map(ss => ss.id)
 
           merged = [...subToDelete, ... subSubToDelete]
-
+}else{
+  merged = []
+}
       await Posts.updateOne(
           {id: parseInt(postId)},
           {
@@ -536,7 +580,7 @@ try{
   if (parentComment){
  
     await Posts.updateOne(
-  { id: parseInt(postId) },
+  { _id: new ObjectId(postId) },
   {
     $push: {
       SubComments: {
@@ -553,7 +597,7 @@ try{
   }
   else if (parentSubcomment){
  await Posts.updateOne(
-  { id: parseInt(postId) },
+    { _id: new ObjectId(postId) },
   {
     $push: {
       SubComments: {
@@ -570,7 +614,7 @@ try{
   } 
   else{
     await Posts.updateOne(
-    { id: parseInt(postId) },
+      { _id: new ObjectId(postId) },
     {
       $push: {
         Comments: {
@@ -590,30 +634,35 @@ res.json({id: CommentId, parentId: parentSubcomment, commentId:parentComment})
   
 
 })
-router.delete('/post/:id', authenticateToken, async (req, res)=>{
+router.delete('/post/region/:regionId/id/:id', authenticateToken, async (req, res)=>{
   const id = req.params.id
-  const post = await Post.findOne({where: {id: id}})
-  if (req.user.id === post.UserId){
-   await post.destroy()
-   res.sendStatus(202)
+  const regionId = req.params.regionId
+ try{
+  
+   const status = await Posts.deleteOne({_id: new ObjectId(id), "User.id": req.user.id})
+   await redis.zrem(`region:${regionId}`, id)
+   if (status.deletedCount === 1){
+       res.sendStatus(202)
+   }else{
+       res.sendStatus(401)
+   }
+  
   }
-  else{
-    res.sendStatus(401)
+  catch(err){
+    res.sendStatus(500)
   }
 })
 router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), async (req, res)=>{
   const id = req.params.id
   const data = req.body
-  const post = await Post.findOne({where: {id: id}})
-  post.title = data.title
-  post.content = data.content
-  data.latitude ? post.latitude = data.latitude : post.latitude = post.latitude
-  data. longitude ? post.longitude = data.longitude: post.longitude = post.longitude
+  const post = await Posts.findOne({_id: new ObjectId(id)})
+
+
   // Delete old photos to replace them 
-  if (req.user.id === post.UserId){
+  if (req.user.id === post.User.id){
     const files = req.files
     if (files.length > 0){
-     const photos = await Media.findAll({where: {PostId: post.id}})
+     const photos = post.Media
      
      for (const photo of photos){
       fs.unlink(photo.url, (err)=>{
@@ -621,15 +670,15 @@ router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), asyn
           console.log(err)
         }
       })
-      await photo.destroy()
+     
      }
      
         
     
-        await handleFiles(files, post)
+        
      }
+     await handlePost(files, post, data, req.user.id)
      
-     await post.save()
      res.redirect(`${process.env.FRONT_END_URL}/home?post=${post.id}`)
   }
 })

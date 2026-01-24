@@ -14,20 +14,8 @@ type coords = {
     latitude: number
     longitude: number
 }
-type Post = {
-    id: number;
-    title:string, 
-    content: string, 
-    Media: Media[]
-    User:User
-}
-type User = {
-  picture: string
-  username: string
-}
-type Media = {
-  url: string;
-};
+import type {Comment, User, Post, Media} from "./page"
+
 
 export default function CreateModal ({url, post, onClose, edit}:ModalProps){
 const [geoAble, setGeoAble] = useState(false)
@@ -59,7 +47,7 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
         
                 
           
-           <form className='feed_modal' method="POST" action={!post ? `${url}/post` : `${url}/post/edit/${post.id}`}
+           <form className='feed_modal' method="POST" action={!post ? `${url}/post` : `${url}/post/edit/${post._id}`}
                     encType='multipart/form-data'>
                          <div className='title_modal_feed'>{post? "Edit post" : "New post"}</div>
                         <button className="x_btn_feed_modal" type="button"
@@ -98,6 +86,8 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
                         value={coords?.longitude ? String(coords.longitude) : ""}/>
                         
                         <button type="submit" className={
+                              edit ? "post_create_btn_ready post_btn_feed_modal"
+                                   :
                             coords ? "post_create_btn_ready post_btn_feed_modal"
                                    :"post_btn_feed_modal"} disabled={!edit && coords === null}>
                          Post

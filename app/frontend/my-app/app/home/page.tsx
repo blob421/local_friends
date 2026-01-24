@@ -13,6 +13,7 @@ export type Region = {
   display_name: string
 }
 export type Post = {
+  _id: String
   id: number;
   title: string;
   content: string;

@@ -50,7 +50,7 @@ export default function PostDetailModal({post, comments, delComment,setComment, 
     const [commentDelType, setCommentDelType] = useState("")
 
 async function submitComment(parent:any, parentSub:any, type:String){
-  const commenturl = url + `/post/${post.id}/comment/feed/${feed}`
+  const commenturl = url + `/post/${post._id}/comment/feed/${feed}`
   await fetchAuth(commenturl, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -62,7 +62,7 @@ const DelComment = async () =>{
   const del_url = `${url}/comment/delete/`
   await fetchAuth(del_url, {
     method: 'POST',
-    body: JSON.stringify({commentId: CommentDelId, commentType: commentDelType, postId: post.id }),
+    body: JSON.stringify({commentId: CommentDelId, commentType: commentDelType, postId: post._id }),
     headers: {'Content-Type': 'application/json'}
    
   }).then(res=> res.json()).then(data => {
@@ -192,7 +192,7 @@ useEffect(() => {
        }
     }
     const DelPost = async ()=>{
-      const delUrl = `${url}/post/${post.id}`
+      const delUrl = `${url}/post/region/${post.Region.id}/id/${post._id}`
       await fetchAuth(delUrl, {method: 'DELETE'}).then(res=> {if (res.status == 401){
         alert('Unauthorized action');
         window.location.href = '/home'
