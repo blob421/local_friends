@@ -1,13 +1,14 @@
-const {Posts, redis} = require('./routes')
+const {redis, Posts} = require('./redis_mongodb')
 const {Followed} = require('./db')
 
-export async function fetchPosts(req, cached, region){
+
+async function fetchPosts(Posts, req, cached, region){
     let posts
     let query_follow
     let query_main
     const userId = req.user.id
     let seenObjectIds
-    
+
     const seen = await redis.smembers(`seen:${userId}`);
     if (cached){
       
@@ -68,3 +69,5 @@ export async function fetchPosts(req, cached, region){
 
       return posts
 }
+
+module.exports = {fetchPosts}

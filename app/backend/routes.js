@@ -1,8 +1,8 @@
 
 
 //////////////////REDIS///////////////////
-const Redis = require("ioredis");
-const redis = new Redis({ host: "localhost", port: 6379 });
+const {redis, Posts} = require('./redis_mongodb.js')
+
 const { ObjectId } =  require("mongodb");
 ////////////////  Utilities  /////////////////
 const {fetchPosts} = require('./fetch_stuff.js')
@@ -21,12 +21,7 @@ const { User, Post, Team, Badge, Region, Media, Animal, Comment
   ,Addresses, Followed , SubComment, UserBadge,
   UserStat,
   UserSettings, sequelize} = require('./db');
-let Posts
-const initMongoRoutes = () =>{
-  const {mongoDb} = require('./mongo.js')
-  const mongo = mongoDb.db('local_friends')
-  Posts = mongo.collection('posts')
-}
+
 
 
 const router = express.Router();
@@ -386,11 +381,11 @@ router.get('/home', authenticateToken, async (req, res) =>{
         region = user.UserSetting.postScopeRegion ? user.RegionId : null
        }    
 
-     posts = await fetchPosts(req, true, region)
+     posts = await fetchPosts(Posts, req, true, region)
 
      if (posts.length < 5){
       await redis.set(`seen:${userId}`, [])
-      posts = await fetchPosts(req, false, region)
+      posts = await fetchPosts(Posts, req, false, region)
     
      }
 
@@ -425,7 +420,7 @@ router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>
   if (posts.length < 5){
 
      await redis.set(`seen:${userId}`, [])
-     posts = await fetchPosts(req, false, region)
+     posts = await fetchPosts(Posts, req, false, region)
   }
  }catch(err){
   console.log(err)
@@ -762,4 +757,4 @@ router.get('/map', authenticateToken, async (req, res)=>{
   )
   res.json({region, pins, user : req.user.username})
 })
-module.exports = {router, initMongoRoutes};
+module.exports = {router};

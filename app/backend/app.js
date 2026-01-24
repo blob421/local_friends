@@ -52,7 +52,8 @@ async function main() {
 
   await connectRabbit()
   await mongoDb.connect()
-   const {router, initMongoRoutes} = require('./routes')
+   const {router} = require('./routes')
+   const {initMongoRoutes} = require('./redis_mongodb.js')
   initMongoRoutes()
   
  
