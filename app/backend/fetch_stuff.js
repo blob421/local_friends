@@ -7,8 +7,10 @@ export async function fetchPosts(req, cached, region){
     let query_main
     const userId = req.user.id
     let seenObjectIds
+    
+    const seen = await redis.smembers(`seen:${userId}`);
     if (cached){
-        const seen = await redis.smembers(`seen:${userId}`);
+      
         seenObjectIds = seen.map(id => new ObjectId(id));
     }
 
@@ -59,6 +61,10 @@ export async function fetchPosts(req, cached, region){
       );
 
       posts = uniquePosts.sort(() => Math.random() - 0.5);
-   
+      if(seen.length == 0){
+        const posts_ids = posts.map(p=> p._id.toString())
+        await redis.sadd(`seen:${userId}`, posts_ids)
+      }
+
       return posts
 }

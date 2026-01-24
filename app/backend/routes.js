@@ -391,6 +391,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
      if (posts.length < 5){
       await redis.set(`seen:${userId}`, [])
       posts = await fetchPosts(req, false, region)
+    
      }
 
 
