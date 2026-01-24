@@ -9,11 +9,11 @@ import { encodeUrlSafe } from '../components/encode';
 const CreateModal = dynamic(()=> import('./create_modal'))
 const PostDetailModal = dynamic(()=> import('./post_detail_modal'))
 export type Region = {
-  id: Number
+  id: number
   display_name: string
 }
 export type Post = {
-  _id: String
+  _id: string
   id: number;
   title: string;
   content: string;
@@ -30,9 +30,9 @@ export type Post = {
 };
 export type Media = {
   url: string;
-  idx: Number;
-  filename: String;
-  mimeType: String;
+  idx: number;
+  filename: string;
+  mimeType: string;
   
 };
 export type Comment = {
@@ -40,16 +40,16 @@ export type Comment = {
   id: string
   User: User
   SubComments: SubComment[]
-  createdAt: String
+  createdAt: string
 }
 export type SubComment = {
   content : string
   id: string
   User: User
   SubComments: SubComment[]
-  createdAt: String
-  CommentId ? : Number
-  ParentId ? : Number
+  createdAt: string
+  CommentId ? : number
+  ParentId ? : number
 }
 export type User = {
   picture: string
@@ -79,7 +79,7 @@ const [commentReload, setCommentReload] = useState("")
 const [regionId, setRegionId] = useState("")
 const [bottomReached, setBottomReached]= useState(false)
 const [noMorePosts, setNoMorePosts] = useState(false)
-const [viewedPostsId, setViewedPostsId] = useState<number[]>([])
+const [viewedPostsId, setViewedPostsId] = useState<string[]>([])
 const [overflowingIds, setOverflowingIds] = useState<string[]>([]);
 
 const removeOverflowingId = (id: string) => {
@@ -227,7 +227,7 @@ if (feed_middle){
 useEffect(()=>{
    if (!bottomReached || noMorePosts){ return}
    
-   const posts_ids = posts.map(post => post.id)
+   const posts_ids = posts.map(post => post._id)
    setViewedPostsId(prev=> [ ...prev, ...posts_ids])
  
 

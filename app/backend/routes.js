@@ -4,7 +4,9 @@
 const Redis = require("ioredis");
 const redis = new Redis({ host: "localhost", port: 6379 });
 const { ObjectId } =  require("mongodb");
-/////////////////////////////////////////
+////////////////  Utilities  /////////////////
+const {fetchPosts} = require('./fetch_stuff.js')
+//////////////////////////////////////////////
 
 const express = require('express');
 const bcrypt = require('bcrypt'); // for password hashing
@@ -363,17 +365,16 @@ router.post('/post', authenticateToken,
 })
 
 
-//
+// SHOWS POSTS OF FOLLOWING WHEN REFRESHING THE MAIN ROUTE , ENSURE NEWEST POSTS AND NEW POSTS
 router.get('/home', authenticateToken, async (req, res) =>{
-  const user = await User.findOne({where: {id: req.user.id},
+  const userId = req.user.id
+  const user = await User.findOne({where: {id: userId},
                                   include: [{model: UserSettings}]})
  
-
   const scope = req.query.scope
   let region
   let posts
-  let cached = null
-  try {
+ 
     if (scope && scope === 'world'){
        region = null
     }
@@ -385,82 +386,22 @@ router.get('/home', authenticateToken, async (req, res) =>{
         region = user.UserSetting.postScopeRegion ? user.RegionId : null
        }    
 
-    try {
+     posts = await fetchPosts(req, true, region)
 
-          if (scope == 'world'){
-            cached = await redis.get("feed:world");
-          }
-          if (scope == 'region'){
-            cached = await redis.get(`feed:region:${user.RegionId}`);
-          }
+     if (posts.length < 5){
+      await redis.set(`seen:${userId}`, [])
+      posts = await fetchPosts(req, false, region)
+     }
 
-      }catch(err){
-        console.log(err)
-      }
 
-      if (cached){
-        posts = JSON.parse(cached)
-
-      }else{
-          const followed = await Followed.findAll({where: {followerId: req.user.id}})  
-
-          const arr = followed.map(follow => follow.followingId)
-
-          const followedPostsNested = await Promise.all(
-            arr.map(async userId => {
-              const query = region
-                ? { "User.id": userId, "Region.id": region }
-                : { "User.id": userId };
-
-              return Posts
-                .find(query)
-                .sort({ id: -1 })
-                .limit(2)
-                .toArray();
-            })
-          );
-
-              const followedPosts = followedPostsNested.flat();
-
-          const mainPostsQuery = region ? { "Region.id": region}: {}
-          const mainstreamPosts =  await Posts
-                                             .find(mainPostsQuery)
-                                             .sort({id: -1})
-                                             .limit(5)
-                                             .toArray()
-
-        const personalizedPosts = [...mainstreamPosts, ...followedPosts]
-        const uniquePosts = Array.from(
-        new Map(personalizedPosts.map(post => [post.id, post])).values()
-      );
-
-      posts = uniquePosts.sort(() => Math.random() - 0.5);
-
-       if (scope == 'world'){
-          await redis.set('feed:world',JSON.stringify(posts), "EX", 300)
-          
-        }
-       if (scope == 'region'){
-          await redis.set(`feed:region:${user.RegionId}`, JSON.stringify(posts), "EX", 300);
-      }
-
-      
+     res.json({posts, user: user, settings: user.UserSetting, region: region})
     }
-  
-    res.json({posts, user: user, settings: user.UserSetting, region: region})
-   
+  )
 
-  
-
-  }catch(err){
-    console.log(err)
-    res.status(500).send({'Error fetching posts': err})
-  }
-
-
-})
+//// CACHES SEEN POSTS AND FETCH MORE POSTS FOR THE FEED 
 router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>{
   const data = req.body.ids
+  const userId = req.user.id
   console.log(req.body)
   const feed = req.params.feed
   const regionId = req.params.regionId
@@ -468,29 +409,29 @@ router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>
   let posts
   try{
 
-  
-  posts = await Post.findAll({where: region ? {RegionId: regionId, id: {[Op.notIn]: data} }
-                                            : {id: {[Op.notIn]: data}},
-                                    
-                                    limit: 15,
-                            include: [{
-                          
-                          model: Media,
-                          attributes: ['url']
-                        },
-                        {
-                          model: Region,
-                          attributes: ['display_name']
-                        },
-                        {model: User, 
-                        attributes: ['username', 'picture', 'id']}]
 
-                      }, )
+  await redis.sadd(`seen:${userId}`, ...data); 
+  await redis.expire(`seen:${userId}`, 60 * 120);
+
+  const seen = await redis.smembers(`seen:${userId}`);
+  const seenObjectIds = seen.map(id => new ObjectId(id));
+ 
+  const query = region
+  ? { "Region.id": regionId, _id: { $nin: seenObjectIds } }
+  : { _id: { $nin: seenObjectIds } };
+  
+  posts = await Posts.find(query).sort({id: -1}).limit(15).toArray()
+  if (posts.length < 5){
+
+     await redis.set(`seen:${userId}`, [])
+     posts = await fetchPosts(req, false, region)
+  }
  }catch(err){
   console.log(err)
  }
  if (posts){
  res.json({posts})
+
  }else{
   res.sendStatus(400)
  }
