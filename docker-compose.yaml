@@ -41,7 +41,7 @@ services:
       node worker.js
     depends_on:
       - rabbitmq
-      - db
+      - postgres
 
  
   pika:
@@ -74,7 +74,7 @@ services:
     image: postgres:17
    
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - /usr/src/app/csv:/usr/src/app/csv/:ro

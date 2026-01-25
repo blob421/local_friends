@@ -1,8 +1,8 @@
 
 
 //////////////////REDIS///////////////////
-const {redis, Posts} = require('./redis_mongodb.js')
-
+const {redis} = require('./redis_mongodb.js')
+const {getPosts} = require('./redis_mongodb.js')
 const { ObjectId } =  require("mongodb");
 ////////////////  Utilities  /////////////////
 const {fetchPosts} = require('./fetch_stuff.js')
@@ -13,12 +13,12 @@ const bcrypt = require('bcrypt'); // for password hashing
 const jwt = require('jsonwebtoken');
 const { Op } = require('sequelize');
 const {getChannel} = require('./rabbit')
-////////////////// BROKER ///////////////////////
-const amqp = require('amqplib/callback_api')
+
+
 /////////////////////////////////////////////////////
 
-const { User, Post, Team, Badge, Region, Media, Animal, Comment
-  ,Addresses, Followed , SubComment, UserBadge,
+const { User, Team, Badge, Region, Animal
+  , Addresses, Followed , UserBadge,
   UserStat,
   UserSettings, sequelize} = require('./db');
 
@@ -62,6 +62,8 @@ const uploadUser = multer({storage : storageUser})
 
 
 const handlePost = async (files, post, data, userId) => {
+  const Posts = getPosts()
+  let postId = null
   try {
     const media_arr = [];
     if (files && files.length > 0) {
@@ -118,6 +120,7 @@ const handlePost = async (files, post, data, userId) => {
 
             }else{
               await redis.zadd(`region:${post.Region.id}`, status.insertedId.toString())
+              postId = status.insertedId.toString()
             }
       }
 
@@ -128,7 +131,7 @@ const handlePost = async (files, post, data, userId) => {
       media_arr.forEach(media => {
         const payload = JSON.stringify({
           path: media.url,
-          postId: post.id,
+          postId: postId? postId: post._id.toString(),
           arr_idx: media.idx
         });
 
@@ -337,26 +340,16 @@ router.post('/post', authenticateToken,
   const post = {id: postId ,title: data.title, content: data.content, 
                 Region: {id: user.RegionId, display_name: region.display_name}, 
                 User: {id: user.id, username:user.username, picture:user.picture}, 
-                longitude: data.longitude, latitude: data.latitude, Comments:[], SubComments:[]}
+                longitude: data.longitude, latitude: data.latitude, Comments:[], SubComments:[],
+                guessed_animal: null, createdAt: new Date()}
 
 
- // const post = await Post.create({title: data.title, content: data.content, 
-  // RegionId: user.RegionId, UserId: user.id, longitude: data.longitude, latitude: data.latitude })
-
-  try {
-
-  await redis.del('feed:world');
-  await redis.del(`feed:region:${user.RegionId}`);
-
-  }catch(err){
-    console.log(err)
-  }
 
   const files = req.files
   await handlePost(files, post, null, null)
  
 
-  res.redirect(`${process.env.FRONT_END_URL}/home`)
+    res.redirect(`${process.env.FRONT_END_URL}/home`)
 })
 
 
@@ -398,6 +391,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
 router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>{
   const data = req.body.ids
   const userId = req.user.id
+  const Posts = getPosts()
   console.log(req.body)
   const feed = req.params.feed
   const regionId = req.params.regionId
@@ -437,7 +431,7 @@ router.get('/images', async (req, res)=>{
 
 })
 router.post('/comment/delete/', authenticateToken, async (req, res)=>{
-  
+  const Posts = getPosts()
   const data = req.body
   console.log(data)
   const commentId = data.commentId
@@ -498,6 +492,7 @@ router.post('/comment/delete/', authenticateToken, async (req, res)=>{
 
 router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) => {
   const postId = req.params.id
+  const Posts = getPosts()
   const feed = req.params.feed
   const data = req.body
   console.log(data)
@@ -574,6 +569,7 @@ res.json({id: CommentId, parentId: parentSubcomment, commentId:parentComment})
 router.delete('/post/region/:regionId/id/:id', authenticateToken, async (req, res)=>{
   const id = req.params.id
   const regionId = req.params.regionId
+  const Posts = getPosts()
  try{
   
    const status = await Posts.deleteOne({_id: new ObjectId(id), "User.id": req.user.id})
@@ -592,6 +588,7 @@ router.delete('/post/region/:regionId/id/:id', authenticateToken, async (req, re
 router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), async (req, res)=>{
   const id = req.params.id
   const data = req.body
+  const Posts = getPosts()
   const post = await Posts.findOne({_id: new ObjectId(id)})
 
 
@@ -742,19 +739,18 @@ router.get('/animals', authenticateToken, async(req, res)=>{
 ///////////////////////////////////// MAP /////////////////////////////////////////////
 
 router.get('/map', authenticateToken, async (req, res)=>{
+  const Posts = getPosts()
   const user = await User.findOne({where: {id: req.user.id}})
 
   const region = await Region.findOne({where: {id: user.RegionId}})
   const now = new Date()
   const oneYearAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 365 )
-  const pins = await Post.findAll({ include: [{model: User, attributes: ['username', 'id']}, {model:Media}] ,
-                                    where: {RegionId: region.id, guessed_animal: {[Op.ne]: null},
-                                    createdAt: {
-                                                   [Op.between]: [oneYearAgo, now]},
-                                                   
-                                    
-                                  }}
-  )
+
+  const pins = await Posts.find({"Region.id": region.id, guessed_animal: {$ne: null}, 
+                                  createdAt: { $gte: oneYearAgo, $lte: now }})
+
+ 
+  
   res.json({region, pins, user : req.user.username})
 })
 module.exports = {router};

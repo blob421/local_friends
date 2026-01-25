@@ -1,11 +1,11 @@
 const amqp = require('amqplib')
 const { Sequelize, Op, where } = require("sequelize");
-const {User, Post, UserStat, UserBadge, Badge, Followed} = require('../backend/db')
-
-
+const {User, UserStat, UserBadge, Badge, Followed} = require('../backend/db')
+const {getPosts} = require('../backend/redis_mongodb')
+const { ObjectId } = require("mongodb");
 
 async function listen_animal_results(channel){
-   
+    const Posts = getPosts()
     const queueName = 'results_animal'
     await channel.assertQueue(queueName, {durable: true})
     await channel.consume(queueName, async msg => {
@@ -13,10 +13,12 @@ async function listen_animal_results(channel){
 
         try {
             const data = JSON.parse(msg.content.toString())
-            const post = await Post.findOne({where: {id: data.postId}})
-            
-            post.guessed_animal = data.prediction
-            await post.save()
+            const status = await Posts.updateOne(
+               { _id: new ObjectId(data.postId) },
+               {
+                 $set: {guessed_animal: data.prediction}
+               }
+            )
             channel.ack(msg)
 
          }catch(err){
@@ -28,19 +30,19 @@ async function listen_animal_results(channel){
 }
 async function check_stats(channel){
    setInterval(async () => {
+     const Posts = getPosts()
      const users = await User.findAll()
      const now = new Date();
      const twoHoursAgo = new Date(now.getTime() - 1000 * 60 * 60 * 2);
      const badges = await Badge.findall({ order: [['id', 'ASC']] })
-
+     
      
      for (const user of users){
+        const query = {"User.id": user.id, createdAt: {$lte: now, $gte: twoHoursAgo}}
         const userStat = await UserStat.findOne({where: {UserId: user.id}})
-        const posts = await Post.findAll({where: {UserId: user.id, 
-                                            createdAt: {
-                                                   [Op.between]: [twoHoursAgo, now]
-                                    }},
-                                    })
+       
+        const posts = await Posts.find(query)
+
         let valid_animals_detected = 0 
 
         posts.forEach(post=>{

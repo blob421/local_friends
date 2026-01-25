@@ -118,7 +118,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
                     placeholder="New password"></input>
               </div>
               <div>
-                   <div>Confirm:</div>
+                   <div>Confirm password:</div>
                   <input type="password" name="password_2"
               onChange={(e)=> setPassConf(e.target.value)}
               placeholder="Confirm" autoComplete="new-password"></input>

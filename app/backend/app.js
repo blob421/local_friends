@@ -54,7 +54,7 @@ async function main() {
   await mongoDb.connect()
    const {router} = require('./routes')
    const {initMongoRoutes} = require('./redis_mongodb.js')
-  initMongoRoutes()
+  await initMongoRoutes()
   
  
   app.use('/', router);

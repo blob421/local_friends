@@ -12,6 +12,7 @@ async function fetchPosts(req, cached, region){
     let seenObjectIds
 
     const seen = await redis.smembers(`seen:${userId}`);
+    
     if (cached){
       
         seenObjectIds = seen.map(id => new ObjectId(id));
