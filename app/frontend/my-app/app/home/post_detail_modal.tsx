@@ -20,6 +20,7 @@ type PostDetailModalProps = {
   commentReload: string
   delComment: (commentId:any, type: String, subComments:Number[]) => void
   setComment: (type:String, content:string, id?:any, commentId?:any, parentId?:any) => void
+  delPost: (post:Post) => void
 }
 
 type Image = {
@@ -28,7 +29,7 @@ type Image = {
 
 
 export default function PostDetailModal({post, comments, delComment,setComment, onClose, user, feed, 
-  commentReload}:PostDetailModalProps){
+  commentReload, delPost}:PostDetailModalProps){
 
     const url = process.env.NEXT_PUBLIC_API_URL
     const [images, setImages] = useState<Image[]>([])
@@ -50,7 +51,7 @@ export default function PostDetailModal({post, comments, delComment,setComment, 
     const [commentDelType, setCommentDelType] = useState("")
 
 async function submitComment(parent:any, parentSub:any, type:String){
-  const commenturl = url + `/post/${post._id}/comment/feed/${feed}`
+  const commenturl = url + `/post/${String(post._id)}/comment/`
   await fetchAuth(commenturl, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -195,10 +196,10 @@ useEffect(() => {
       const delUrl = `${url}/post/region/${post.Region.id}/id/${post._id}`
       await fetchAuth(delUrl, {method: 'DELETE'}).then(res=> {if (res.status == 401){
         alert('Unauthorized action');
-        window.location.href = '/home'
+    
       }
        if(res.status == 202){
-        window.location.href= '/home'
+       delPost(post)
        }})
     }
     return(

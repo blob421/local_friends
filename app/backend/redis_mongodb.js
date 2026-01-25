@@ -1,5 +1,12 @@
 const Redis = require("ioredis");
-const redis = new Redis({ host: "localhost", port: 6379 });
+let redis
+if (!process.env.worker){
+const runMode = process.env.runModeLocalFriends || 'Dev'
+redis = runMode == 'Dev' ? new Redis({ host: "localhost", port: 6379 })
+                               : new Redis({ host: "redis", port: 6379 })
+
+}
+
 let Posts
 const initMongoRoutes = async () =>{
   const {mongoDb} = require('./mongo.js')

@@ -33,16 +33,18 @@ function FitBBox({ bbox }: { bbox: BBox }) {
 
 type MapComponentProps = {
   setPost: (post:Post) => void
-  setUser: (username:string) => void
+  setUser: (user:User) => void
   setCommentReload: (id:string) => void
+  setPosts: (posts: Post[]) => void
+  posts: Post[]
 }
 
-import type {Post, Media, User, Region } from "../home/page.tsx"
-export default function Map({setPost, setUser, setCommentReload}: MapComponentProps) {
+import type {Post, Media, User, Region} from "../home/page.tsx"
+export default function Map({setPost, setUser, setCommentReload, setPosts, posts}: MapComponentProps) {
   const [bbox, setBbox] = useState<BBox | null>(null);
   const [coords, setCoords] = useState<Coords | null>(null);
   const [pinCoords, setPinCoords] = useState<pins | undefined>(undefined)
-  const [posts, setPosts] = useState<Post[]>([])
+
 
 ///////////////////////// CACHE AND ICON /////////////////////////////
 
@@ -70,9 +72,13 @@ const animalIcon = (name: string) => {
         const pin_lists = data.pins.filter((post:Post) => post.latitude).map((post:Post)=>{
    
            const dict = {latitude: post.latitude, longitude: post.longitude,
-                         animal: post.guessed_animal, id: post.id, guessed_animal: post.guessed_animal,
-                        User: {id: post.User.id, username: post.User.username}, Media: post.Media, 
-                          content: post.content, title: post.title}
+                         animal: post.guessed_animal, _id: post._id, id: post.id, 
+                         guessed_animal: post.guessed_animal,
+                        User: {id: post.User.id, username: post.User.username, picture:post.User.picture}, 
+                        Media: post.Media, 
+                        Region: post.Region,
+                        content: post.content, title: post.title, Comments:post.Comments,
+                        SubComments:post.SubComments}
            
            return dict
         

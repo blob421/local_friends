@@ -65,7 +65,7 @@ const handlePost = async (files, post, data, userId) => {
   const Posts = getPosts()
   let postId = null
   try {
-    const media_arr = [];
+    let media_arr = [];
     if (files && files.length > 0) {
       
 
@@ -119,7 +119,7 @@ const handlePost = async (files, post, data, userId) => {
               console.log('Insert failed mongodb, handlefiles');
 
             }else{
-              await redis.zadd(`region:${post.Region.id}`, status.insertedId.toString())
+           
               postId = status.insertedId.toString()
             }
       }
@@ -455,7 +455,7 @@ router.post('/comment/delete/', authenticateToken, async (req, res)=>{
   merged = []
 }
       await Posts.updateOne(
-          {id: parseInt(postId)},
+          {_id: new ObjectId(postId)},
           {
           $pull:{
             "Comments": {id: parseInt(commentId) },
@@ -471,7 +471,7 @@ router.post('/comment/delete/', authenticateToken, async (req, res)=>{
                              .map(ss => ss.id))
      merged = [...subSubToDelete, commentId];
      await Posts.updateOne(
-       {id: parseInt(postId)},
+       {_id: new ObjectId(postId)},
           {
           $pull:{
             'SubComments': { id: {$in: merged}},
@@ -490,10 +490,10 @@ router.post('/comment/delete/', authenticateToken, async (req, res)=>{
 })
 
 
-router.post('/post/:id/comment/feed/:feed',authenticateToken, async (req, res) => {
+router.post('/post/:id/comment/',authenticateToken, async (req, res) => {
   const postId = req.params.id
   const Posts = getPosts()
-  const feed = req.params.feed
+  
   const data = req.body
   console.log(data)
   const user = await User.findOne({where: {id: req.user.id}})
@@ -747,10 +747,10 @@ router.get('/map', authenticateToken, async (req, res)=>{
   const oneYearAgo = new Date(now.getTime() - 1000 * 60 * 60 * 24 * 365 )
 
   const pins = await Posts.find({"Region.id": region.id, guessed_animal: {$ne: null}, 
-                                  createdAt: { $gte: oneYearAgo, $lte: now }})
+                                  createdAt: { $gte: oneYearAgo, $lte: now }}).toArray()
 
  
-  
-  res.json({region, pins, user : req.user.username})
+  console.log(pins)
+  res.json({region:region, pins:pins, user:req.user.username})
 })
 module.exports = {router};

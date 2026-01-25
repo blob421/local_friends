@@ -1,13 +1,17 @@
 FROM node:21-alpine
+
+RUN apk add --no-cache postgresql-client
+
 WORKDIR /usr/src/app
 
-COPY package.json yarn.lock entrypoint.sh ./
-COPY ./app/backend/package.json ./app/backend/
-RUN chmod +x ./entrypoint.sh
+COPY ML/animals.json ./app/ML
+COPY package.json yarn.lock .sequelizerc ./
 
-RUN yarn install --production --cwd app/backend
+## app/app/backend
+COPY ./app/backend ./app/backend 
+RUN yarn install --production
 
-COPY ./app/backend ./app/backend
 WORKDIR /usr/src/app/app/backend
-
+RUN chmod +x ./entrypoint.sh
+WORKDIR /usr/src/app
 

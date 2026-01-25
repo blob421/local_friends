@@ -4,7 +4,7 @@ import {fetchAuth} from '../components/fetch'
 import $ from 'jquery'
 import dynamic from 'next/dynamic';
 import { encodeUrlSafe } from '../components/encode';
-
+import { truncateText } from '../components/truncate_text';
 
 const CreateModal = dynamic(()=> import('./create_modal'))
 const PostDetailModal = dynamic(()=> import('./post_detail_modal'))
@@ -313,15 +313,7 @@ const setVisiblePopUp = (id:string) => {
 }
 
 
-function truncateText(el: HTMLElement, lines: number) {
- 
-  const lineHeight = parseFloat(getComputedStyle(el).lineHeight);
-  const maxHeight = lineHeight * lines;
 
-  while (el.scrollHeight > maxHeight) {
-    el.textContent = el.textContent!.replace(/\W*\s(\S)*$/, '...');
-  }
-}
 
 return (
  
@@ -459,7 +451,10 @@ return (
             
           {createModal && <CreateModal url={url} onClose={()=> setModal(false)}/>}    
           {postDetailModal && (activePost && <PostDetailModal feed={postScope} commentReload={commentReload}
-          comments={comments} 
+          comments={comments} delPost={(post)=> {
+            setPosts(prev=> prev.filter(p=> p.id !== post.id));
+            setPostDetailModal(false)
+          }}
           delComment={(commentId, type, subComments) => {
           
           setPosts(prev =>

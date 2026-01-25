@@ -101,13 +101,13 @@ async function check_stats(channel){
 
 async function main(){
     //////////INIT DB
-    const sequelize = new Sequelize('postgres://postgres:1246@db:5432/js-backend');
+    const sequelize = new Sequelize('postgres://postgres:1246@postgres:5432/js-backend');
     await sequelize.authenticate()
 
 
 
     //////////INIT RABBITMQ
-    const connection = await amqp.connect('amqp://admin:secret@localhost:5672')
+    const connection = await amqp.connect('amqp://admin:secret@rabbitmq:5672')
     const channel = await connection.createChannel()
 
 

@@ -1,7 +1,12 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
 
- // const sequelize = new Sequelize('postgres://postgres:1246@postgres:5432/js-backend')
-const sequelize = new Sequelize('postgres://postgres:1246@localhost:5432/js-backend')
+
+const runMode = process.env.runModeLocalFriends || 'Dev'
+const sequelize = runMode == 'Dev' 
+                              ? new Sequelize('postgres://postgres:1246@localhost:5432/js-backend')
+                              : new Sequelize('postgres://postgres:1246@postgres:5432/js-backend')
+
+
 
 ///Squelize cli :
 /// yarn sequelize-cli migration:generate --name add-users-table

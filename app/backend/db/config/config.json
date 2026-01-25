@@ -17,8 +17,8 @@
     "username": "postgres",
     "password": "1246",
     "database": "js-backend",
-    "host": "db",
+    "host": "postgres",
     "dialect": "postgres",
-    "port": 5433
+    "port": 5432
   }
 }

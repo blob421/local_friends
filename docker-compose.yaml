@@ -3,19 +3,40 @@ services:
     build:
       context: .
       dockerfile: ./app/backend/Dockerfile
-    entrypoint: ['entrypoint.sh']
+
+    entrypoint: ["/usr/src/app/app/backend/entrypoint.sh"]
+
       
-    
+    environment:
+      - NODE_ENV=production
     volumes:
       - mediaData:/usr/src/app/media/
     ports:
       - "3000:3000"
+    env_file:
+      - .env
+    
     depends_on:
       - rabbitmq
       - postgres
     restart:
        always
 
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: local_friends 
+    ports: 
+      - "27017:27017" 
+    volumes: 
+      - mongoData:/data/db 
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
 
   frontend:
     build:
@@ -39,9 +60,12 @@ services:
       always
     command:
       node worker.js
+    env_file:
+      - ./app/scheduler/.env
     depends_on:
       - rabbitmq
       - postgres
+      - redis
 
  
   pika:
@@ -56,6 +80,8 @@ services:
     env_file:
       - .env
     restart: always
+    depends_on:
+      - rabbitmq
 
   
   rabbitmq:
@@ -74,7 +100,7 @@ services:
     image: postgres:17
    
     ports:
-      - "5434:5432"
+      - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
       - /usr/src/app/csv:/usr/src/app/csv/:ro
@@ -88,3 +114,4 @@ services:
 volumes:
     pgdata:
     mediaData:
+    mongoData:
