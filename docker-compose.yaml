@@ -58,8 +58,7 @@ services:
         ./app/scheduler/Dockerfile
     restart:
       always
-    command:
-      node worker.js
+    entrypoint: ["/usr/src/app/app/scheduler/entrypoint.sh"]
     env_file:
       - ./app/scheduler/.env
     depends_on:

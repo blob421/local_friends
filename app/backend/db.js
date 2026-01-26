@@ -150,7 +150,8 @@ Team.init(
   },
     {
     sequelize,
-    modelName: 'Team'
+    modelName: 'Team',
+    timestamps: false
   }
 )
 class Badge extends Model {}
