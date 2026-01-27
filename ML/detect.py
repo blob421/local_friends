@@ -12,7 +12,7 @@ for attempt in range(5):
                 results = model.predict(job.get('path'))
                 if results[0]:
                      
-                    prediction = results[0].names[0].to_json()
+                    prediction = results[0].names[0]
                 else:
                      prediction = None
                      

@@ -67,7 +67,7 @@ async function fetchPosts(req, cached, region){
       posts = uniquePosts.sort(() => Math.random() - 0.5);
       if(seen.length == 0){
         const posts_ids = posts.map(p=> p._id.toString())
-        await redis.sadd(`seen:${userId}`, posts_ids)
+        await redis.sadd(`seen:${userId}`, ...posts_ids)
       }
 
       return posts

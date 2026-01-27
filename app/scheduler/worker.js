@@ -1,7 +1,7 @@
 const amqp = require('amqplib')
 const { Sequelize, Op, where } = require("sequelize");
 const {User, UserStat, UserBadge, Badge, Followed} = require('../backend/db')
-const {getPosts} = require('../backend/redis_mongodb')
+const {getPosts, initMongoRoutes} = require('../backend/redis_mongodb')
 const { ObjectId } = require("mongodb");
 
 async function listen_animal_results(channel){
@@ -105,7 +105,7 @@ async function main(){
     await sequelize.authenticate()
 
 
-
+    await initMongoRoutes()
     //////////INIT RABBITMQ
     const connection = await amqp.connect('amqp://admin:secret@rabbitmq:5672')
     const channel = await connection.createChannel()
