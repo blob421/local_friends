@@ -50,6 +50,10 @@ services:
      - PORT=3001
     restart:
       always
+      
+    volumes:
+      - mediaData:/usr/src/app/media/
+
   worker:
     build:
       context:

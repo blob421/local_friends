@@ -17,6 +17,15 @@ module.exports = {
         allowNull: false,
       },
       
+      TeamId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Teams",
+          key: "id"
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
       picture: {
         type: Sequelize.STRING,
 
@@ -27,16 +36,6 @@ module.exports = {
         type: Sequelize.STRING,
 
         allowNull: false,
-      },
-
-      TeamId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Teams",
-          key: "id"
-        },
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE",
       },
 
       UserId: {

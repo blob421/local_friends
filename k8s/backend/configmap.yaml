@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: express-env
+data:
+  POSTGRES_DB: js-backend
+  POSTGRES_USER: postgres
+  POSTGRES_HOST: postgres
+  POSTGRES_PASSWORD: "1246"
+  runModeLocalFriends: Prod
+  NODE_ENV: production

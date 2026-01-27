@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: backend
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:     
+      containers:
+        - name: express
+          image:  blob421/local_friends-backend:latest
+          command: ["/bin/bash", "-c", "./entrypoint.sh"]
+          ports:
+           - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: express-env
+          resources:
+            limits:
+              cpu:
+                 "2000m"
+              memory:
+                  "4Gi"
+            requests:
+               cpu: "1000m"
+               memory: "2Gi"
+
+          volumeMounts:
+              - name: media-pvc
+                mountPath: /usr/src/media
+      volumes:
+        - name: media-pvc
+          persistentVolumeClaim:
+            claimName: mediaData
+    
+            
+
+   

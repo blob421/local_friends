@@ -3,7 +3,11 @@ downloads/
 backend/.fur
 ML/animals/
 regions.csv
-
+app/backend/db/pg_csv/Addresses.csv
+app/backend/db/pg_csv/Badges.csv
+app/backend/db/pg_csv/Regions.csv
+parse_addresses_name_merged.py
+test_img/
 .env
 .vscode/
 __pycache__/
