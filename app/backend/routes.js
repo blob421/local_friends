@@ -132,6 +132,7 @@ const handlePost = async (files, post, data, userId) => {
         const payload = JSON.stringify({
           path: media.url,
           postId: postId? postId: post._id.toString(),
+          userId: userId,
           arr_idx: media.idx
         });
 

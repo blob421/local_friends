@@ -5,6 +5,7 @@ const {getPosts, initMongoRoutes} = require('../backend/redis_mongodb')
 const { ObjectId } = require("mongodb");
 
 async function listen_animal_results(channel){
+   let data
     const Posts = getPosts()
     const queueName = 'results_animal'
     await channel.assertQueue(queueName, {durable: true})
@@ -12,11 +13,12 @@ async function listen_animal_results(channel){
       if(msg){
 
         try {
-            const data = JSON.parse(msg.content.toString())
+            data = JSON.parse(msg.content.toString())
+            const guessed_animal = data.prediction
             const status = await Posts.updateOne(
                { _id: new ObjectId(data.postId) },
                {
-                 $set: {guessed_animal: data.prediction}
+                 $set: {guessed_animal: guessed_animal}
                }
             )
             channel.ack(msg)
@@ -24,6 +26,12 @@ async function listen_animal_results(channel){
          }catch(err){
             console.log(err)
          }
+         if (data.prediction !== null){
+               const stats = UserStat.findOne({where: {UserId: data.userId}})
+               stats.found += 1
+               stats.save()
+         }
+    
       }
     })
 

@@ -20,7 +20,8 @@ for attempt in range(5):
                 ch.basic_publish(
                      exchange = '',
                      routing_key='results_animal',
-                     body = json.dumps({'postId': job.get('postId'), 'prediction': prediction}),
+                     body = json.dumps({'postId': job.get('postId'), 'prediction': prediction, 
+                                        'userId':job.get('userId')}),
                      properties=pika.BasicProperties(delivery_mode=2)  # make message persistent
 
 
