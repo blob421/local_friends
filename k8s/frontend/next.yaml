@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: next
+spec:
+  selector:
+    matchLabels:
+      app: next
+  template:
+    metadata:
+      labels:
+        app: next
+    spec:
+      containers:
+      - name: next
+        command: ["/bin/bash", "yarn start"]
+        image: blob421/local_friends-frontend:latest
+        envFrom:
+          - configMapRef:
+              name: next-env
+        resources:
+          limits:
+            memory: "2Gi"
+            cpu: "2000m"
+          requests:
+            memory: "1Gi"
+            cpu: "2000m"
+        ports:
+        - containerPort: 3001
+
+        volumeMounts:
+              - name: media-pvc
+                mountPath: /usr/src/app/media/
+
+      volumes:
+        - name: media-pvc
+          persistentVolumeClaim:
+            claimName: mediaData

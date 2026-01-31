@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: worker-env
+data:
+  worker: "true"
+  runModeLocalFriends: Prod
