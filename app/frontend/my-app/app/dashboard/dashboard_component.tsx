@@ -71,7 +71,8 @@ export default function DashboardMain({visitor}: DashboardProps){
      const [userBadge, setUserBadge]= useState<UserBadge[]>([])
      const [obtainedBadges, setObtainedBadges] = useState<number[]>([])
      const [hoveredBadge, setHoveredBadge] = useState<number | null>(null)
-
+     const [summary, summaryToggled] = useState(true)
+     const [postPage, postsToggled] = useState(false)
      const [showModal, setModal] = useState(false)
      const [modalTriggered, setModalTriggered] = useState(false)
      const [animalModal, setAnimalModal] = useState(false)
@@ -199,7 +200,7 @@ const follow = async () => {
    console.log("reqUser:", reqUser, "id:", id, "following:", following);
 
      return (
-      <div className="dash_cont" id="dash_cont">
+      <div className="dash_cont container-fluid w-100" id="dash_cont">
         {visitor && <div id="follow_popup" className={followClicked2 ? "shrink": ""} >
                           <div id="follow_href" className={followClicked? "fadeout": ""} onClick={()=>{
                              
@@ -216,16 +217,30 @@ const follow = async () => {
                    </div>
           }
         <div className="row outer_row_dash">
-           <div className="col-md-1 d-flex flex-row flex-md-column
-               align-items-center pt-2 pb-2 pt-md-4 pb-md-0 menu_options">
-
-
+           <div className="col-lg-1 d-flex flex-row flex-lg-column gap-4 gap-lg-4 pl-4 pl-lg-0
+               mt-0 
+               align-items-center pt-3 pb-1 pt-lg-5 pb-lg-0 menu_options justify-content-lg-start justify-content-center"
+               >
+              {!visitor && <div className="dash_img_menu_cont">
+                                  <img src="/avatar.png" alt="stats_icon" 
+                                  className={summary ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
+                                   onClick={()=> summaryToggled(true)}/>
+                                  <div className={"hint_div_dash"}>Summary</div>
+                          </div>
+              }
+              {!visitor && <div className="dash_img_menu_cont">
+                                  <img src="/feed_icon2.png" alt="stats_icon" 
+                                  className={postPage ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
+                                   onClick={()=> {postsToggled(true); summaryToggled(false)}}/>
+                                  <div className={"hint_div_dash"}>Posts</div>
+                          </div>
+              }
 
         
               {!visitor && <div className="dash_img_menu_cont">
                                   <img src="/group_icon.png" alt="stats_icon" 
                                   className={followerModal ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
-                                  width={30} height={30} onClick={()=> setFollowerModal(true)}/>
+                                   onClick={()=> {setFollowerModal(true); summaryToggled(false)}}/>
                                   <div className={"hint_div_dash"}>Followers</div>
                           </div>
               }
@@ -233,7 +248,7 @@ const follow = async () => {
               {!visitor && <div className="dash_img_menu_cont">
                                 <Image src="/gear_icon.png" alt="gear_icon" 
                                 className={optionsModal ? 'selected_tab_dash dash_tab_icon': "dash_tab_icon"}
-                                width={30} height={30} onClick={()=> setOptionsModal(true)}/>
+                                width={30} height={30} onClick={()=> {setOptionsModal(true); summaryToggled(false)}}/>
                                 <div className={"hint_div_dash"}>Settings</div>
                           </div>
               }
@@ -242,11 +257,11 @@ const follow = async () => {
 
 
            </div>
-            <div className="col-md-11">
+            <div className="col-lg-11">
 
                 <div className="row justify-content-center">
                  
-                     <div className="col-12 top_bar_dashboard">
+                     <div className="col-12 mb-1 mb-lg-0 top_bar_dashboard">
                        {!visitor ? `Welcome ${username}`
                                  : `You are viewing the profile of ${username}` }
 
@@ -257,86 +272,11 @@ const follow = async () => {
                         }
                      </div>
                 </div>
-                <div className="row justify-content-center">
+
+                <div className="row d-flex justify-content-center top_dash_row">
                   
-                    <div className="col-md-5">
-                          <div className="rectangle">
-                              {!visitor &&<Image src={"/pen.png"} alt="Edit" height={25} 
-                            width={25} className="edit_icon_dash"
-                            onClick={
-                              ()=>{ 
-                              setAnimalModal(true); 
-                              $('#profile_modal_bg_animal').show()
-                              }
-                              }/>}
-                                <div className="team_upper">
-                                   {team}
-                                   {!team && 'Team'}
-
-                                </div>
-                                
-                                <div className="teams_grid">
-                                     <div className="animal_pic_cont">
-                                              {animalPic && 
-                                              <img src={animalPic}
-                                                alt="" className="animal_ico">
-                                              </img>}
-                                     </div>
-                                    
-                                      {!animalPic && <div className="no_team_content">
-                                            No team yet , click on the pen icon and pick your favorite animal ⭐
-                                           </div>
-                                           }
-                                     <div className="animal_desc_dash">
-                                       
-                                   
-                                          <div className="animal_title_dash">
-                                          {animalName}
-                                            </div>
-                                          {animalName && <div className="animal_text_dash">
-                                           {animalDesc}
-
-                                          </div>}   
-                                   </div>
-                                
-                                </div>
-                          </div>
-                    </div>
-                      <div className="col-md-5">
-                          <div className="rectangle">
-                              <div className="badges_title">
-                                Badges
-                              </div>
-
-                              <div className="badge_grid_dash">
-                              {badges.map(b=>{
-                                return <div className={"single_badge_div"} key={b.id}>
-                                        <img src={b.picture} className={obtainedBadges.includes(b.id) ? 
-                                          "badge_image": "badge_image grey_badge"}
-                                            onMouseEnter={()=>{setHoveredBadge(b.id)}}
-                                            onMouseLeave={()=>{setHoveredBadge(null)}}
-                                            onClick={()=>{setHoveredBadge(b.id)}}/>
-
-                                            <div className={hoveredBadge == b.id ? "badge_desc_info visible"
-                                                                                 : "badge_desc_info"
-                                            } 
->
-
-                                              {b.description}
-                                            </div>
-                                       </div>        
-                              })}
-                            </div>
-
-                          </div>            
-                        
-                    </div>
-                
-                </div>
-                <div className="row d-flex justify-content-center">
-                  
-                    <div className="col-md-5">
-                          <div className="rectangle">
+                    <div className="col-lg-5">
+                          <div className="rectangle mt-1 mb-2 m-large-2 m-0">
                            {!visitor && <Image src={"/pen.png"} alt="Edit" height={25} 
                             width={25} className="edit_icon_dash"
                             onClick={
@@ -348,7 +288,7 @@ const follow = async () => {
                               }/>}
 
                            
-                              <div className="account_top">
+                              <div className="account_top dashboard_squares_titles">
                                   Account
                               </div>
                               <div className="account_bot">
@@ -366,25 +306,27 @@ const follow = async () => {
 
                                 <div className="info_left">
                                   
-                                    <ul>
-                                        <li>Username: {username}</li>
-                                        <li>Name: {firstName + " "}{lastName}</li>
-                                        <li className="text_elipsis">Email: {email}</li>
-                                        <li>Region: {region?.name? region.name: <div className="add_a_region_red">
-                                          Add a region to unlock the feed
-                                          </div>}</li>
-                                      </ul>
+                                 <div className="user_square_ul">
+                                        <div><strong>Username: </strong>{username}</div>
+                                        <div><strong>Name: </strong>{firstName + " "}{lastName}</div>
+                                        <div className="text_elipsis"><strong>Email: </strong>{email}</div>
+                                        <div><strong>Region: </strong>{region?.name? region.name: 
+                                            <div className="add_a_region_red">
+                                            Add a region to unlock the feed
+                                            </div>
+                                            }
+                                        </div>
 
                                 </div>
-
+                                </div>
                                  
                               </div>
 
                           </div>
                     </div>
-                      <div className="col-md-5">
-                          <div className="rectangle">
-                               <div className="stats_top">
+                      <div className="col-lg-5">
+                          <div className="rectangle mt-1 mb-2 m-large-2 m-0">
+                               <div className="stats_top dashboard_squares_titles">
                                  Stats
                                </div>
                                 <div className="stats_bot">
@@ -396,6 +338,82 @@ const follow = async () => {
                                </div>
                             
                           </div>            
+                        
+                    </div>
+                
+                </div>
+                <div className="row justify-content-center">
+                  
+              <div className="col-lg-5">
+                    <div className="rectangle mt-1 mb-2 m-large-2 m-0">
+                        {!visitor &&<Image src={"/pen.png"} alt="Edit" height={25} 
+                      width={25} className="edit_icon_dash"
+                      onClick={
+                        ()=>{ 
+                        setAnimalModal(true); 
+                        $('#profile_modal_bg_animal').show()
+                        }
+                        }/>}
+                          <div className="team_upper dashboard_squares_titles">
+                              {team}
+                              {!team && 'Team'}
+
+                          </div>
+                          
+                          <div className="teams_grid">
+                                <div className="animal_pic_cont">
+                                        {animalPic && 
+                                        <img src={animalPic}
+                                          alt="" className="animal_ico">
+                                        </img>}
+                                </div>
+                              
+                                {!animalPic && <div className="no_team_content">
+                                      No team yet , click on the pen icon and pick your favorite animal ⭐
+                                      </div>
+                                      }
+                                <div className="animal_desc_dash">
+                                  
+                              
+                                    <div className="animal_title_dash">
+                                    {animalName}
+                                      </div>
+                                    {animalName && <div className="animal_text_dash">
+                                      {animalDesc}
+
+                                    </div>}   
+                              </div>
+                          
+                          </div>
+                    </div>
+              </div>
+                <div className="col-lg-5">
+                    <div className="rectangle mt-1 mb-2 m-large-2 m-0">
+                        <div className="badges_title dashboard_squares_titles">
+                          Badges
+                        </div>
+
+                        <div className="badge_grid_dash">
+                        {badges.map(b=>{
+                          return <div className={"single_badge_div"} key={b.id}>
+                                  <img src={b.picture} className={obtainedBadges.includes(b.id) ? 
+                                    "badge_image": "badge_image grey_badge"}
+                                      onMouseEnter={()=>{setHoveredBadge(b.id)}}
+                                      onMouseLeave={()=>{setHoveredBadge(null)}}
+                                      onClick={()=>{setHoveredBadge(b.id)}}/>
+
+                                      <div className={hoveredBadge == b.id ? "badge_desc_info visible"
+                                                                            : "badge_desc_info"
+                                      } 
+>
+
+                                        {b.description}
+                                      </div>
+                                  </div>        
+                        })}
+                      </div>
+
+                    </div>            
                         
                     </div>
                 

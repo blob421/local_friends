@@ -1,24 +1,33 @@
 .rectangle{
-    background-color: rgb(121, 121, 121); height: 39vh; margin: 10px;
-    border-radius: 10px; overflow: hidden; position: relative;
+    background-color: rgb(121, 121, 121); height: 39vh; 
+    border-radius: 10px; overflow: hidden; position: relative; display: flex;
+    flex-direction: column;
 }
 
 .menu_options{
-    background-color: rgb(35, 152, 241);  gap:3%
+    background-color: rgb(35, 152, 241); 
+    box-shadow: inset 4px 0px 17px white;  border: 1px solid black; border-top: 0px;
+    
 }
-
+.outer_row_dash{
+    
+}
 .dash_cont{
     overflow-y: hidden; overflow-x: hidden;
 }
 .top_bar_dashboard{
-    background-color: aliceblue; color: black; text-align: center;
+    background-color: aliceblue; color: black; text-align: center; border: 1px solid black;
+    height: 5vh; display: flex; align-items: center; justify-content: center;
+}
+.top_dash_row{
+    margin-top: 12px;
 }
 .selected_tab_dash{
     background-color: rgba(101, 103, 110, 0.431); border-radius: 15%;
 }
 .dash_tab_icon{
-    cursor: pointer; transition: transform ease 1s;transform-origin: center center; width: 36px;
-    margin-bottom: 5px;
+    cursor: pointer; transition: transform ease 1s;transform-origin: center center; width: max(4vh, 3vw);
+    margin-bottom: 5px; height: max(4vh, 3vw); border-radius: 15%;
 }
 .dash_tab_icon:hover{
     transform: scale(1.2); 
@@ -34,7 +43,7 @@
 }
 .dash_img_menu_cont{
     justify-content: center; display: flex; flex-direction: column; align-items: center;
-    font-size: small; padding: 2%; width: 36px; gap: 2%;
+    font-size: small; padding: 2%; width: fit-content; gap: 2%
 }
 /*********************Follow popup*************************/
 
@@ -85,13 +94,15 @@
      
 }
 .animal_text_dash{
-    font-size: small; padding: 3%; background-color: rgba(38, 38, 38, 0.094);
+     padding: 3%; background-color: rgba(38, 38, 38, 0.094);
+     font-size: max(13px, 1.5vh);
 }
 .animal_desc_dash{
 width: 55%; ;overflow-y: scroll; scrollbar-width: thin; 
 }
 .animal_title_dash{
     text-align: center; position: sticky; top: 0; background-color: rgb(39, 39, 39);
+     font-size: max(15px, 2vh);
     
 }
 .teams_grid > * {
@@ -109,17 +120,24 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 @keyframes wiggle{
     to{transform: scale(1.1);} from{transform: scale(1);}
 }
-
+.dashboard_squares_titles{
+    font-size: max(1.5vw, 2.3vh);
+}
 /*********************Square 2*************************/
 
 .badges_title{
-    height: 25%; background-color: rgba(59, 59, 59, 0.321); 
-    color: rgb(243, 243, 243); font-size: 22px; align-items: center;
-    display: flex; justify-content: center;
+    height: 25%; background-color: rgba(37, 37, 37, 0.321); 
+    color: rgb(243, 243, 243);  align-items: center;
+    display: flex; justify-content: center; 
 }
 .badge_grid_dash{
-    grid-template-columns: repeat(5, 1fr); display: grid; overflow-y: scroll; height: 100%;
-    grid-auto-rows: max(70px); padding-top: 1.6vh;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); display: grid; overflow-y: scroll;
+    grid-auto-rows: max(70px); padding-top: 1.6vh; background-color: rgb(37, 37, 37); 
+    height: 75%;
+}
+.single_badge_div{ 
+    border: 1px solid rgb(62, 62, 62); display: flex; justify-content: center;
+    align-items: center; background-color: #494949; 
 }
 .badge_image{
     height: 60px; width: 60px; align-self: center; justify-self: center;
@@ -135,6 +153,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     visibility: hidden; background-color: rgb(96, 133, 242); z-index: 10000000;
     width: 250px; position: absolute; padding-left:2%; border: 1px solid white;
     color: rgb(255, 255, 255); bottom: 2; left: 7; border-radius: 5px;
+   
 }
 .badge_grid_dash::-webkit-scrollbar {
   width: 9px; 
@@ -157,22 +176,27 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 }
 /*********************Square 3*************************/
 .account_top{
-  height: 25%; background-color: rgba(59, 59, 59, 0.321); 
-    color: rgb(243, 243, 243); font-size: 22px; align-items: center;
+  height: 25%; background-color: rgba(37, 37, 37, 0.321); 
+    color: rgb(243, 243, 243);  align-items: center;
     display: flex; justify-content: center;
+}
+.user_square_ul{
+    width: 95%;
+   
 }
 .account_bot{
   display: flex; align-items: center; padding-top: 3%;
 }
 .info_left{
- width: 65%;  font-size: small; display: flex; align-items: center; 
+ width: 65%;  font-size: max(13px, 1.5vh); display: flex; justify-content: center;
+ align-items: center; padding-bottom: 2vh;
  padding-top: 2vh; background-color: rgba(0, 0, 0, 0.139); margin-right: 5px;
 }
 .profile_pic_dash{
-    height: 90%; width: 90%; object-fit: contain;
+    height: 85%; width: 85%; object-fit: contain;
 }
 .text_elipsis{
-    text-overflow: ellipsis; overflow: hidden; white-space: nowrap; width: 95%;
+    text-overflow: ellipsis; overflow: hidden; white-space: nowrap; 
 }
 .photo_right{
     width: 35%; display: flex; align-items: center;
@@ -189,16 +213,16 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 }
 /*********************Square 4*************************/
 .stats_top{
-  height: 25%; background-color: rgba(59, 59, 59, 0.321); 
-    color: rgb(243, 243, 243); font-size: 22px; align-items: center;
+  height: 25%; background-color: rgba(37, 37, 37, 0.321); 
+    color: rgb(243, 243, 243);  align-items: center;
     display: flex; justify-content: center;
 }
 .stats_bot li{
  background-color: #4176da97;width: fit-content; margin-top: 2vh; padding: 0.5%; padding-left: 1%;
- padding-right: 1%;
+ padding-right: 1%; font-size: max(15px, 1.7vh);
 }
 .stats_bot{
-    background-color: rgba(57, 96, 193, 0.116); height: 100%; padding-top:2vh ;
+    background-color: rgba(57, 96, 193, 0.116); height: 100%; padding-top:2vh ; height: 75%;
 }
 /*********************** PROFILE MODAL **************************/
 
