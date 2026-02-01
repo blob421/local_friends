@@ -13,11 +13,11 @@ spec:
     spec:
       containers:
       - name: next
-        command: ["/bin/bash", "yarn start"]
+        command: ["yarn", "start"]
         image: blob421/local_friends-frontend:latest
         envFrom:
           - configMapRef:
-              name: next-env
+            name: next-env
         resources:
           limits:
             memory: "2Gi"
@@ -25,12 +25,13 @@ spec:
           requests:
             memory: "1Gi"
             cpu: "2000m"
+            
         ports:
-        - containerPort: 3001
+          - containerPort: 3001
 
         volumeMounts:
-              - name: media-pvc
-                mountPath: /usr/src/app/media/
+          - name: media-pvc
+            mountPath: /usr/src/app/media/
 
       volumes:
         - name: media-pvc

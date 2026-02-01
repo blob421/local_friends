@@ -19,7 +19,7 @@ spec:
       containers:
         - name: express
           image:  blob421/local_friends-backend:latest
-          command: ["/bin/bash", "-c", "/usr/src/app/app/backend/entrypoint.sh"]
+          command: ["/usr/src/app/app/backend/entrypoint.sh"]
           ports:
            - containerPort: 3000
           envFrom:

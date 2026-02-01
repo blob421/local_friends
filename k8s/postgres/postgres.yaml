@@ -36,7 +36,7 @@ spec:
             - containerPort: 5433
           env:
             - name: PGPORT
-              value: "5433"
+              value: "5432"
           envFrom:
             - secretRef:
                 name: postgres-env
@@ -53,6 +53,7 @@ spec:
       name: postgres-storage
     spec:
       accessModes: ["ReadWriteOnce"]
+      storageClassName: longhorn
       resources:
         requests:
-          storage: 20Gi
+          storage: 32Gi

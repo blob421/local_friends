@@ -30,6 +30,6 @@ spec:
       volumes:
       - name: media-pvc
         persistentVolumeClaim:
-          claimName: media-pvc
+          claimName: mediaData
          
 

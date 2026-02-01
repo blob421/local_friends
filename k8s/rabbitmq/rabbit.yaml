@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: StatefulSet
+
+metadata:
+  name: rabbit
+
+spec:
+  serviceName: rabbitmq
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbit
+  template:
+    metadata:
+      labels:
+        app: rabbit
+    spec: 
+      containers:
+        - name: rabbit
+          ports: 
+            - containerPort: 5672
+          image: rabbitmq:management-alpine
+          envFrom: 
+            - configMapRef:
+                name: rabbit-env
+          
+       
