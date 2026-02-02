@@ -6,14 +6,16 @@ import $ from 'jquery'
 import dynamic from 'next/dynamic';
 import { decodeUrlSafe } from "../components/encode";
 
+import type {Region, User, Badge, UserBadge, stats} from '../types'
+import {baseUser} from '../types'
+
+const SummaryComponent = dynamic(()=> import('./summary_component'))
 const FirstLoginModal = dynamic(()=> import('./first_login_modal'))
 const FollowersModal = dynamic(()=> import('./followers_modal'))
 const UserModal = dynamic(()=> import('./user_info_modal'))
 const AnimalModal = dynamic(() => import('./animal_modal'))
 const Settings = dynamic(()=> import('./options_modal'))
 
-type Region = {id : Number 
-   name: string;}
 
 type DashboardProps = {visitor: boolean}
 
@@ -21,56 +23,27 @@ type Settings= {showEmail : boolean
   postScopeRegion: boolean
     firstLogin: boolean
 }
-type stats = {
-  found: number
-  followers: number
-  following: number
-}
-export type UserBadge = {
-  awardedAt: string
-  UserId: number
-  BadgeId: number
-}
-export type Badge ={ 
-  description: string
-  name: string
-  picture: string
-  id: number
-  TeamId: number
-}
 
-export type User = {
-    id: number
-    username: string
-    picture: string
-}
+
 
 export type following = User[]
-type followers = number[]
+
 
 export default function DashboardMain({visitor}: DashboardProps){
   
      const url = process.env.NEXT_PUBLIC_API_URL
-     const [username, setUsername] = useState("")
-     const [id, setid] = useState("")
-     const [firstName, setFirstName] = useState('')
-     const [lastName, setLastName] = useState('')
-     const [team, setTeam] = useState("")
-     const [email , setEmail] = useState("")
-   
-     const [animalName , setanimalName] = useState("")
-     const [animalDesc , setanimalDesc] = useState("")
-     const [animalPic , setanimalPic] = useState(null)
+
+     const [user, setUser] = useState<User>(baseUser)
      const [Usersettings, setUserSettings] = useState<Settings>({ 
       showEmail: false, postScopeRegion: false, firstLogin:false });
 
      const [region , setRegion] = useState<Region | null >(null)
-     const [pictureUrl, setPicture] = useState("")
+ 
 
      const [badges, setBadges] = useState<Badge[]>([])
      const [userBadge, setUserBadge]= useState<UserBadge[]>([])
      const [obtainedBadges, setObtainedBadges] = useState<number[]>([])
-     const [hoveredBadge, setHoveredBadge] = useState<number | null>(null)
+    
      const [summary, summaryToggled] = useState(true)
      const [postPage, postsToggled] = useState(false)
      const [showModal, setModal] = useState(false)
@@ -78,7 +51,7 @@ export default function DashboardMain({visitor}: DashboardProps){
      const [animalModal, setAnimalModal] = useState(false)
      const [optionsModal, setOptionsModal] = useState(false)
      const [following, setFollowing] = useState(true)
-     const [userStats, setStats] = useState<stats | null>(null)
+     const [userStats, setStats] = useState<stats | undefined>(undefined)
      const [followClicked, setFollowClicked] = useState(false)
      const [followClicked2, setFollowClicked2] = useState(false)
      const [reqUser, setReqUser] = useState("")
@@ -88,7 +61,7 @@ export default function DashboardMain({visitor}: DashboardProps){
      const [activeHint, setHint] = useState("")
 
      const unfollow = async () =>{
-        const unfollow_url = `${url}/unfollow/user/${id}`
+        const unfollow_url = `${url}/unfollow/user/${user?.id}`
         await fetchAuth(unfollow_url, {method: 'POST'}).then(res=> res.status == 200 ? location.reload() : 
       alert('There was a problem unfollowing , try again later'))
      }
@@ -119,18 +92,11 @@ export default function DashboardMain({visitor}: DashboardProps){
           })
           const data = await response.json()
           console.log(data)
-          setFirstName(data.user.firstName?data.user.firstName: "--")
-          setLastName(data.user.lastName)
-          setTeam(data.user.TeamId)
-          setEmail(data.user.email)
+          setUser(data.user)
+ 
           setStats(data.stats)
-          setid(data.user.id)
-          const animal_Name = data.user.Animal?.name
-          if (animal_Name){
-          setanimalName(animal_Name[0].toUpperCase() + animal_Name.substring(1))
-          setanimalPic(data.user.Animal.picture)
-          setanimalDesc(data.user.Animal.description)
-          }
+
+
           if(data.badges){
              setBadges(data.badges)
           }
@@ -140,16 +106,15 @@ export default function DashboardMain({visitor}: DashboardProps){
           }
           setReqUser(data.req_user)
           console.log(data.user)
-          setUsername(data.user.username)
+  
           setUserSettings(data.settings)
-          if( data.user.Region){
-            setRegion(data.user.Region)
-          }else{
+          if( !data.user.Region){
+        
              $('.home_link').hide()
             $('.map_link').hide()
           }
           
-          setPicture(data.user.picture)
+          
 
       //    setFollowingUsers(data.following_Users)
      
@@ -189,7 +154,7 @@ useEffect(()=>{
 }, [badges, userBadge])
 
 const follow = async () => {
-    const follow_url = `${url}/follow/${id}`
+    const follow_url = `${url}/follow/${user?.id}`
     await fetchAuth(follow_url, {method: 'POST'}).then(res=>{ 
       if (res.status == 400){
          alert('Oops , something went wrong with your request')
@@ -197,7 +162,7 @@ const follow = async () => {
     })
    }
    
-   console.log("reqUser:", reqUser, "id:", id, "following:", following);
+   console.log("reqUser:", reqUser, "id:", user?.id, "following:", following);
 
      return (
       <div className="dash_cont container-fluid w-100" id="dash_cont">
@@ -252,173 +217,20 @@ const follow = async () => {
                                 <div className={"hint_div_dash"}>Settings</div>
                           </div>
               }
-          
-              
 
-
-           </div>
-            <div className="col-lg-11">
-
-                <div className="row justify-content-center">
-                 
-                     <div className="col-12 mb-1 mb-lg-0 top_bar_dashboard">
-                       {!visitor ? `Welcome ${username}`
-                                 : `You are viewing the profile of ${username}` }
-
-                      {(reqUser !== id && following) && <button className="unfollow"
-                      onClick={() => unfollow()}>
-                        Unfollow
-                        </button>
-                        }
-                     </div>
-                </div>
-
-                <div className="row d-flex justify-content-center top_dash_row">
-                  
-                    <div className="col-lg-5">
-                          <div className="rectangle mt-1 mb-2 m-large-2 m-0">
-                           {!visitor && <Image src={"/pen.png"} alt="Edit" height={25} 
-                            width={25} className="edit_icon_dash"
-                            onClick={
-                              ()=>{ 
-                              setModalTriggered(true); 
-                              $('#profile_modal_bg').show()
-                              window.scrollTo({ top: 0, behavior: 'smooth' });
-                              }
-                              }/>}
-
-                           
-                              <div className="account_top dashboard_squares_titles">
-                                  Account
-                              </div>
-                              <div className="account_bot">
-
-                                <div className="photo_right">
-
-                                    {pictureUrl && <img src={url + pictureUrl} 
-                                    className="profile_pic_dash"></img>}
-
-                                    {!pictureUrl && <img src={'/avatar.png'}
-                                    alt="profile picture">
-                                    </img>}
-
-                                </div>
-
-                                <div className="info_left">
-                                  
-                                 <div className="user_square_ul">
-                                        <div><strong>Username: </strong>{username}</div>
-                                        <div><strong>Name: </strong>{firstName + " "}{lastName}</div>
-                                        <div className="text_elipsis"><strong>Email: </strong>{email}</div>
-                                        <div><strong>Region: </strong>{region?.name? region.name: 
-                                            <div className="add_a_region_red">
-                                            Add a region to unlock the feed
-                                            </div>
-                                            }
-                                        </div>
-
-                                </div>
-                                </div>
-                                 
-                              </div>
-
-                          </div>
-                    </div>
-                      <div className="col-lg-5">
-                          <div className="rectangle mt-1 mb-2 m-large-2 m-0">
-                               <div className="stats_top dashboard_squares_titles">
-                                 Stats
-                               </div>
-                                <div className="stats_bot">
-                                   <ul>
-                                        <li>Animals found: {userStats?.found ?? '-'}</li>
-                                        <li>Followed : {userStats?.following ?? '-'}</li>
-                                        <li>Followers : {userStats?.followers ?? '-'}</li>
-                                   </ul>
-                               </div>
-                            
-                          </div>            
-                        
-                    </div>
-                
-                </div>
-                <div className="row justify-content-center">
-                  
-              <div className="col-lg-5">
-                    <div className="rectangle mt-1 mb-2 m-large-2 m-0">
-                        {!visitor &&<Image src={"/pen.png"} alt="Edit" height={25} 
-                      width={25} className="edit_icon_dash"
-                      onClick={
-                        ()=>{ 
-                        setAnimalModal(true); 
-                        $('#profile_modal_bg_animal').show()
-                        }
-                        }/>}
-                          <div className="team_upper dashboard_squares_titles">
-                              {team}
-                              {!team && 'Team'}
-
-                          </div>
-                          
-                          <div className="teams_grid">
-                                <div className="animal_pic_cont">
-                                        {animalPic && 
-                                        <img src={animalPic}
-                                          alt="" className="animal_ico">
-                                        </img>}
-                                </div>
-                              
-                                {!animalPic && <div className="no_team_content">
-                                      No team yet , click on the pen icon and pick your favorite animal ⭐
-                                      </div>
-                                      }
-                                <div className="animal_desc_dash">
-                                  
-                              
-                                    <div className="animal_title_dash">
-                                    {animalName}
-                                      </div>
-                                    {animalName && <div className="animal_text_dash">
-                                      {animalDesc}
-
-                                    </div>}   
-                              </div>
-                          
-                          </div>
-                    </div>
-              </div>
-                <div className="col-lg-5">
-                    <div className="rectangle mt-1 mb-2 m-large-2 m-0">
-                        <div className="badges_title dashboard_squares_titles">
-                          Badges
-                        </div>
-
-                        <div className="badge_grid_dash">
-                        {badges.map(b=>{
-                          return <div className={"single_badge_div"} key={b.id}>
-                                  <img src={b.picture} className={obtainedBadges.includes(b.id) ? 
-                                    "badge_image": "badge_image grey_badge"}
-                                      onMouseEnter={()=>{setHoveredBadge(b.id)}}
-                                      onMouseLeave={()=>{setHoveredBadge(null)}}
-                                      onClick={()=>{setHoveredBadge(b.id)}}/>
-
-                                      <div className={hoveredBadge == b.id ? "badge_desc_info visible"
-                                                                            : "badge_desc_info"
-                                      } 
->
-
-                                        {b.description}
-                                      </div>
-                                  </div>        
-                        })}
-                      </div>
-
-                    </div>            
-                        
-                    </div>
-                
-                </div>
             </div>
+
+
+            {summary &&
+            
+             <SummaryComponent user={user} visitor={visitor} reqUser={reqUser}
+             following={following} setModalTriggered={(bool:boolean)=> setModalTriggered(bool)}
+             userStats={userStats} setAnimalModal={(bool:boolean) => setAnimalModal(bool)}
+             badges={badges} obtainedBadges={obtainedBadges} 
+             
+             unfollow={() => unfollow()}/>
+           
+             }
      </div>
 
 {Usersettings.firstLogin && <FirstLoginModal/>}
@@ -427,9 +239,9 @@ const follow = async () => {
 
 {optionsModal && <Settings settings={Usersettings} hideModal={()=> setOptionsModal(false)}/>}
 
-{(showModal || modalTriggered) && (<UserModal url={url} username={username} 
-email={email} firstName={firstName} lastName={lastName}
-pictureUrl={pictureUrl} Region={region?.name} RegionId={region?.id}/>)}   
+{(showModal || modalTriggered) && (<UserModal url={url} username={user?.username} 
+email={user?.email} firstName={user?.firstName} lastName={user?.lastName}
+pictureUrl={user.picture} Region={region?.name} RegionId={region?.id}/>)}   
 
 </div>                   
  )

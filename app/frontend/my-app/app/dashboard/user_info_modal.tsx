@@ -6,9 +6,9 @@ import handle_debounce from "../components/debounce";
 
 type UserInfoModalProps = {
   url?: string;        // might be undefined
-  username: string;
-  firstName: string
-  lastName: string
+  username?: string;
+  firstName?: string
+  lastName?: string
   email?: string;
   pictureUrl?: string;
   Region?: string;
