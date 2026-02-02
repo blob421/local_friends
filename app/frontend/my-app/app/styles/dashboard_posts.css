@@ -1,0 +1,58 @@
+.posts_dashboard_cont{
+    border: 1px solid grey; overflow-y: scroll;  height: 92vh;
+    padding-top: 3vh; 
+   
+
+}
+.single_post_dash{
+     border: 1px solid grey; max-height: 75vh;
+    justify-self: center; background-color: rgb(34, 34, 34); border-radius: 5px;
+    margin-top: 1vh; overflow: hidden; padding:1%
+}
+
+.post_dash_left_content{
+   
+}
+
+.post_dash_right_picture{
+      display: flex; align-items: center;
+     justify-content: center; padding: 3%;
+   
+}
+.post_dash_title{
+    text-align: center; width: 100%;
+}
+html, body {
+    overflow: hidden;
+}
+.post_dash_description{
+     background-color: rgb(71, 71, 71); justify-self: center; 
+    max-height: 14vh;  padding: 2%; border-radius: 5px; overflow-y: scroll;
+    object-fit: contain; 
+}
+
+.post_dash_description::-webkit-scrollbar {
+  width: 7px; 
+}
+
+/* Track (background) */
+.post_dash_description::-webkit-scrollbar-track {
+    background-color:rgba(90, 90, 90, 0.358);border-radius: 6px;
+}
+
+/* Handle (thumb) */
+.post_dash_description::-webkit-scrollbar-thumb {
+  background: rgb(84, 84, 84);
+  border-radius: 1px;
+}
+
+/* Handle on hover */
+.post_dash_description::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 90, 90, 0.358);
+}
+
+@media (min-width: 992px) { 
+    .post_dash_description { 
+        max-height: 69% !important; 
+    }
+}

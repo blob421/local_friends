@@ -1,4 +1,4 @@
-import type {User, stats, Badge} from '../types'
+import type {User, stats, Badge} from '../types_dashboard'
 import $ from 'jquery'
 import Image from 'next/image'
 import {useState, useEffect} from 'react'

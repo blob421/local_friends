@@ -1,7 +1,6 @@
 "use client"
-import type {following} from './dashboard_component'
+
 import {useState, useEffect, useMemo} from 'react'
-import debounce from 'lodash.debounce'
 import {fetchAuth} from '../components/fetch'
 import $ from 'jquery'
 type User = {

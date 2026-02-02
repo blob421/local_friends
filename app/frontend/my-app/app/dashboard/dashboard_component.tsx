@@ -6,9 +6,10 @@ import $ from 'jquery'
 import dynamic from 'next/dynamic';
 import { decodeUrlSafe } from "../components/encode";
 
-import type {Region, User, Badge, UserBadge, stats} from '../types'
-import {baseUser} from '../types'
+import type {Region, User, Badge, UserBadge, stats} from '../types_dashboard'
+import {baseUser} from '../types_dashboard'
 
+const PostsComponent = dynamic(()=> import('./posts_component'))
 const SummaryComponent = dynamic(()=> import('./summary_component'))
 const FirstLoginModal = dynamic(()=> import('./first_login_modal'))
 const FollowersModal = dynamic(()=> import('./followers_modal'))
@@ -165,7 +166,7 @@ const follow = async () => {
    console.log("reqUser:", reqUser, "id:", user?.id, "following:", following);
 
      return (
-      <div className="dash_cont container-fluid w-100" id="dash_cont">
+      <div className="dash_cont container-fluid" id="dash_cont">
         {visitor && <div id="follow_popup" className={followClicked2 ? "shrink": ""} >
                           <div id="follow_href" className={followClicked? "fadeout": ""} onClick={()=>{
                              
@@ -231,6 +232,11 @@ const follow = async () => {
              unfollow={() => unfollow()}/>
            
              }
+
+            {postPage && 
+             <PostsComponent userId={user.id}/>
+             }
+
      </div>
 
 {Usersettings.firstLogin && <FirstLoginModal/>}

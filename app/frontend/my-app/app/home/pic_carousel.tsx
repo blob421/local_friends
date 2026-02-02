@@ -2,7 +2,8 @@
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import {useState} from 'react'
 
-type Image = {
+
+export type Image = {
   url: string
 }
 

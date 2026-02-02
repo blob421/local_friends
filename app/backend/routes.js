@@ -269,6 +269,16 @@ router.post('/follow/:target_user', authenticateToken, async (req, res)=>{
   }
 })
 
+
+router.get('/dashboard/posts/:UserId', authenticateToken, async (req, res) =>{
+  const userId = parseInt(req.params.UserId)
+  const Posts = getPosts()
+  const userPosts = await Posts.find({"User.id": userId}).sort({id: -1}).toArray()
+
+  res.json({posts: userPosts})
+})
+
+
 router.get('/dashboard', authenticateToken, async (req, res) => {
    const user = await User.findOne({where:{id: req.user.id},
   include: [

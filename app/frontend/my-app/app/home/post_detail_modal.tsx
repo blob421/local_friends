@@ -10,7 +10,7 @@ import { encodeUrlSafe } from '../components/encode';
 const CreateModal = dynamic(()=> import('./create_modal'))
 
 
-import type {Comment, User, Post, Media} from "./page"
+import type {Comment, User, Post, Media} from "../types_feed"
 type PostDetailModalProps = {
   post: Post
   comments: Comment[] 

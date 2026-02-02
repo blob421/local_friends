@@ -15,6 +15,7 @@
 .dash_cont{
     overflow-y: hidden; overflow-x: hidden;
 }
+
 .top_bar_dashboard{
     background-color: aliceblue; color: black; text-align: center; border: 1px solid black;
     height: 5vh; display: flex; align-items: center; justify-content: center;

@@ -14,7 +14,7 @@ type coords = {
     latitude: number
     longitude: number
 }
-import type {Comment, User, Post, Media} from "./page"
+import type {Comment, User, Post, Media} from "../types_feed"
 
 
 export default function CreateModal ({url, post, onClose, edit}:ModalProps){

@@ -11,6 +11,7 @@ import './styles/registration.css'
 import './styles/navbar.css'
 import './styles/dashboard.css'
 import './styles/home.css'
+import './styles/dashboard_posts.css'
 
 
 //////
