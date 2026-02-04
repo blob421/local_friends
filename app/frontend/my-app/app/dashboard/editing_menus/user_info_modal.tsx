@@ -2,7 +2,7 @@
 import { useState } from "react";
 import $ from 'jquery'
 import AsyncSelect from 'react-select/async';
-import handle_debounce from "../components/debounce";
+import handle_debounce from "../../components/debounce";
 
 type UserInfoModalProps = {
   url?: string;        // might be undefined
@@ -13,6 +13,7 @@ type UserInfoModalProps = {
   pictureUrl?: string;
   Region?: string;
   RegionId?: Number;
+  
 };
 
 

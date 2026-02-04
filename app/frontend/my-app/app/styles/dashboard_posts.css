@@ -1,6 +1,6 @@
 .posts_dashboard_cont{
     border: 1px solid grey; overflow-y: scroll;  height: 92vh;
-    padding-top: 3vh; 
+    padding-top: 3vh; background-color: rgb(33, 33, 33);
    
 
 }
@@ -53,6 +53,30 @@ html, body {
 
 @media (min-width: 992px) { 
     .post_dash_description { 
-        max-height: 69% !important; 
+        max-height: 69% !important; display: flex;
     }
+   
+}
+@media (max-width: 992px){
+     .no_post_wrapper{
+        gap:2% !important
+    }
+}
+.no_post_wrapper{
+    border-radius: 16px; background-color: rgba(56, 56, 56, 0.016); color: white;
+     display: flex; border: 1px solid rgb(109, 109, 109); align-items: center;
+    justify-content: center; gap: 15%; height: fit-content; margin-top: 2vh;
+    height: 160px;
+   
+}
+.cricket_img{
+     align-items: center; justify-content: center;
+     aspect-ratio: 1/1; height: 80%; margin-right: 10px;
+
+}
+.text_no_post{
+     margin-left: 15px; width: 50%;
+}
+.no_post_div{
+    background-color: rgba(78, 77, 77, 0); border: 1px solid grey; height: 85vh;
 }

@@ -1,4 +1,4 @@
-import type {User, stats, Badge} from '../types_dashboard'
+import type {User, stats, Badge} from '../../types_dashboard'
 import $ from 'jquery'
 import Image from 'next/image'
 import {useState, useEffect} from 'react'
@@ -15,7 +15,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
     
     const url = process.env.NEXT_PUBLIC_API_URL
     const [hoveredBadge, setHoveredBadge] = useState<number | null>(null)
-   
+    if (user.Animal)
     user.Animal.name = user.Animal.name ? user.Animal.name[0].toUpperCase() +
     user.Animal.name.substring(1): ""
 
@@ -126,13 +126,13 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                           
                           <div className="teams_grid">
                                 <div className="animal_pic_cont">
-                                        {user.Animal.picture && 
+                                        {user.Animal && 
                                         <img src={user.Animal.picture}
                                           alt="" className="animal_ico">
                                         </img>}
                                 </div>
                               
-                                {!user.Animal.picture && <div className="no_team_content">
+                                {!user.Animal && <div className="no_team_content">
                                       No team yet , click on the pen icon and pick your favorite animal ⭐
                                       </div>
                                       }
@@ -140,9 +140,9 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                                   
                               
                                     <div className="animal_title_dash">
-                                    {user.Animal.name}
+                                    {user.Animal && user.Animal.name}
                                       </div>
-                                    {user.Animal.name && <div className="animal_text_dash">
+                                    {user.Animal && <div className="animal_text_dash">
                                       {user.Animal.description}
 
                                     </div>}   

@@ -686,7 +686,7 @@ async (req, res)=>{
     if (username_exists){
     res.redirect(`${process.env.FRONT_END_URL}/dashboard?modal=true&username=false`)
   }
-  res.redirect(`${process.env.FRONT_END_URL}/dashboard?modal=true`)
+  res.redirect(`${process.env.FRONT_END_URL}/dashboard`)
  }
   }
   

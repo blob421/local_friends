@@ -194,14 +194,14 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
  padding-top: 2vh; background-color: rgba(0, 0, 0, 0.139); margin-right: 5px;
 }
 .profile_pic_dash{
-    height: 85%; width: 85%; object-fit: contain;
+    height: 85%; width: 85%; object-fit: contain; 
 }
 .text_elipsis{
     text-overflow: ellipsis; overflow: hidden; white-space: nowrap; 
 }
 .photo_right{
     width: 35%; display: flex; align-items: center;
-    justify-content: center;
+    justify-content: center; aspect-ratio: 1/1;
 }
 .edit_icon_dash{
     position: absolute; right: 10; top: 10; cursor: pointer;border-radius: 4px;
@@ -312,10 +312,10 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     height: 11vh; align-items: center;
 }
 .animal_select{
-    margin-top: 2vh !important; left: 2vw; position: absolute; top:2.5vh
+    margin-top: 2vh !important; left: 2vw; position: absolute; top:2.5vh; 
 }
 .region_select{
-    width: 270px; color: black; z-index: 10000;
+    width: 270px; color: black; z-index: 10000;margin-top: 5vh;
 }
 .region_select input{
     height: 20px;
@@ -324,7 +324,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     margin-left: 5px; font-size: medium; margin-bottom: 1vh; margin-top: 1vh;
 }
 #region_dropdown{
-    width: 250px;
+    width: 250px; 
 }
 /*****************************SETTINGS MODAL********************************/
 
@@ -477,7 +477,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 /***************** FIRST LOGIN MODAL *********************************/
 
 #first_login_bg{
-        background-color: rgba(0, 0, 0, 0.29); position: absolute; left: 50%;
+        background-color: rgba(0, 0, 0, 0.436); position: absolute; left: 50%;
      top: 50%; transform: translate(-50%, -50%); height: 100vh; 
     width: 100vw; 
 }
@@ -499,3 +499,10 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     color: salmon;
 }
 
+@media (max-width: 992px) { 
+    .first_login_modal { 
+        width:95vw !important; border-radius: 4% !important; top:21vh !important;
+        height: 35vh !important;
+       
+    }
+}

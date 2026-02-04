@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react'
-import type {Post} from '../types_feed'
-import { fetchAuth } from '../components/fetch'
-import Carousel from '../home/pic_carousel'
-import type {Image} from '../home/pic_carousel'
+import type {Post} from '../../types_feed'
+import { fetchAuth } from '../../components/fetch'
+import Carousel from '../../home/pic_carousel'
+import type {Image} from '../../home/pic_carousel'
 type DashboardPostsComponentProps = {
   userId: string
 }
@@ -27,7 +27,7 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
   }, [posts])
 
   return(
- 
+
   
         <div className='posts_dashboard_cont col-lg-11 col-12'>
              {posts && posts.length > 0 && posts.map((post) => {
@@ -49,7 +49,22 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
                   </div>
               </div>
             ) })
+
+
              }
+           {(posts && posts.length < 1) && 
+           <div className='col-12 justify-content-center d-flex align-lg-center 
+           gap-lg-3 gap-0 p-4 no_post_div'>
+            <div className='no_post_wrapper col-12 col-lg-6 mt-2'>
+            <div className='text_no_post'>Nothing but crickets singing ...
+
+            </div>
+            
+            <img src={'/cricket2.png'} className='cricket_img'/>
+            </div>
+
+            </div>}
+    
         </div>
  
 

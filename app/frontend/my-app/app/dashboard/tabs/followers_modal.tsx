@@ -1,7 +1,7 @@
 "use client"
 
 import {useState, useEffect, useMemo} from 'react'
-import {fetchAuth} from '../components/fetch'
+import {fetchAuth} from '../../components/fetch'
 import $ from 'jquery'
 type User = {
     id: number

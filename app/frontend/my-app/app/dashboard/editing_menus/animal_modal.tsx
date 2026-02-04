@@ -1,7 +1,7 @@
 'use-client'
 import {useState} from 'react'
 import AsyncSelect from "react-select/async";
-import handle_debounce from "../components/debounce";
+import handle_debounce from "../../components/debounce";
 import $ from 'jquery'
 type animal_modal_props = {
     url?: string

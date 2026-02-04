@@ -9,13 +9,13 @@ import { decodeUrlSafe } from "../components/encode";
 import type {Region, User, Badge, UserBadge, stats} from '../types_dashboard'
 import {baseUser} from '../types_dashboard'
 
-const PostsComponent = dynamic(()=> import('./posts_component'))
-const SummaryComponent = dynamic(()=> import('./summary_component'))
+const PostsComponent = dynamic(()=> import('./tabs/posts_component'))
+const SummaryComponent = dynamic(()=> import('./tabs/summary_component'))
 const FirstLoginModal = dynamic(()=> import('./first_login_modal'))
-const FollowersModal = dynamic(()=> import('./followers_modal'))
-const UserModal = dynamic(()=> import('./user_info_modal'))
-const AnimalModal = dynamic(() => import('./animal_modal'))
-const Settings = dynamic(()=> import('./options_modal'))
+const FollowersModal = dynamic(()=> import('./tabs/followers_modal'))
+const UserModal = dynamic(()=> import('./editing_menus/user_info_modal'))
+const AnimalModal = dynamic(() => import('./editing_menus/animal_modal'))
+const Settings = dynamic(()=> import('./tabs/options_modal'))
 
 
 type DashboardProps = {visitor: boolean}
@@ -206,7 +206,7 @@ const follow = async () => {
               {!visitor && <div className="dash_img_menu_cont">
                                   <img src="/group_icon.png" alt="stats_icon" 
                                   className={followerModal ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
-                                   onClick={()=> {setFollowerModal(true); summaryToggled(false)}}/>
+                                   onClick={()=> {setFollowerModal(true);}}/>
                                   <div className={"hint_div_dash"}>Followers</div>
                           </div>
               }
@@ -214,7 +214,7 @@ const follow = async () => {
               {!visitor && <div className="dash_img_menu_cont">
                                 <Image src="/gear_icon.png" alt="gear_icon" 
                                 className={optionsModal ? 'selected_tab_dash dash_tab_icon': "dash_tab_icon"}
-                                width={30} height={30} onClick={()=> {setOptionsModal(true); summaryToggled(false)}}/>
+                                width={30} height={30} onClick={()=> {setOptionsModal(true);}}/>
                                 <div className={"hint_div_dash"}>Settings</div>
                           </div>
               }
