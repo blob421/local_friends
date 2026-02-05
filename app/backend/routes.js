@@ -68,7 +68,7 @@ const handlePost = async (files, post, data, userId) => {
     let media_arr = [];
     if (files && files.length > 0) {
       
-
+  
       files.forEach((file, idx) => {
         media_arr.push({
           idx,
@@ -97,8 +97,8 @@ const handlePost = async (files, post, data, userId) => {
         const latitude = data.latitude ? data.latitude : post.latitude
         const status=  await Posts.updateOne({_id: post._id, "User.id": parseInt(userId)}, 
           {$set : {Media: media_arr, 
-                   longitude: longitude, 
-                   latitude: latitude,
+                   longitude: parseFloat(longitude), 
+                   latitude: parseFloat(latitude),
                    content: data.content,
                    title: data.title
                   }, 
@@ -127,7 +127,7 @@ const handlePost = async (files, post, data, userId) => {
 
 
       const channel = await getChannel();
-
+      
       media_arr.forEach(media => {
         const payload = JSON.stringify({
           path: media.url,
@@ -135,9 +135,11 @@ const handlePost = async (files, post, data, userId) => {
           userId: userId,
           arr_idx: media.idx
         });
-
+    
         channel.sendToQueue('detect_animal', Buffer.from(payload));
       });
+
+      return media_arr
     
   } catch (err2) {
     console.log(err2);
@@ -603,7 +605,7 @@ router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), asyn
   const data = req.body
   const Posts = getPosts()
   const post = await Posts.findOne({_id: new ObjectId(id)})
-  const dashboard = data.dashboard
+ 
 
   // Delete old photos to replace them 
   if (req.user.id === post.User.id){
@@ -624,13 +626,9 @@ router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), asyn
     
         
      }
-     await handlePost(files, post, data, req.user.id)
-     if (dashboard){
-        res.redirect(`${process.env.FRONT_END_URL}/dashboard?post=${post.id}`)
-     }else{
-        res.redirect(`${process.env.FRONT_END_URL}/home?post=${post.id}`)
-     }
-     
+     const medias = await handlePost(files, post, data, req.user.id)
+     res.json({Media: medias})
+
   }
 })
 ///////////////////////////// PROFILE //////////////////////////////////

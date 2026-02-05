@@ -13,9 +13,7 @@ import { set_visible } from '@/app/utilities/set_visible'
 type DashboardPostsComponentProps = {
   userId: string
 }
-type Images = {
-  
-}
+
 export const handleMenu = () =>{
     const menus = document.querySelectorAll('.option_menu_hidden')
     
@@ -34,7 +32,12 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [selectedPost, setSelectedPost] = useState<Post>()
 
-
+  const handlePostEditCreate = (post:Post, edit:boolean) =>{
+       if (edit){
+         setPosts(prev => prev.map(p => p.id == post.id ? post : p))
+ 
+       }
+  }
 
 
   const delPost = (post:Post) => {
@@ -74,7 +77,8 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
               return(
                 
               <div className='single_post_dash d-flex flex-lg-row flex-column col-12 col-lg-8
-               gap-3 gap-lg-0 p-2 pb-5 pb-lg-1 position-relative' key={post.id}>
+               gap-3 gap-lg-0 p-2 pb-5 pb-lg-1 position-relative' key={post.id}
+               id={`dash_post_${post.id}`}>
 
                 <PostEditMenu setEditModalVisible={(bool:boolean) => setEditModalVisible(bool)} 
                 location={'dashboard'} postId={String(post.id)} 
@@ -111,7 +115,9 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
             </div>}
 
             {editModalVisible && <CreateModal url={url} post={selectedPost} edit={true}
-            onClose={()=> setEditModalVisible(false)} dashboard='dashboard'/>}
+            onClose={()=> setEditModalVisible(false)} dashboard='dashboard' 
+            handlePostEditCreate={(post:Post, edit:boolean) => 
+                                                   handlePostEditCreate(post, edit) }/>}
 
 
            {selectedPost && <DeleteBtnModal DelPost={async (post:Post) => { 

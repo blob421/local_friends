@@ -12,6 +12,7 @@ import './styles/navbar.css'
 import './styles/dashboard.css'
 import './styles/home.css'
 import './styles/dashboard_posts.css'
+import './styles/base.css'
 
 
 //////
