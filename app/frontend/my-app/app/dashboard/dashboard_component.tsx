@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react"
-import { fetchAuth } from '../components/fetch';
+import { fetchAuth } from '../utilities/fetch';
 import Image from 'next/image'
 import $ from 'jquery'
 import dynamic from 'next/dynamic';
-import { decodeUrlSafe } from "../components/encode";
+import { decodeUrlSafe } from "../utilities/encode";
 
 import type {Region, User, Badge, UserBadge, stats} from '../types_dashboard'
 import {baseUser} from '../types_dashboard'
@@ -70,7 +70,16 @@ export default function DashboardMain({visitor}: DashboardProps){
      useEffect(()=>{
        const fetch_data = async () =>{
        const params = new URLSearchParams(window.location.search)
+
+       if (params.get('post')){
+        postsToggled(true)
+        summaryToggled(false)
+        
+        
+       }
+
        const modal = params.get('modal')
+       
        let fetch_url
 
        if(modal){

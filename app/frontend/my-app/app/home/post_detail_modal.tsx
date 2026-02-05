@@ -1,12 +1,15 @@
 'use client '
-import {fetchAuth} from '../components/fetch'
+import {fetchAuth} from '../utilities/fetch'
 import {useEffect, useState, useRef} from 'react'
 import $ from 'jquery'
 import enlarge from './enlarge'
-import Carousel from './pic_carousel'
+import Carousel from '../components/UI/pic_carousel'
 import dynamic from 'next/dynamic';
 import EmojiPicker from 'emoji-picker-react';
-import { encodeUrlSafe } from '../components/encode';
+import { encodeUrlSafe } from '../utilities/encode';
+import PostEditMenu from '../components/UI/post_edit_menu'
+import DeletePostModal from '../components/UI/delete_confirm'
+import { DelPost } from '../utilities/delete_post'
 const CreateModal = dynamic(()=> import('./create_modal'))
 
 
@@ -165,18 +168,8 @@ useEffect(() => {
   })
   
 }, [post, url])
+    
 
-    const set_visible = (id:string) => {
-       const menu = $(`#${id}`)
-       
-       if (menu.hasClass('visible')){
-        menu.removeClass('visible')
-       
-       }else{
-        menu.addClass('visible')
-        
-       }
-    }
     const getCommentSize = (id:string) =>{
        const parent = $(`#${id}`)
        if (parent.hasClass('large_width')){
@@ -192,16 +185,8 @@ useEffect(() => {
         return 'large_width'
        }
     }
-    const DelPost = async ()=>{
-      const delUrl = `${url}/post/region/${post.Region.id}/id/${post._id}`
-      await fetchAuth(delUrl, {method: 'DELETE'}).then(res=> {if (res.status == 401){
-        alert('Unauthorized action');
-    
-      }
-       if(res.status == 202){
-       delPost(post)
-       }})
-    }
+
+
     return(
        
           <div className="position-absolute top-0 start-0 w-100 d-flex align-items-center justify-content-center" id="post_detail_bg">
@@ -220,16 +205,7 @@ useEffect(() => {
                                               }
 
               {post.User.username == user?.username && 
-              <div className='menu_post_detail_cont'>
-              <button id='three_dots_post_detail' onClick={()=>set_visible('option_menu_post_detail')}>...</button>
-
-              <div id='option_menu_post_detail'>
-                   <button className='option_post_detail' 
-                   onClick={()=> set_visible('delete_post_detail_confirm')}>Delete post</button>
-                   <button className='option_post_detail' onClick={()=> setEditModalVisible(true)}>
-                    Edit post</button>
-              </div>
-              </div>}
+              <PostEditMenu setEditModalVisible={(bool:boolean) => setEditModalVisible(bool)}/>}
 
 
 
@@ -512,11 +488,13 @@ useEffect(() => {
         
                           </div>}
   
-    
-       <div id='delete_post_detail_confirm'>
-          Are you sure you want to delete this post ? 
-         <button className='btn btn-danger' onClick={()=> DelPost()}>Delete</button>
-      </div>
+   <DeletePostModal DelPost={async (post:Post) => { 
+        delPost(post);
+        await DelPost(post, url? url: "")
+             .then(s => s == 202 ? delPost(post) : alert('Unauthorized action'))
+
+        }} post={post}/>
+   
 
     </div>
     )

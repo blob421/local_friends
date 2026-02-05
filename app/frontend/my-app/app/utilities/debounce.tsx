@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce'
-import {fetchAuth} from '../components/fetch'
+import {fetchAuth} from './fetch'
 
 type element = {
     name: string

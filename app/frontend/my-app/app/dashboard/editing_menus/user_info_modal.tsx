@@ -2,7 +2,7 @@
 import { useState } from "react";
 import $ from 'jquery'
 import AsyncSelect from 'react-select/async';
-import handle_debounce from "../../components/debounce";
+import handle_debounce from "../../utilities/debounce";
 
 type UserInfoModalProps = {
   url?: string;        // might be undefined

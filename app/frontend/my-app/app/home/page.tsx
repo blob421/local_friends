@@ -1,9 +1,9 @@
 "use client";
 import {useState, useEffect } from 'react'
-import {fetchAuth} from '../components/fetch'
+import {fetchAuth} from '../utilities/fetch'
 import $ from 'jquery'
 import dynamic from 'next/dynamic';
-import { encodeUrlSafe } from '../components/encode';
+import { encodeUrlSafe } from '../utilities/encode';
 import { truncateText } from '../components/truncate_text';
 
 import type {Region, Post, Media, Comment, SubComment, User} from '../types_feed'

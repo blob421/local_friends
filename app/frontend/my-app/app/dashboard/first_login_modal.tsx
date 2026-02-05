@@ -1,5 +1,5 @@
 "use client"
-import { fetchAuth } from "../components/fetch"
+import { fetchAuth } from "../utilities/fetch"
 
 import $ from 'jquery'
 export default function FirstLoginModal(){

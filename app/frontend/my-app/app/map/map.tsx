@@ -1,7 +1,7 @@
 'use client'
 import { MapContainer, TileLayer, Polygon, useMap, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { fetchAuth } from "../components/fetch";
+import { fetchAuth } from "../utilities/fetch";
 import { useEffect, useState } from "react";
 import L from "leaflet";
 

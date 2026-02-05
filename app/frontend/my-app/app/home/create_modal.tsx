@@ -2,13 +2,14 @@
 import $ from 'jquery'
 import {useState, useEffect} from 'react'
 import AsyncSelect from 'react-select/async'
-import handle_debounce from '../components/debounce'
+import handle_debounce from '../utilities/debounce'
 
 type ModalProps = {
     url?: string
     post?: Post
     onClose: () => void
     edit?: boolean
+    dashboard?: string
 }
 type coords = {
     latitude: number
@@ -17,7 +18,7 @@ type coords = {
 import type {Comment, User, Post, Media} from "../types_feed"
 
 
-export default function CreateModal ({url, post, onClose, edit}:ModalProps){
+export default function CreateModal ({url, post, onClose, edit, dashboard}:ModalProps){
 const [geoAble, setGeoAble] = useState(false)
 const [coords , setCoords] = useState<coords | null >(null)
 const [title, setTitle] = useState(post?.title ?? "");
@@ -62,7 +63,10 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
                         className="textarea_post_feed" name="content" value={content? content: ""}
                         onChange={(e) => setContent(e.target.value)}>
                         </textarea>
+
+                       {dashboard && <input type='hidden' name='dashboard' value={dashboard}></input>}
                         
+
                         <input type='file' name='images' multiple></input> 
                         {post? <div className='warn_text_edit_post'>Adding files will replace old files</div>: ""}
 

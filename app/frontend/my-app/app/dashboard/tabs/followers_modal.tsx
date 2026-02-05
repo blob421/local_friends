@@ -1,7 +1,7 @@
 "use client"
 
 import {useState, useEffect, useMemo} from 'react'
-import {fetchAuth} from '../../components/fetch'
+import {fetchAuth} from '../../utilities/fetch'
 import $ from 'jquery'
 type User = {
     id: number
@@ -84,7 +84,7 @@ const clearInput = ()=>{
 
                 
                 <div className='input_cont_follower_modal'>
-                       <input type='text' name='following' placeholder='Search ...' id='search_input' 
+                       <input type='search' name='following' placeholder='Search ...' id='search_input' 
                          onChange={(e)=> {handle_filtering(e.target.value, followingToggled ? 'followed'
                                                         : 'followers'); setInputValue(e.target.value)}}/>
                 </div>

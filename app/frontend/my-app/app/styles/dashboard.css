@@ -406,9 +406,9 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     background-color: rgb(39, 61, 125) !important; border: 1px solid grey;
 }
 
-.input_cont_follower_modal input[type='text']{
+.input_cont_follower_modal input[type='search']{
     background-color: aliceblue; color: black; border: 1px solid black; border-radius: 5px;
-    width: 75%; left:50%; transform: translateX(-50%); position: relative; padding-left: 1%;
+    width: 75%; left:50%; transform: translateX(-50%); position: relative; padding-left: 1%; padding-right: 1%;
    
    
     

@@ -579,6 +579,7 @@ res.json({id: CommentId, parentId: parentSubcomment, commentId:parentComment})
 })
 router.delete('/post/region/:regionId/id/:id', authenticateToken, async (req, res)=>{
   const id = req.params.id
+
   const regionId = req.params.regionId
   const Posts = getPosts()
  try{
@@ -596,12 +597,13 @@ router.delete('/post/region/:regionId/id/:id', authenticateToken, async (req, re
     res.sendStatus(500)
   }
 })
+
 router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), async (req, res)=>{
   const id = req.params.id
   const data = req.body
   const Posts = getPosts()
   const post = await Posts.findOne({_id: new ObjectId(id)})
-
+  const dashboard = data.dashboard
 
   // Delete old photos to replace them 
   if (req.user.id === post.User.id){
@@ -623,8 +625,12 @@ router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), asyn
         
      }
      await handlePost(files, post, data, req.user.id)
+     if (dashboard){
+        res.redirect(`${process.env.FRONT_END_URL}/dashboard?post=${post.id}`)
+     }else{
+        res.redirect(`${process.env.FRONT_END_URL}/home?post=${post.id}`)
+     }
      
-     res.redirect(`${process.env.FRONT_END_URL}/home?post=${post.id}`)
   }
 })
 ///////////////////////////// PROFILE //////////////////////////////////

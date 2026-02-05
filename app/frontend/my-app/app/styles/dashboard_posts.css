@@ -13,7 +13,17 @@
 .post_dash_left_content{
    
 }
-
+.menu_post_dashboard{
+    position: absolute; right: 0; display: flex; flex-direction: column; align-items: center;
+}
+#three_dots_dashboard{
+   
+}
+.option_menu_hidden{
+    background-color: grey; margin-top: 12%; flex-direction: column;
+      min-width: 10vw;  border: 1px solid white; display: flex; visibility: hidden;
+      z-index: 10000;
+}
 .post_dash_right_picture{
       display: flex; align-items: center;
      justify-content: center; padding: 3%;
