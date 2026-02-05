@@ -15,13 +15,14 @@
 }
 .menu_post_dashboard{
     position: absolute; right: 0; display: flex; flex-direction: column; align-items: center;
+    width: 10vw;
 }
 #three_dots_dashboard{
    
 }
 .option_menu_hidden{
     background-color: grey; margin-top: 12%; flex-direction: column;
-      min-width: 10vw;  border: 1px solid white; display: flex; visibility: hidden;
+      min-width: 10vw;  border: 1px solid white; display: flex; 
       z-index: 10000;
 }
 .post_dash_right_picture{

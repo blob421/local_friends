@@ -32,6 +32,8 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [selectedPost, setSelectedPost] = useState<Post>()
 
+  const [visibleMap, setVisibleMap] = useState<Record<string, boolean>>({})
+
   const handlePostEditCreate = (post:Post, edit:boolean) =>{
        if (edit){
          setPosts(prev => prev.map(p => p.id == post.id ? post : p))
@@ -50,22 +52,28 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
 
    const postsUrl = url + `/dashboard/posts/${userId}`
    fetchAuth(postsUrl, {method: 'GET'}).then(res => res.json()).then(data => setPosts(data.posts))
+  
+  document.addEventListener('click', (e) => {
+     const target =  e.target as HTMLElement
+     if (target.id !== 'three_dots_dashboard'){
+      setVisibleMap(prev => {
+          const newMap: Record<string, boolean> = {}
+          for (const key in prev){
+            newMap[key] = false
 
+          }
+          return newMap
+      })
+     }
+  })
   
 
-  document.addEventListener('click', (e)=>{
-    const target = e.target as HTMLElement
-    if (target.id !== 'three_dots_dashboard')
-      
-     handleMenu()
- 
-  })
+
 
   }, [])
 
   useEffect(()=>{
-  console.log(posts)
-
+     posts.forEach(p => { visibleMap[p.id] = false })
   }, [posts])
 
   return(
@@ -80,8 +88,23 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
                gap-3 gap-lg-0 p-2 pb-5 pb-lg-1 position-relative' key={post.id}
                id={`dash_post_${post.id}`}>
 
-                <PostEditMenu setEditModalVisible={(bool:boolean) => setEditModalVisible(bool)} 
-                location={'dashboard'} postId={String(post.id)} 
+                 <PostEditMenu setEditModalVisible={(bool:boolean) => setEditModalVisible(bool)} visibleMap={visibleMap}
+                location={'dashboard'} postId={String(post.id)} setMenuVisible={(postId:string) => {
+             
+                 setVisibleMap(prev => { 
+                   const newMap: Record<string, boolean> = {}
+                   for (const key in prev){
+                     if (key == postId){
+                       newMap[key] = !prev[key]
+                     }
+                     else {
+                      newMap[key] = false
+                     }
+                   }
+                   return newMap
+                 })
+
+                }}
                 setPostActive={(id:string) => setSelectedPost(posts.find(p => p.id == parseInt(id)))}/>
 
                   <div className='post_dash_left_content col-12 col-lg-7 mr-5'>

@@ -405,12 +405,17 @@ return (
             </div>
       
             
-          {createModal && <CreateModal url={url} onClose={()=> setModal(false)}/>}    
+          {createModal && <CreateModal url={url} onClose={()=> setModal(false)}
+            handlePostEditCreate={(post:Post, edit:boolean) => setPosts([post, ...posts]) }/>}    
+
           {postDetailModal && (activePost && <PostDetailModal feed={postScope} commentReload={commentReload}
           comments={comments} delPost={(post)=> {
             setPosts(prev=> prev.filter(p=> p.id !== post.id));
             setPostDetailModal(false)
           }}
+          postModified={(post:Post) => {setPosts(prev => prev.map(p => p.id == post.id ? post : p));
+                                        setActivePost(undefined); setActivePost(post)
+          } }
           delComment={(commentId, type, subComments) => {
           
           setPosts(prev =>

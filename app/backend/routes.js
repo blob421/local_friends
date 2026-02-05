@@ -139,7 +139,7 @@ const handlePost = async (files, post, data, userId) => {
         channel.sendToQueue('detect_animal', Buffer.from(payload));
       });
 
-      return media_arr
+      return {Media: media_arr, _id: postId}
     
   } catch (err2) {
     console.log(err2);
@@ -359,10 +359,12 @@ router.post('/post', authenticateToken,
 
 
   const files = req.files
-  await handlePost(files, post, null, null)
- 
+  const returned_data = await handlePost(files, post, null, null)
+  
+  post._id = returned_data['_id']
+  post.Media = returned_data['Media']
 
-    res.redirect(`${process.env.FRONT_END_URL}/home`)
+    res.json({post: post })
 })
 
 
@@ -626,8 +628,8 @@ router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), asyn
     
         
      }
-     const medias = await handlePost(files, post, data, req.user.id)
-     res.json({Media: medias})
+     const returned_data = await handlePost(files, post, data, req.user.id)
+     res.json({Media: returned_data['Media']})
 
   }
 })

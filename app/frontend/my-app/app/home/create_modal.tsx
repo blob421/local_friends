@@ -56,6 +56,7 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
    const SendPostEditCreate = (e:React.FormEvent) =>{
     e.preventDefault()
     const fetchUrl = !post ? `${url}/post` : `${url}/post/edit/${post._id}`
+    
     const editedTitle = post?.title !== title ? title: post.title
     const editedContent = post?.content !== content ? content: post.content
     const editedLatitude = coords?.latitude ? parseFloat(coords?.latitude) : post?.latitude
@@ -85,8 +86,8 @@ const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
                                                  latitude: editedLatitude, longitude: editedLongitude,
                                                  Media: data.Media}
                          }
-                         else{
-                        
+                         else {
+                             newPost = data.post
 
                          }
                         

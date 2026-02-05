@@ -24,6 +24,7 @@ type PostDetailModalProps = {
   delComment: (commentId:any, type: String, subComments:Number[]) => void
   setComment: (type:String, content:string, id?:any, commentId?:any, parentId?:any) => void
   delPost: (post:Post) => void
+  postModified: (post:Post) => void
 }
 
 type Image = {
@@ -32,7 +33,7 @@ type Image = {
 
 
 export default function PostDetailModal({post, comments, delComment,setComment, onClose, user, feed, 
-  commentReload, delPost}:PostDetailModalProps){
+  commentReload, delPost, postModified}:PostDetailModalProps){
 
     const url = process.env.NEXT_PUBLIC_API_URL
     const [images, setImages] = useState<Image[]>([])
@@ -48,6 +49,9 @@ export default function PostDetailModal({post, comments, delComment,setComment, 
     const [selectedEmoji, setSelectedEmoji] = useState("")
     const [newCommentId , setNewCommentId] = useState(0)
     const textRef = useRef<HTMLDivElement>(null);
+    
+    const [editMenu, setEditMenuVisible] = useState(false)
+
     const [overflowingIds, setOverflowingIds] = useState<string[]>([]);
     const [commentDelModal,showDeleteCommentModal] = useState(false)
     const [CommentDelId, setCommentDelete] = useState("")
@@ -205,7 +209,9 @@ useEffect(() => {
                                               }
 
               {post.User.username == user?.username && 
-              <PostEditMenu setEditModalVisible={(bool:boolean) => setEditModalVisible(bool)}/>}
+              <PostEditMenu setEditModalVisible={(bool:boolean) => setEditModalVisible(bool)}
+              postId={String(post.id)} setMenuVisible={(postId:string) => setEditMenuVisible(!editMenu)}
+              visible={editMenu}/>}
 
 
 
@@ -471,7 +477,9 @@ useEffect(() => {
              
        </div>
        {editModalVisible && <CreateModal url={url} post={post} edit={true}
-      onClose={()=> setEditModalVisible(false)}/>}
+      onClose={()=> setEditModalVisible(false)} handlePostEditCreate={(post:Post, edit:boolean) => {
+        postModified(post); setEditMenuVisible(false)
+      }}/>}
 
       
       {commentDelModal && <div id='commentDelBg'>

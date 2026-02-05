@@ -13,7 +13,7 @@ export type Post = {
   SubComments: SubComment[]
   Region: Region
   latitude: number
-  guessed_animal: string
+  guessed_animal: string | null
   longitude: number
  
   
