@@ -23,7 +23,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
     return ( 
     <div className="col-lg-11">
         
-                <div className="row justify-content-center">
+                <div className="row justify-content-center g-0">
                  
                      <div className="col-12 mb-1 mb-lg-0 top_bar_dashboard">
                        {!visitor ? `Welcome ${user?.username}`

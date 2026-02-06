@@ -1,6 +1,8 @@
 .posts_dashboard_cont{
-    border: 1px solid grey; overflow-y: scroll;  height: 92vh;
-    padding-top: 3vh; background-color: rgb(33, 33, 33);
+    border: 1px solid grey; overflow-y: scroll;  height:91vh;
+    background-color: rgb(33, 33, 33); overflow-x: hidden; position: relative;
+    padding-top: 6vh;
+    
    
 
 }
@@ -14,11 +16,15 @@
    
 }
 .menu_post_dashboard{
-    position: absolute; right: 0; display: flex; flex-direction: column; align-items: center;
-    width: 10vw;
+    position: absolute; right: 0; display: flex; flex-direction: column; align-items: end;
+    width: 10vw; padding-right: 2vw; gap: 2vh;
 }
 #three_dots_dashboard{
-   
+   font-size: larger; 
+}
+.new_post_btn_dash{
+    position: absolute !important; top: 10px; right: 13px; height: 6vh !important; z-index: 1000;
+    max-height: 40px;
 }
 .option_menu_hidden{
     background-color: grey; margin-top: 12%; flex-direction: column;
@@ -72,6 +78,19 @@ html, body {
      .no_post_wrapper{
         gap:2% !important
     }
+    .posts_dashboard_cont{
+     height:80vh;
+}
+    .new_post_btn_dash{
+      position: fixed !important; top:unset !important; 
+      bottom: 20px !important; opacity: 0.9;
+}
+.option_post_detail{
+    font-size: larger; padding-left: 2vw; padding-right: 2vw;
+}
+.menu_post_dashboard{
+    padding-right: 4vw; 
+}
 }
 .no_post_wrapper{
     border-radius: 16px; background-color: rgba(56, 56, 56, 0.016); color: white;

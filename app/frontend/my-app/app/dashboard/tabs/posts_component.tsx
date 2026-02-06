@@ -9,7 +9,8 @@ import DeleteBtnModal from '@/app/components/UI/delete_confirm'
 const CreateModal = dynamic(() => import('../../home/create_modal'))
 import { DelPost } from '@/app/utilities/delete_post'
 import { set_visible } from '@/app/utilities/set_visible'
-
+import { create } from 'domain'
+import $ from 'jquery'
 type DashboardPostsComponentProps = {
   userId: string
 }
@@ -31,7 +32,7 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
   const [posts, setPosts] = useState<Post[]>([])
   const [editModalVisible, setEditModalVisible] = useState(false)
   const [selectedPost, setSelectedPost] = useState<Post>()
-
+  const [createModal, setCreateModal] = useState(false)
   const [visibleMap, setVisibleMap] = useState<Record<string, boolean>>({})
 
   const handlePostEditCreate = (post:Post, edit:boolean) =>{
@@ -78,8 +79,14 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
 
   return(
 
-  
-        <div className='posts_dashboard_cont col-lg-11 col-12'>
+       <div className='col-lg-11 col-12'>
+        <div className='posts_dashboard_cont'>
+
+               <button className='new_post_btn_dash new_post_btn' id={'new_post_div'} onClick={()=>{setCreateModal(true);
+                       $('#feed_modal_bg').show()}}>
+                 New post <img src={'/new_post.png'} id='new_post_icon' className='new_post_icon'></img>
+                </button>
+
              {posts && posts.length > 0 && posts.map((post) => {
               const images: Image[] = post.Media.map(i => ({url: url + i.url}))
               return(
@@ -137,11 +144,23 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
 
             </div>}
 
-            {editModalVisible && <CreateModal url={url} post={selectedPost} edit={true}
+           
+
+
+        </div>
+            {createModal && 
+            <CreateModal url={url} 
+            onClose={()=> setCreateModal(false)} dashboard='dashboard' 
+            handlePostEditCreate={(post:Post, edit:boolean) => 
+                                                   handlePostEditCreate(post, edit) } />}
+
+
+          {editModalVisible && <CreateModal url={url} post={selectedPost} edit={true}
             onClose={()=> setEditModalVisible(false)} dashboard='dashboard' 
             handlePostEditCreate={(post:Post, edit:boolean) => 
                                                    handlePostEditCreate(post, edit) }/>}
 
+        
 
            {selectedPost && <DeleteBtnModal DelPost={async (post:Post) => { 
                  delPost(post);
@@ -149,10 +168,7 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
                       .then(s => s == 202 ? delPost(post) : alert('Unauthorized action'))
          
                  }} post={selectedPost}/>}
-
-
         </div>
-        
  
 
     )

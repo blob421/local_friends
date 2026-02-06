@@ -11,7 +11,9 @@ export default function PostEditMenu({setEditModalVisible, setPostActive, setMen
     return (
          <div className={location? `menu_post_dashboard` :'menu_post_detail_cont'}>
               <button id={location? "three_dots_dashboard" :'three_dots_post_detail'}
-                      onClick={()=> setMenuVisible(postId)}>...</button>
+                      onClick={()=> {setMenuVisible(postId); 
+                      location &&  setPostActive && setPostActive(postId)}}>...</button>
+                      
              {((visibleMap && visibleMap[postId]) || visible) && 
               <div id={location? `option_menu_dashboard_${postId}`:'option_menu_post_detail'}
                    className='option_menu_hidden'>
