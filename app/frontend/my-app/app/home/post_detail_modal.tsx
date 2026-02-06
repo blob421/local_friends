@@ -232,7 +232,8 @@ useEffect(() => {
                                 <div>{post.content} </div>
                                 
                             </div>
-                                <div className="post_detail_pictures_cont col-md-6">
+                                <div className="post_detail_pictures_cont col-md-6 h-100 d-flex justify-lg-center
+                                align-lg-center">
                                  {images.length > 1 && <Carousel images={images}/>}
                                  
                                  {images.length == 1 && post.Media?.map(img=>{

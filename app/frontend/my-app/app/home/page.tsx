@@ -273,7 +273,7 @@ const setVisiblePopUp = (id:string) => {
 
 return (
  
-<div className="container-fluid d-flex justify-content-center">
+<div className="container-fluid d-flex justify-content-center p-0">
         
         
 

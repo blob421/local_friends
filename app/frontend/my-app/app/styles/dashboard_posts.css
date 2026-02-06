@@ -9,7 +9,7 @@
 .single_post_dash{
      border: 1px solid grey; max-height: 75vh;
     justify-self: center; background-color: rgb(34, 34, 34); border-radius: 5px;
-    margin-top: 1vh; overflow: hidden; padding:1%
+    margin-top: 1vh; overflow: hidden; padding:1% ;
 }
 
 .post_dash_left_content{
@@ -32,8 +32,8 @@
       z-index: 10000;
 }
 .post_dash_right_picture{
-      display: flex; align-items: center;
-     justify-content: center; padding: 3%;
+      
+     padding: 1%; height: 54vh; position: relative; margin-top: 3vh; 
    
 }
 .post_dash_title{

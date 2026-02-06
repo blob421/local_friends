@@ -39,6 +39,8 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
        if (edit){
          setPosts(prev => prev.map(p => p.id == post.id ? post : p))
  
+       }else {
+        setPosts([post, ...posts])
        }
   }
 
@@ -123,9 +125,16 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
                     </div>
 
                   </div>
-                  <div className='post_dash_right_picture col-12 col-lg-4'>
-                    <Carousel images={images}/>
+                 
+                     <div className='post_dash_right_picture col-12 col-lg-4 '>
+                    {images && images.length > 0 &&
+                    <Carousel images={images} postId={String(post.id)}/>
+                    }
+       
                   </div>
+                  
+              
+               
               </div>
             ) })
 

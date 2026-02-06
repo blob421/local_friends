@@ -244,8 +244,8 @@ input[type='file']{
     display: flex; flex-direction: column; align-items: center; z-index: 1005;
 }
 .post_detail_author{
-    height: 25%; display: flex; gap: 2%; background-color: rgb(53, 53, 53); font-size: small;
-    align-items: center; border-radius: 5px; position: sticky; top:0; margin-bottom: 1vh;
+    display: flex; gap: 2%; background-color: rgb(53, 53, 53); font-size: small;
+    align-items: center; border-radius: 5px; position: sticky; top:0; margin-bottom: 2vh;
  }
  .compass_icon_create_post{
     height: 25px;
@@ -482,7 +482,19 @@ input[type='file']{
 }
 .carousel-item img {
   object-fit: contain;
-  max-height: 45vh; /* set a max height */
+  max-height: 43vh; /* set a max height */
+}
+.carousel-indicators{
+    position: absolute; top: -35px;  height: 3vh;
+}
+.carousel_indicators_feed{
+    position: absolute; top: -5px !important; height: 3vh;
+}
+.carousel-inner{
+    margin-top: 5vh;
+}
+.post_detail_pictures_cont {
+    height: fit-content;
 }
 .carousel-control-prev,
 .carousel-control-next {
@@ -523,7 +535,7 @@ input[type='file']{
 }
 @media (max-width: 768px) {   /* md breakpoint */
   .description_post_detail {
-    height: 200px !important; margin-bottom: 2vh;
+    height: 17% !important; margin-bottom: 2vh;
   }
 
   .post_detail_pictures_cont{
