@@ -8,10 +8,11 @@ type animal_modal_props = {
 }
 type Option = { value: string; label: string };
 
+
 export default function AnimalModal({url}: animal_modal_props){
-    const search_url = `${url}/animals`
+    const search_url = `${url}/graphql`
     
-    const loadOptions = handle_debounce(search_url, 'animal')
+    const loadOptions = handle_debounce(search_url, 'animals')
     const [selectedOption, setSelectedOption] = useState<Option | null>(null);
     return(
          <div id="profile_modal_bg_animal">

@@ -721,42 +721,7 @@ router.post('/user_settings/edit/:firstLogin', authenticateToken, async (req, re
     
 
 })
-//////////////////////////////// REGIONS API ////////////////////////////////////////
 
-/////////// CAN BE DELETED
-router.get('/regions', authenticateToken, async (req, res)=>{
-  const search = req.query.name
-  const results = await Region.findAll({attributes: ['name', 'id'] ,
-                                  where:{name: {[Op.iLike]: `${search}%`} }, 
-                                  distinct: true,
-                                  group: ['name', 'id'],
-                                  limit: 20})
-  res.json({results})
-} )
-
-/////////// CAN BE DELETED
-router.get('/street_addresses', authenticateToken, async (req,res)=>{
-  const search = req.query.name
-  const number =  search.match(/\d+/g);
-  const string = search.replace(/\d+/g, "").trim();
-  const results = await Addresses.findAll({ where:{[Op.and] : [
-                                                         {street:{[Op.iLike]: `${string}%`}},
-                                                         {number:{[Op.iLike]: `${number? number: ""}%`}}
-                                                        ]
-                                                      },
-                                    
-                                            limit: 20})
-  res.json({results})
-})
-router.get('/animals', authenticateToken, async(req, res)=>{
-  const search = req.query.name
-  const results = await Animal.findAll({attributes: ['name', 'id'],
-                                       where:{name:{[Op.iLike]: `${search}%`}},
-                                       group: ['name', 'id'],
-                                       limit: 20
-                                      })
-  res.json({results})
-})
 ///////////////////////////////////// MAP /////////////////////////////////////////////
 
 router.get('/map', authenticateToken, async (req, res)=>{

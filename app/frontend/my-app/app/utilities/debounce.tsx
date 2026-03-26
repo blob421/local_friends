@@ -1,7 +1,14 @@
 import debounce from 'lodash.debounce'
 import {fetchAuth} from './fetch'
 ///////////////////////// GRAPHQL ///////////
-
+const GET_ANIMALS = `
+  query ($name: String!) {
+    animals(name: $name){
+    id
+    name
+    }
+  }
+`;
 
 const GET_REGION = `
   query ($name: String!) {
@@ -23,7 +30,7 @@ const GET_STREET = `
     }
   }
 `;
-
+//////////////////////////////////////////////////////////
 type element = {
     name: string
     id: string
@@ -48,23 +55,26 @@ export default function handle_debounce(url:string, type:string){
 
         fetchAuth(url, {
                 method: "POST",
-                body: type !== 'streets' ? JSON.stringify({query: GET_REGION, variables: {name: input}})
-                                        : JSON.stringify({query: GET_STREET, variables: {name: input}})
+                body: 
+                      type == 'addresses' ? JSON.stringify({query: GET_STREET, variables: {name: input}})
+                    : type == 'animals' ? JSON.stringify({query: GET_ANIMALS, variables: {name: input}})
+                    : JSON.stringify({query: GET_REGION, variables: {name: input}})
+
                 
         }).then(res => res.json()).then(data => {
                 console.log(data)
-                choices =  type !== 'streets' ? data.data.regions.map((element:element) => ({
+                choices =  type !== 'addresses' ? data.data[type].map((element:element) => ({
                 label: element.name,
                 value: element.id
               }))
-                                            :  data.data.addresses.map((element:element) => ({
+                                            :  data.data[type].map((element:element) => ({
                 label: element.number + ' ' + element.street + ', ' + (element.city? element.city: ""),
                 value:  element.number + element.street,
                 coords: {longitude: element.longitude, latitude: element.latitude}
 
                 
               }))
-              
+
             callback(choices)
         })
 

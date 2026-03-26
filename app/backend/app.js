@@ -37,12 +37,19 @@ app.set('trust proxy', 1); // for nginx or real ips instead of the proxy
 
 ////////////////////////////// GRAPHQL /////////////////////////////////////////
 const { createHandler } = require('graphql-http/lib/use/express');
-const { schema } = require("./graphql/Queries & Schema.js");
+const { schema } = require("./graphql/schema.js");
 
 
-app.all(
+const { renderGraphiQL } = require('@graphql-yoga/render-graphiql');;
+
+app.get('/graphql', (req, res) => {
+  res.send(renderGraphiQL({ endpoint: '/graphql' }));
+});
+
+app.use(
   "/graphql",
-  authenticateToken,                                                                     
+  authenticateToken,   
+                                                                    
   createHandler({
     schema,
     graphiql: true

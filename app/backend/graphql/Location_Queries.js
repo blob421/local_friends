@@ -1,24 +1,19 @@
 /////////////////////////////////////// IMPORTS ////////////////////////////////////////
 
-const { sequelize, User, Region, Addresses } = require('../db.js');
+const {Region, Addresses} = require('../db.js');
 const { Op } = require("sequelize");
 
-const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLID, GraphQLInt, GraphQLFloat
-} = require("graphql");
-
+const {GraphQLString, GraphQLList} = require("graphql");
 const {RegionType, AddressesType} = require('./ORM_types.js')
 
-/////////////////////////////////////// Queries ////////////////////////////////////////
+/////////////////////////////////////// GET ////////////////////////////////////////
 
-const QueryType = new GraphQLObjectType({
-  name: "Query",
-  fields: {
-    //****************************************************/   // Regions
+const Location_Queries = {
+
+      //****************************************************/   // Regions
     regions: {                                               
-      type: new GraphQLList(RegionType),                      // frontend debounce.tsx , user-info-modala   
-      args: {
-        name: { type: GraphQLString }
-      },
+      type: new GraphQLList(RegionType),                        // frontend debounce.tsx , user-info-modala   
+      args: {name: { type: GraphQLString }},
       resolve: async (_, { name }) => {                     
         return Region.findAll({
           attributes: ["id", "name"],
@@ -31,9 +26,7 @@ const QueryType = new GraphQLObjectType({
      //****************************************************/ // Addresses
      addresses: {
       type: new GraphQLList(AddressesType),                  // create_modal.tsx , 
-      args: {
-        name: {type: GraphQLString}
-      },
+      args: {name: {type: GraphQLString}},
       resolve: async (_, {name}) => {
           const number =  name.match(/\d+/g);
           const string = name.replace(/\d+/g, "").trim();
@@ -46,11 +39,6 @@ const QueryType = new GraphQLObjectType({
                                             limit: 20})
       }
      }
-  }
-});
+}
 
-const schema = new GraphQLSchema({
-  query: QueryType
-});
-
-module.exports = { schema };
+module.exports = Location_Queries

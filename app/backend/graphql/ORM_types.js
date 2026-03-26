@@ -1,6 +1,9 @@
 const {GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLList, GraphQLID, GraphQLInt, GraphQLFloat
 } = require("graphql");
 
+
+///////////////////////////////////// LOCATION ////////////////////////////////////////////
+
 const RegionType = new GraphQLObjectType({
   name: "Region",
   fields: () => ({                                           // Prevent circular conflict 
@@ -20,5 +23,13 @@ const AddressesType = new GraphQLObjectType({
 
   })
 })
+/////////////////////////////////////// ENTITIES ////////////////////////////////
 
-module.exports = {RegionType, AddressesType}
+const AnimalType = new GraphQLObjectType({
+  name: "Animal",
+  fields: () => ({
+    id: {type: GraphQLID},
+    name: {type: GraphQLString}
+  })
+})
+module.exports = {RegionType, AddressesType, AnimalType}
