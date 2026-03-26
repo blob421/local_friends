@@ -173,7 +173,7 @@ router.post('/login', async (req, res) => {
   res.redirect(`${process.env.FRONT_END_URL}/dashboard`);
 });
 
-router.get('/profile/:id', authenticateToken, async (req, res)=>{
+router.get('/profile/:id', authenticateToken, async (req, res)=>{                                  
   const targetId = req.params.id
   const settings = await UserSettings.findOne({where: {UserId: req.params.id}})
   const attr = settings.showEmail
@@ -205,6 +205,7 @@ router.get('/profile/:id', authenticateToken, async (req, res)=>{
 
   const req_user = req.user.id
   res.json({user, settings, req_user: req_user, following:following !== null, stats, badges, UserBadges})
+  
 })
 
 
@@ -271,7 +272,7 @@ router.post('/follow/:target_user', authenticateToken, async (req, res)=>{
   }
 })
 
-
+//////// possible candidate
 router.get('/dashboard/posts/:UserId', authenticateToken, async (req, res) =>{
   const userId = parseInt(req.params.UserId)
   const Posts = getPosts()
@@ -722,6 +723,7 @@ router.post('/user_settings/edit/:firstLogin', authenticateToken, async (req, re
 })
 //////////////////////////////// REGIONS API ////////////////////////////////////////
 
+/////////// CAN BE DELETED
 router.get('/regions', authenticateToken, async (req, res)=>{
   const search = req.query.name
   const results = await Region.findAll({attributes: ['name', 'id'] ,
@@ -731,6 +733,8 @@ router.get('/regions', authenticateToken, async (req, res)=>{
                                   limit: 20})
   res.json({results})
 } )
+
+/////////// CAN BE DELETED
 router.get('/street_addresses', authenticateToken, async (req,res)=>{
   const search = req.query.name
   const number =  search.match(/\d+/g);

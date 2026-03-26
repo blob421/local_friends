@@ -28,7 +28,7 @@ const [title, setTitle] = useState(post?.title ?? "");
 const [content, setContent] = useState(post?.content ?? "");
 const [files, setFiles] = useState<File[]>([])
 
-const loadOptions = handle_debounce(url + '/street_addresses', 'streets')
+const loadOptions = handle_debounce(url + '/graphql', 'streets')
 
     useEffect(() => {
         if('geolocation' in navigator) {
