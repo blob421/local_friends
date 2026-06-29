@@ -27,7 +27,7 @@ const login = async () => {
     return (
     <div className="modal_bg">
       
-          <form className="login_cont" action={login}>
+          <form className="register_cont" action={login}>
               <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
               <h1 className="login_head">Login</h1>
 
@@ -50,6 +50,7 @@ const login = async () => {
               <button type="submit" className='home_submit_forms_btns'>
                 Login
               </button>
+
               <a className="forgot_password_login txt_xs" onClick={() => reset()}>
                 Forgot your password ?</a>
           </form>

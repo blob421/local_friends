@@ -18,7 +18,7 @@ export default function Reset({onClose}: reg_params){
  const [code , setCode] = useState('')
  const [passwordProcessCompleted, setpasswordProcessCompleted]= useState(false)
  const [codeValid, setcodeValid] = useState(false)
- const [message, setMessage] = useState('A recovery code has been sent if this address is valid')
+ const [message, setMessage] = useState('A recovery code has been sent if this address was valid')
  const [password, changePassword] = useState("")
  const [passconfirm, changeConfirm] = useState('')
 
@@ -63,7 +63,7 @@ export default function Reset({onClose}: reg_params){
  return (
    <div className="modal_bg">
       {!mailSent ?
-      <form action={send} className="login_cont">
+      <form action={send} className="register_cont">
               <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
               <h1 className="login_head">Reset</h1>
         <input type="email" required className="home_forms_inputs" placeholder="Email address"
@@ -77,7 +77,7 @@ export default function Reset({onClose}: reg_params){
 
        : codeValid ?
 
-     <form action={passwordReset} className="login_cont">
+     <form action={passwordReset} className="register_cont">
             <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
             <h1 className="login_head">New password</h1>
               <input type="text" name="username" value={username} disabled required={false}
@@ -93,7 +93,7 @@ export default function Reset({onClose}: reg_params){
                 </input>
 
                 {(!passMatch && !passwordProcessCompleted) &&
-                   <div className="username_help">
+                   <div className="username_help yellow_help txt_xs">
                     Passwords don't match
                   </div>}
 
@@ -113,9 +113,9 @@ export default function Reset({onClose}: reg_params){
       
        : 
        
-      <form action={sendCode} className="login_cont">
+      <form action={sendCode} className="register_cont">
             <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
-            <h1 className="login_head">Enter your code</h1>
+            <h1 className="login_head">Confirm</h1>
             <input type="text" required className="home_forms_inputs" placeholder="Code" maxLength={6}
             onChange={(e)=> {setCode(e.target.value)}}>
             

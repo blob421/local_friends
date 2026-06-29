@@ -3,7 +3,7 @@ const { Sequelize, DataTypes, Model } = require('sequelize');
 
 const runMode = process.env.runModeLocalFriends || 'Dev'
 const sequelize = runMode == 'Dev' 
-                              ? new Sequelize('postgres://postgres:1246@localhost:5432/js-backend')
+                              ? new Sequelize('postgres://postgres:1246@localhost:5432/local_friends_dev')
                               : new Sequelize('postgres://postgres:1246@postgres:5432/js-backend')
 
 
@@ -14,6 +14,21 @@ const sequelize = runMode == 'Dev'
 /// yarn sequelize-cli db:migrate --env production
 
 ///////////////////////////// MODELS ////////////////////////////////
+class UserReset extends Model {}
+UserReset.init(
+  {
+
+  requestedAt : {type: DataTypes.DATE, defaultValue: DataTypes.NOW},
+  code: {type: DataTypes.INTEGER, allowNull:false}
+  
+}, 
+{
+  timestamps: false,
+  sequelize,
+  freezeTableName : true,
+  modelName: 'UserReset'
+}
+)
 
 class User extends Model {}
 User.init(
@@ -235,7 +250,11 @@ User.hasOne(Media)
 Post.belongsTo(Animal)
 User.belongsTo(Animal)
 User.hasOne(UserSettings)
+User.hasMany(UserReset)
 
+UserReset.belongsTo(User, {
+    onDelete: 'CASCADE',
+})
 SubComment.belongsTo(Comment, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE',
@@ -314,5 +333,5 @@ UserStat.belongsTo(User, {
 console.log(User === sequelize.models.User); // true
 
 module.exports = { sequelize, User, Post, Region, Team, Badge, Media, Animal, Comment, UserSettings,
-  Addresses, UserStat, Followed, SubComment, UserBadge,
+  Addresses, UserStat, Followed, SubComment, UserBadge, UserReset
 };

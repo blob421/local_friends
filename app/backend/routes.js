@@ -6,8 +6,9 @@ const {getPosts} = require('./redis_mongodb.js')
 const { ObjectId } =  require("mongodb");
 ////////////////  Utilities  /////////////////
 const {fetchPosts} = require('./fetch_stuff.js')
+const {SendMail} = require('./utility/sendMail.js')
 //////////////////////////////////////////////
-
+const runMode = process.env.runModeLocalFriends || 'Dev'
 const express = require('express');
 const bcrypt = require('bcrypt'); // for password hashing
 const jwt = require('jsonwebtoken');
@@ -19,7 +20,7 @@ const {getChannel} = require('./rabbit')
 
 const { User, Team, Badge, Region, Animal
   , Addresses, Followed , UserBadge,
-  UserStat,
+  UserStat, UserReset,
   UserSettings, sequelize} = require('./db');
 
 
@@ -146,6 +147,71 @@ const handlePost = async (files, post, data, userId) => {
   }
 };
 
+router.get('/auth', authenticateToken, async (req , res) => {
+  res.sendStatus(200)
+})
+
+router.post('/reset', async (req, res)=>{
+  const {email} = req.body
+  
+  const user = await User.findOne({where: {email: email}})
+
+  if (user){
+    const code = Math.floor(Math.random() * 999999)
+    const request = await UserReset.create({UserId: user.id, code: code})
+    const success = await SendMail(code, email)
+    if (success){
+        res.status(204).json({'msg': 'reset request created, message sent'})
+    }
+    else{
+      res.status(500).json({'msg': 'failed to send message for password reset'})
+    }
+   
+  }
+
+  else {
+    res.status(500).json({'msg': 'User does not exist'})
+  }
+})
+
+router.post('/codevalidate', async (req, res)=>{
+  const {email , code} = req.body
+
+  const user = await User.findOne({where: {email: email},
+                            include: [{model: UserReset, limit: 1, order: [['id', 'DESC']]}]
+                           })
+
+  if (user && user.UserResets){
+    expired = new Date() - new Date(user.UserResets.at(0).requestedAt) > (1000 * 60 * 30)
+
+    if (expired){
+      res.status(400).json({msg: 'Code expired'})
+    }
+    else if (parseInt(code) == user.UserResets.at(0).code){
+      res.status(200).json({username: user.username})
+    }
+    else {
+      res.status(403).json({msg: 'Invalid code '})
+    }
+    
+  }
+  else {
+    res.status(500).json({msg: 'User does not exists or has not made a reset request'})
+  }
+})
+router.post('/password_reset', async (req, res) => {
+  const {email , password} = req.body
+  const user = await User.findOne({where: {email: email}})
+  if (user){
+    const hash = await bcrypt.hash(password, 10)
+    user.password = hash
+    user.save()
+    res.status(201).json({msg: 'password changed succesfully'})
+  }
+  else {
+    res.status(500)
+  }
+})
 //////////////////// AUTH ///////////////////////////
 
 router.post('/login', async (req, res) => {
@@ -331,10 +397,10 @@ router.post('/register', async (req, res) => {
   res.cookie('jwt', token, {
     maxAge:  60 * 60 * 24 * 1000 * 2,
     sameSite: 'lax',
-    secure: false,
+    secure: runMode !== 'Dev',
     httpOnly: true
   }) 
-  res.redirect(`${process.env.FRONT_END_URL}/dashboard`)
+  res.sendStatus(200)
 })
 
 ////////////////////////////// POST ////////////////////////////////////

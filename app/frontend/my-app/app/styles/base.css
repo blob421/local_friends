@@ -4,3 +4,21 @@ html{
 a{
     text-decoration: none; color: white; padding: 0.5%; padding-left: 1%; padding-right: 1%;
 }
+.txt_lg{
+    font-size: max(1.5vw, 2.5vh) !important; 
+}
+.txt_md{
+font-size: max(1.3vw, 2.1vh)  !important;
+}
+.txt_sm{
+font-size: max(1.3vw, 2vh)  !important;
+}
+.txt_xs{
+    font-size: max(1vw, 1.5vh)  !important;
+}
+.txt_xl{
+    font-size: max(2vw, 2.8vh) !important;
+}
+.txt_xxl{
+    font-size: max(2.6vw, 3vh)  !important;
+}

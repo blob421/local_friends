@@ -7,9 +7,21 @@
     text-align: center; border-radius: 4px;
 
 }
+.home_forms_inputs{
+    background-color: aliceblue; border: 1px solid black; border-radius: 5px;
+    padding: 1%; width: 100%; padding-left: 2%; padding-right: 2%;
+}
+.disabled_inputs{
+       background-color: rgba(228, 236, 243, 0.897); border: 1px solid black; border-radius: 5px;
+    padding: 1%; width: 100%; padding-left: 2%; padding-right: 2%;
+}
 .login_btn_cont{
      right: 10; position: absolute; display: flex; 
      align-items: center; height: 10vh; gap: 2%;
+}
+.forgot_password_login{
+    color: blue; position: absolute; bottom:7%; display: flex; justify-content: center;
+    cursor: pointer;
 }
 .reg_btn_landing{
     background-color: rgb(158, 198, 232); padding: 1%; width: 7vw; 
