@@ -19,3 +19,4 @@ node_modules/
 frontend/node_modules/
 backend/node_modules/
 backend/uploads/
+app/backend/migrations
