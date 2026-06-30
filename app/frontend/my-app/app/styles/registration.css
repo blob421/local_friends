@@ -10,8 +10,9 @@
     height: 100vh; z-index: 1000;
 }
 .btn_reg{
-    background-color: rgb(208, 208, 208); margin-top: 7%; padding: 2%;
-    border: 1px solid black; cursor: pointer;
+         background-color: rgb(208, 208, 208); margin-top: 19%; padding: 2%;
+    border: 1px solid black; cursor: pointer; width: 30%; border-radius: 4px;
+    position: absolute; bottom: 10%;
 }
 .home_submit_forms_btns{
         background-color: rgb(208, 208, 208); margin-top: 9%; padding: 2%;
@@ -27,10 +28,15 @@
     padding: 1%; width: 100%
 }
 .yellow_help{
-    background-color: rgb(233, 141, 131) !important; padding: 6%;
+    background-color: rgb(238, 219, 139) !important; padding: 6%;
     width: 100%; text-align: left !important; padding-left: 4% !important;
     padding-right: 4% !important;
     
+}
+.red_help{
+        background-color: rgb(233, 141, 131) !important; padding: 6%;
+    width: 100%; text-align: left !important; padding-left: 4% !important;
+    padding-right: 4% !important;
 }
 .username_help{
     background-color: rgb(240, 238, 236); padding-left: 1%; padding: 2%;

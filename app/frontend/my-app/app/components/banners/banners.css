@@ -1,0 +1,28 @@
+.info_banner_main{
+    position: relative;   padding: 1.2%; background-color: rgb(142, 187, 225); 
+    height: 9vh; display: flex; justify-content: center; align-items: center;
+}
+
+
+
+.hidden{
+   opacity: 0;
+}
+
+.middle_slide{
+   transform: translateX(0%) 
+}
+
+.slide_left{
+     transform: translateX(-100%)
+}
+.slide_right{
+  transform: translateX(100%)
+}
+
+
+.info_banner{
+   position: absolute; width: 100vw; bottom: 0;
+   color: black;  display: flex; align-items: center; justify-content: center;
+   height: 100%; transition: transform 2s ease;
+}

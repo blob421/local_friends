@@ -15,6 +15,7 @@ export default function Reset({onClose}: reg_params){
  const [email, setEmail] = useState('')
  const [username, setUsername] = useState("")
  const [mailSent, setMailSent] = useState(false)
+ const [codeSent, setcodeSent] = useState(false)
  const [code , setCode] = useState('')
  const [passwordProcessCompleted, setpasswordProcessCompleted]= useState(false)
  const [codeValid, setcodeValid] = useState(false)
@@ -30,6 +31,7 @@ export default function Reset({onClose}: reg_params){
  }
 
  const sendCode = async ()=> {
+  
     const res = await fetch(code_url, {method: 'POST', headers: {'Content-Type': 'application/json'},
                                      body: JSON.stringify({email: email, code:code})})
     console.log(res.status)
@@ -40,8 +42,9 @@ export default function Reset({onClose}: reg_params){
    }
 
     else {setMessage('This code is invalid')}
-   
+   setcodeSent(true)
  }
+
 
  const passwordReset = async () => {
     const res = await fetch(resetUrl, {method: 'POST', headers: {'Content-Type': 'application/json'},
@@ -122,7 +125,7 @@ export default function Reset({onClose}: reg_params){
             </input>
 
          
-                  <div className="username_help yellow_help txt_xs">
+                  <div className={codeSent ? "username_help red_help txt_xs": "username_help yellow_help txt_xs"}>
                      {message}
                   </div>
          

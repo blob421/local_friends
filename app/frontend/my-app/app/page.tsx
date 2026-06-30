@@ -6,7 +6,13 @@ import Register from "./components/registration/register";
 import Reset from "./components/registration/reset";
 import Login from "./components/registration/login";
 
+import InfoBanner from './components/banners/home_banner';
+
 export default function Home(){
+      const bannerSlides = ['Report animal sightings and connect with animal lovers',
+                            'New feature has just rolled out',
+                            'Tell your friends ',
+                         'Wooah']
 
       const url = process.env.NEXT_PUBLIC_API_URL + '/auth'
       const [regV , setRegV] = useState(false)
@@ -26,11 +32,11 @@ export default function Home(){
      }, [])
      
     return(
-        <div className="container-fluid">
+        <div className="container-fluid p-0 m-0">
               <div className="row">
 
                     <div className="col-12 top_bar_landing">
-                         <div className="local_friends">
+                         <div className="local_friends txt_lg text_center">
                               Local Friends
                          </div>
                          <div className="login_btn_cont">
@@ -52,12 +58,9 @@ export default function Home(){
                           </div>
                     </div>
               </div>
-              <div className="row d-flex justify-content-center title_header_landing">
 
-                 
-                    Report animal sightings and connect with animal lovers
-                  
-               </div>
+              <InfoBanner slides={bannerSlides}/>
+
                    <div className="row top_landing_row">
                         <div className="col-md-8 big_text_landing">
                          <div className="top_text_landing">

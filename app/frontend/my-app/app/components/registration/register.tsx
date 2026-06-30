@@ -72,13 +72,13 @@ export default function Register({onClose}:reg_params){
                   onChange={(e) => changeConfirm(e.target.value)}>
                 </input>
                 
-                <div className='pass_help' 
+                <div className='pass_help txt_xs' 
                 hidden={passconfirm === password || passconfirm.length < 1}>
                     Passwords don't match
                 </div>
                
 
-                <button type="submit" className="home_submit_forms_btns"
+                <button type="submit" className="btn_reg"
                 disabled={passconfirm !== password}>Register</button>
         </form>
     </div>

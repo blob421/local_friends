@@ -1,5 +1,6 @@
 .top_bar_landing{
     background-color: rgb(88, 88, 197); height: 10vh; position: relative;
+    text-align: center;
 }
 .login_btn_landing{
     background-color: rgb(158, 198, 232); padding: 1%; width: 7vw; 
@@ -16,7 +17,7 @@
     padding: 1%; width: 100%; padding-left: 2%; padding-right: 2%;
 }
 .login_btn_cont{
-     right: 10; position: absolute; display: flex; 
+     right: 2.5vw; position: absolute; display: flex; 
      align-items: center; height: 10vh; gap: 2%;
 }
 .forgot_password_login{
