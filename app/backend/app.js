@@ -12,6 +12,8 @@ const cookieParser = require('cookie-parser');
 const queryInterface = sequelize.getQueryInterface();
 
 // Middleware///////////////////////////////////////////////////////////////////
+const authenticateToken = require('./jwt_middleware');
+
 app.use(express.json());
 app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
 const bcrypt = require('bcrypt');
@@ -20,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/usr/src/app/media', express.static('/usr/src/app/media'));
+
 /////////////////////////////// RATE LIMITER ///////////////////////////////////
 const {rateLimit} = require('express-rate-limit')
 const limit = rateLimit({windowMs: 1000 * 60,
@@ -32,6 +35,26 @@ const limit = rateLimit({windowMs: 1000 * 60,
 app.use(limit)
 app.set('trust proxy', 1); // for nginx or real ips instead of the proxy
 
+////////////////////////////// GRAPHQL /////////////////////////////////////////
+const { createHandler } = require('graphql-http/lib/use/express');
+const { schema } = require("./graphql/Schema.js");
+
+
+const { renderGraphiQL } = require('@graphql-yoga/render-graphiql');;
+
+app.get('/graphql', (req, res) => {
+  res.send(renderGraphiQL({ endpoint: '/graphql' }));
+});
+
+app.use(
+  "/graphql",
+  authenticateToken,   
+                                                                    
+  createHandler({
+    schema,
+    graphiql: true
+  })
+);
 
 /////////////////////////////// MAIN LOOP //////////////////////////////////////
 async function main() {

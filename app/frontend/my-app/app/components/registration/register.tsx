@@ -1,10 +1,12 @@
-
-
 "use client";
+
 import {useState, useEffect} from 'react'
 import $ from 'jquery';
 
-export default function Register(){
+type reg_params = {
+    onClose: () => void
+}
+export default function Register({onClose}:reg_params){
   const [userExists, changeUser] = useState(false)
   const [emailExists, changeEmail] = useState(false)
 
@@ -39,36 +41,38 @@ export default function Register(){
 
     const api = process.env.NEXT_PUBLIC_API_URL
     return(
+    <div className='modal_bg'>
         <form className="register_cont" method="POST" action={`${api}/register`}>
+                <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
                 <h1 className="header_reg">Register</h1>
 
                 <input type="text" name="username" required 
-                className="reg_input" placeholder="Username" maxLength={26}>
+                className="home_forms_inputs" placeholder="Username" maxLength={26}>
                 </input>
                  <div className='username_help' 
                 hidden={!userExists}>
                     Username already in use
                 </div>
 
-                <input type="email" name="email" required className="reg_input"
+                <input type="email" name="email" required className="home_forms_inputs"
                 placeholder="Email">
                 </input>
-                <div className='email_help' 
+                <div className='email_help txt_xs' 
                 hidden={!emailExists}>
-                    This email is already in use
+                    Email address already in use
                 </div>
 
                 <input type="password" name="password" required 
-                className="reg_input" placeholder="Password"
+                className="home_forms_inputs" placeholder="Password"
                 onChange={(e)=> changePassword(e.target.value)}>
                 </input>
 
                 <input type="password" name="password2" required 
-                className="reg_input" placeholder="Confirm"
+                className="home_forms_inputs" placeholder="Confirm"
                   onChange={(e) => changeConfirm(e.target.value)}>
                 </input>
                 
-                <div className='pass_help' 
+                <div className='pass_help txt_xs' 
                 hidden={passconfirm === password || passconfirm.length < 1}>
                     Passwords don't match
                 </div>
@@ -77,6 +81,7 @@ export default function Register(){
                 <button type="submit" className="btn_reg"
                 disabled={passconfirm !== password}>Register</button>
         </form>
+    </div>
     
     )
 }

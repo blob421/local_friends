@@ -2,6 +2,7 @@
 export async function fetchAuth(url: string, options: RequestInit = {}) {
   const response = await fetch(url, {
     ...options,
+    headers : {'Content-Type': 'application/json'},
     credentials: 'include',
   });
 

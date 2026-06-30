@@ -13,7 +13,7 @@ import './styles/dashboard.css'
 import './styles/home.css'
 import './styles/dashboard_posts.css'
 import './styles/base.css'
-
+import './components/banners/banners.css'
 
 //////
 

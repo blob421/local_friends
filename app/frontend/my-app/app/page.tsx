@@ -1,43 +1,66 @@
-import Image from "next/image";
-import { cookies } from 'next/headers';
-import Link from 'next/link';
+'use client'
 
-export default async function Home(){
-  const cookieStore = await cookies()
-  const jwt = cookieStore.get('jwt')
-  const hasJwt = !!jwt;
+import Link from 'next/link';
+import { useEffect, useState } from "react";
+import Register from "./components/registration/register";
+import Reset from "./components/registration/reset";
+import Login from "./components/registration/login";
+
+import InfoBanner from './components/banners/home_banner';
+
+export default function Home(){
+      const bannerSlides = ['Report animal sightings and connect with animal lovers',
+                            'New feature has just rolled out',
+                            'Tell your friends ',
+                         'Wooah']
+
+      const url = process.env.NEXT_PUBLIC_API_URL + '/auth'
+      const [regV , setRegV] = useState(false)
+      const [loginV , setLoginV] = useState(false)
+      const [resetV , setResetV] = useState(false)
+
+      const [isLoggedIn, setLoggedIn] = useState(false)
+
+      const isAuth = async () => {
+          const res = await fetch(url, {credentials: 'include', method:'GET'})
+          if (res.ok){
+               setLoggedIn(true)
+          }
+      }
+     useEffect(()=> {
+        isAuth()
+     }, [])
+     
     return(
-        <div className="container-fluid">
+        <div className="container-fluid p-0 m-0">
               <div className="row">
 
                     <div className="col-12 top_bar_landing">
-                         <div className="local_friends">
+                         <div className="local_friends txt_lg text_center">
                               Local Friends
                          </div>
                          <div className="login_btn_cont">
                               
                             <Link className="dashboard_btn_landing" href="/dashboard"
-                            hidden={!hasJwt}>Dashboard
+                            hidden={!isLoggedIn}>Dashboard
                              
                             </Link>
-                            <Link className="login_btn_landing" href="/login"
-                            hidden={hasJwt}>
+                            <div className="login_btn_landing" onClick={()=>setLoginV(true)}
+                            hidden={isLoggedIn}>
                               Login
-                            </Link>
-                            <Link className="reg_btn_landing" href="/registration"
-                             hidden={hasJwt}>
+                            </div>
+                            <div className="reg_btn_landing" onClick={()=>setRegV(true)}
+                             hidden={isLoggedIn}>
                               Register
-                            </Link>
+                            </div>
+                          
 
                           </div>
                     </div>
               </div>
-              <div className="row d-flex justify-content-center title_header_landing">
 
-                 
-                    Report animal sightings and connect with animal lovers
-                  
-               </div>
+              <InfoBanner slides={bannerSlides}/>
+
                    <div className="row top_landing_row">
                         <div className="col-md-8 big_text_landing">
                          <div className="top_text_landing">
@@ -71,7 +94,12 @@ export default async function Home(){
                
                   
               </div>
-              
+
+              {loginV && <Login onClose={()=> setLoginV(false)} 
+                                reset={()=> {setLoginV(false); setResetV(true)}}/>}
+
+              {regV && <Register onClose={()=> setRegV(false)}/>}
+              {resetV && <Reset onClose={()=> setResetV(false)}/>}
         </div>
     )
 }

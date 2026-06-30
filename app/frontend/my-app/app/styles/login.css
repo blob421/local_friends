@@ -3,14 +3,9 @@
     background-color: rgb(34, 34, 34) ;
 }
 
-.login_cont{
-    left: 50%; top: 50%; transform: translate(-50%,-50%); position: absolute;
-    display: flex; flex-direction: column; gap: 5%; height: 50vh; 
-    border: 1px solid white; justify-content: center; width: 34vw;
-    align-items: center; background-color: rgb(86, 78, 75); user-select: none;
-}
+
 .login_head{
-    font-size: x-large;
+ margin-bottom: 18%; margin-top: 17%; font-size: x-large;color: white;
 }
 .username_input{
     border-radius: 10px; background-color: aliceblue; color: black;

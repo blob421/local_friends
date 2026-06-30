@@ -29,8 +29,8 @@ export default function User_info_modal({url, username, email, firstName, lastNa
     const params = new URLSearchParams(window.location.search)
     const usernameExists = params.get('username')
     
-    const search_url = `${url}/regions`
-    const loadOptions = handle_debounce(search_url, 'user')
+    const search_url = `${url}/graphql`
+    const loadOptions = handle_debounce(search_url, 'regions')
 
   return(
     
