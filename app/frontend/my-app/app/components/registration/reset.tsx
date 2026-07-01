@@ -64,34 +64,35 @@ export default function Reset({onClose}: reg_params){
  const passMatch = useMemo(() =>  password == passconfirm, [passconfirm, password])
 
  return (
-   <div className="modal_bg">
+   <div className="modal_bg row p-0 m-0 d-flex justify-content-center">
+    <div className='col-10 col-md-3 position-relative'>
       {!mailSent ?
-      <form action={send} className="register_cont">
-              <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
-              <h1 className="login_head">Reset</h1>
-        <input type="email" required className="home_forms_inputs" placeholder="Email address"
+      <form action={send} className="register_cont col-10 col-md-3 p-5">
+              <button type='button' className='x_btn_reg txt_sm' onClick={()=> onClose()}>X</button>
+              <h1 className="login_head txt_xl">Reset</h1>
+        <input type="email" required className="home_forms_inputs txt_sm" placeholder="Email address"
         onChange={(e)=> {setMailSent(false); setEmail(e.target.value)}}>
         
         </input>
 
 
-       <input type="submit" value={'Submit'} className="home_submit_forms_btns"/>
+       <input type="submit" value={'Submit'} className="home_submit_forms_btns txt_sm"/>
       </form>
 
        : codeValid ?
 
-     <form action={passwordReset} className="register_cont">
-            <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
-            <h1 className="login_head">New password</h1>
+     <form action={passwordReset} className="register_cont col-10 col-md-3 p-5">
+            <button type='button' className='x_btn_reg txt_sm' onClick={()=> onClose()}>X</button>
+            <h1 className="login_head txt_xl">New password</h1>
               <input type="text" name="username" value={username} disabled required={false}
-              className="disabled_inputs"/>
+              className="disabled_inputs txt_sm"/>
               <input type="password" name="password" required 
-                className="home_forms_inputs" placeholder="Password"
+                className="home_forms_inputs txt_sm" placeholder="Password"
                 onChange={(e)=> changePassword(e.target.value)}>
                 </input>
 
                 <input type="password" name="password2" required 
-                className="home_forms_inputs" placeholder="Confirm"
+                className="home_forms_inputs txt_sm" placeholder="Confirm"
                   onChange={(e) => changeConfirm(e.target.value)}>
                 </input>
 
@@ -109,31 +110,32 @@ export default function Reset({onClose}: reg_params){
          
          
          
-            <input type="submit" value={'Reset'} className="home_submit_forms_btns" 
+            <input type="submit" value={'Reset'} className="home_submit_forms_btns txt_sm" 
             disabled={!passMatch || passwordProcessCompleted}/>
       </form>     
       
       
        : 
        
-      <form action={sendCode} className="register_cont">
-            <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
-            <h1 className="login_head">Confirm</h1>
-            <input type="text" required className="home_forms_inputs" placeholder="Code" maxLength={6}
+      <form action={sendCode} className="register_cont col-10 col-md-3  p-5">
+            <button type='button' className='x_btn_reg txt_sm' onClick={()=> onClose()}>X</button>
+            <h1 className="login_head txt_xl">Confirm</h1>
+            <input type="text" required className="home_forms_inputs txt_sm" placeholder="Code" maxLength={6}
             onChange={(e)=> {setCode(e.target.value)}}>
             
             </input>
 
          
-                  <div className={codeSent ? "username_help red_help txt_xs": "username_help yellow_help txt_xs"}>
+                  <div className={codeSent ? "username_help red_help txt_sm": "username_help yellow_help txt_xs"}>
                      {message}
                   </div>
          
          
-            <input type="submit" value={'Validate'} className="home_submit_forms_btns"/>
+            <input type="submit" value={'Validate'} className="home_submit_forms_btns txt_xs"/>
       </form>      
        
        }
+       </div>
    </div>
 
  )

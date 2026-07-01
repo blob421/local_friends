@@ -41,20 +41,21 @@ export default function Register({onClose}:reg_params){
 
     const api = process.env.NEXT_PUBLIC_API_URL
     return(
-    <div className='modal_bg'>
-        <form className="register_cont" method="POST" action={`${api}/register`}>
-                <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
-                <h1 className="header_reg">Register</h1>
+    <div className='modal_bg row p-0 m-0 d-flex justify-content-center'>
+        <div className='col-10 col-md-3 position-relative'>
+        <form className="register_cont p-5" method="POST" action={`${api}/register`}>
+                <button type='button' className='x_btn_reg txt_sm' onClick={()=> onClose()}>X</button>
+                <h1 className="header_reg txt_xl">Register</h1>
 
                 <input type="text" name="username" required 
-                className="home_forms_inputs" placeholder="Username" maxLength={26}>
+                className="home_forms_inputs txt_sm" placeholder="Username" maxLength={26}>
                 </input>
-                 <div className='username_help' 
+                 <div className='username_help txt_sm' 
                 hidden={!userExists}>
                     Username already in use
                 </div>
 
-                <input type="email" name="email" required className="home_forms_inputs"
+                <input type="email" name="email" required className="home_forms_inputs txt_sm"
                 placeholder="Email">
                 </input>
                 <div className='email_help txt_xs' 
@@ -63,12 +64,12 @@ export default function Register({onClose}:reg_params){
                 </div>
 
                 <input type="password" name="password" required 
-                className="home_forms_inputs" placeholder="Password"
+                className="home_forms_inputs txt_sm" placeholder="Password"
                 onChange={(e)=> changePassword(e.target.value)}>
                 </input>
 
                 <input type="password" name="password2" required 
-                className="home_forms_inputs" placeholder="Confirm"
+                className="home_forms_inputs txt_sm" placeholder="Confirm"
                   onChange={(e) => changeConfirm(e.target.value)}>
                 </input>
                 
@@ -78,9 +79,10 @@ export default function Register({onClose}:reg_params){
                 </div>
                
 
-                <button type="submit" className="btn_reg"
+                <button type="submit" className="btn_reg txt_sm"
                 disabled={passconfirm !== password}>Register</button>
         </form>
+        </div>
     </div>
     
     )

@@ -55,7 +55,7 @@ export default function InfoBanner({slides}: infoBannerProps){
 
     return (
 
-      <div className="info_banner_main">
+      <div className="info_banner_main row txt_sm">
             {slides.map((s, idx) => {
 
                 const pos = (idx - current + slides.length) % slides.length 

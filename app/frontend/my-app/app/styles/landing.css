@@ -1,11 +1,11 @@
 .top_bar_landing{
-    background-color: rgb(88, 88, 197); height: 10vh; position: relative;
-    text-align: center;
+    background-color: rgb(88, 88, 197); height: 13vh; position: relative;
+    text-align: center; display: flex; align-items: center;
 }
 .login_btn_landing{
-    background-color: rgb(158, 198, 232); padding: 1%; width: 7vw; 
+    background-color: rgb(158, 198, 232); padding: 2%; width: 7vw; 
     color: white; text-decoration: none; font-size: medium;
-    text-align: center; border-radius: 4px;
+    text-align: center; border-radius: 4px; cursor: pointer; min-width: 4.5em;
 
 }
 .home_forms_inputs{
@@ -17,51 +17,57 @@
     padding: 1%; width: 100%; padding-left: 2%; padding-right: 2%;
 }
 .login_btn_cont{
-     right: 2.5vw; position: absolute; display: flex; 
-     align-items: center; height: 10vh; gap: 2%;
+    right: 0; position: absolute; bottom: 0;
+      height: 100%; gap: 2%;
 }
 .forgot_password_login{
     color: blue; position: absolute; bottom:7%; display: flex; justify-content: center;
     cursor: pointer;
 }
 .reg_btn_landing{
-    background-color: rgb(158, 198, 232); padding: 1%; width: 7vw; 
+    background-color: rgb(158, 198, 232); padding: 2%; width: 7vw; 
     color: white; text-decoration: none; font-size: medium;
-    text-align: center;  border-radius: 4px;
+    text-align: center;  border-radius: 4px; cursor: pointer; min-width: 4.5em;
 }
 .dashboard_btn_landing{
     background-color: rgb(158, 198, 232); padding: 2%; width: 8vw; 
     color: white; text-decoration: none; font-size: medium;
-    text-align: center; border-radius: 4px;
+    text-align: center; border-radius: 4px; cursor: pointer; min-width: 4.5em;
 }
 .earth_image{
     max-height: 60vh; opacity: 0.9; position: relative; right: 0;
 }
 .local_friends{
     position: absolute; left: 50%; top:50%; transform: translate(-50%, -50%);
-    font-size: x-large; padding: 1%;
+     
 }
 .top_landing_row{
-    background-color: rgb(91, 67, 208); padding: 2%;
+    background-color: rgb(91, 67, 208); padding: 2%; display: flex; justify-content: center;
 }
 .title_header_landing{
     background-color: rgb(142, 187, 225); color: black; padding: 1.2%;
 }
 .big_text_landing{
      border: 2px solid grey; border-radius: 5px;  display: flex; flex-direction: column;
-     gap: 15%; text-align: center;justify-content: center;
+     text-align: left;justify-content: center;  
+    
 }
 .top_text_landing{
-     font-size:xx-large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; 
+      width: 90%;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 
+     'Trebuchet MS', sans-serif; height: 40%; display: flex; align-items: center; justify-content: center;
 }
 .big_text_landing ul{
-padding:5vh; border: 1px solid rgb(194, 194, 194);
+padding:5vh; border: 1px solid rgb(194, 194, 194); padding-left: max(5vh, 5vw);
 background-color: rgb(53, 53, 53); text-align: left;
+display: flex; flex-direction: column;  height: 60%; justify-content: center;
+list-style-type:disc !important; width: 100%;
 }
 .bottom_landing_row{
-  display: flex; justify-content: flex-end; align-items: center; padding-top: 4vh; 
+  display: flex; justify-content: flex-end; align-items: center; height: 15vh;
+
 }
 .icons_div_landing{
     display: flex; justify-content: flex-end; align-items: center; gap: 1.5%; right: 2vw;
-    position: relative;
+    position: relative; cursor: pointer;
 }

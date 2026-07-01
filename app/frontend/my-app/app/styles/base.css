@@ -1,5 +1,5 @@
 html{
-    overflow-x: hidden; user-select: none;
+    overflow-x: hidden; user-select: none; overflow-y: auto;
 }
 a{
     text-decoration: none; color: white; padding: 0.5%; padding-left: 1%; padding-right: 1%;
@@ -8,7 +8,7 @@ a{
     font-size: max(1.5vw, 2.5vh) !important; 
 }
 .txt_md{
-font-size: max(1.3vw, 2.1vh)  !important;
+font-size: max(1.3vw, 2.3vh)  !important;
 }
 .txt_sm{
 font-size: max(1.3vw, 2vh)  !important;
@@ -17,8 +17,16 @@ font-size: max(1.3vw, 2vh)  !important;
     font-size: max(1vw, 1.5vh)  !important;
 }
 .txt_xl{
-    font-size: max(2vw, 2.8vh) !important;
+    font-size: max(1.8vw, 2.8vh) !important;
 }
 .txt_xxl{
-    font-size: max(2.6vw, 3vh)  !important;
+    font-size: max(2.3vw, 3vh)  !important;
+}
+@media (orientation: portrait) and (min-width:819px){
+    .top_landing_row > [class*='col-md']{
+        flex: 0 0 95%
+    }
+    .modal_bg > [class*='col-md']{
+        flex: 0 0 65% !important;
+    }
 }

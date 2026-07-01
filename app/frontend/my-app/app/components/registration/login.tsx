@@ -25,18 +25,18 @@ const login = async () => {
 
 
     return (
-    <div className="modal_bg">
-      
-          <form className="register_cont" action={login}>
-              <button type='button' className='x_btn_reg' onClick={()=> onClose()}>X</button>
-              <h1 className="login_head">Login</h1>
+    <div className="modal_bg row p-0 m-0 d-flex justify-content-center">
+      <div className='col-10 col-md-3 position-relative'>
+          <form className="register_cont col-10 col-md-3 p-5" action={login}>
+              <button type='button' className='x_btn_reg txt_sm' onClick={()=> onClose()}>X</button>
+              <h1 className="login_head txt_xl">Login</h1>
 
-              <input type="text" className="home_forms_inputs" 
+              <input type="text" className="home_forms_inputs txt_sm" 
               placeholder="username" value={username}
               required name="username"
               onChange={(e) => {setUsername(e.target.value); setWrongCreds(false)}}></input>
 
-              <input type="password" className="home_forms_inputs" 
+              <input type="password" className="home_forms_inputs txt_sm" 
               placeholder="password" value={password} 
               required name="password"
               onChange={(e)=> {setPassword(e.target.value); setWrongCreds(false)}}></input>
@@ -47,14 +47,14 @@ const login = async () => {
                 </div>
               }
 
-              <button type="submit" className='home_submit_forms_btns'>
+              <button type="submit" className='home_submit_forms_btns txt_sm'>
                 Login
               </button>
 
-              <a className="forgot_password_login txt_xs" onClick={() => reset()}>
+              <a className="forgot_password_login txt_sm" onClick={() => reset()}>
                 Forgot your password ?</a>
           </form>
-       
+       </div>
     </div>
   );
 }

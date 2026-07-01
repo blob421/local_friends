@@ -33,23 +33,24 @@ export default function Home(){
      
     return(
         <div className="container-fluid p-0 m-0">
-              <div className="row">
+              <div className="row p-0 m-0">
 
-                    <div className="col-12 top_bar_landing">
-                         <div className="local_friends txt_lg text_center">
+                    <div className="col-12 top_bar_landing p-5">
+                         <div className="local_friends txt_xl text_center">
                               Local Friends
                          </div>
-                         <div className="login_btn_cont">
+                         <div className="login_btn_cont d-flex flex-column flex-lg-row justify-content-center
+                         pr-3 pr-md-5 gap-2 gap-md-3 align-items-center">
                               
-                            <Link className="dashboard_btn_landing" href="/dashboard"
+                            <Link className="dashboard_btn_landing txt_md" href="/dashboard"
                             hidden={!isLoggedIn}>Dashboard
                              
                             </Link>
-                            <div className="login_btn_landing" onClick={()=>setLoginV(true)}
+                            <div className="login_btn_landing txt_md" onClick={()=>setLoginV(true)}
                             hidden={isLoggedIn}>
                               Login
                             </div>
-                            <div className="reg_btn_landing" onClick={()=>setRegV(true)}
+                            <div className="reg_btn_landing txt_md" onClick={()=>setRegV(true)}
                              hidden={isLoggedIn}>
                               Register
                             </div>
@@ -61,21 +62,25 @@ export default function Home(){
 
               <InfoBanner slides={bannerSlides}/>
 
-                   <div className="row top_landing_row">
-                        <div className="col-md-8 big_text_landing">
-                         <div className="top_text_landing">
-                          The new social media for animals in your region, 
-                          because we think they deserve it too.
-                         </div>
+                   <div className="row top_landing_row pl-0 mr-0">
+                        <div className="col-md-8 big_text_landing gap-4 gap-md-5 pb-2 pb-md-0
+                                        align-items-center">
+                              <div className="top_text_landing txt_xxl pb-2 pb-md-0 pt-4
+                                              text-left 
+                                                                    ml-md-5
+                                                                       pt-md-5 mt-1 mt-md-0">
+                              The new social media for animals in your region, 
+                              because we think they deserve it too.
+                              </div>
 
-                          <ul className="bullet_points_top_landing">
-                              <li>Help map and get to know animals living in your region</li>
-                              <li>Make new friends on the way</li>
-                              <li>Get AI feedback and earn badges</li>
-                          </ul>
+                              <ul className="txt_lg">
+                                   <li>Help map and get to know animals living in your region</li>
+                                   <li>Make new friends on the way</li>
+                                   <li>Get AI feedback and earn badges</li>
+                              </ul>
                         </div>
-                        <div className="col-md-4">
-                             <div className="img-fluid">
+                        <div className="col-md-4 d-flex justify-content-center">
+                             <div className="img-fluid p-5 p-md-0">
                                   <img src={'/earth.png'} className="earth_image"></img>
                              </div>
                         </div>
