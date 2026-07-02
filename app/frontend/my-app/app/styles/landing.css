@@ -32,7 +32,7 @@
 .dashboard_btn_landing{
     background-color: rgb(158, 198, 232); padding: 2%; width: 8vw; 
     color: white; text-decoration: none; font-size: medium;
-    text-align: center; border-radius: 4px; cursor: pointer; min-width: 4.5em;
+    text-align: center; border-radius: 4px; cursor: pointer; min-width: 5em;
 }
 .earth_image{
     max-height: 60vh; opacity: 0.9; position: relative; right: 0;

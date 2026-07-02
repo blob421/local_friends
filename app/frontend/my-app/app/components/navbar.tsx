@@ -7,7 +7,8 @@ export default function Navbar(){
     const path = usePathname()
     return (
         
-        <nav className='nav_main gap-4 gap-lg-3 d-flex justify-content-center mb-lg-1 align-items-center'>
+        <nav className='nav_main gap-4 gap-lg-3 m-0 d-flex justify-content-start
+                        align-items-center'>
                <Link href={'/dashboard'} className={path == '/dashboard' ? 'toggled_nav': "aligned_nav"} >Dashboard</Link>
                <Link href={'/home'} className={path == '/home' ? 'toggled_nav home_link': "home_link"}>Home 
                    <img src={'/home.jpg'} alt={""} className='home_icon_nav'>

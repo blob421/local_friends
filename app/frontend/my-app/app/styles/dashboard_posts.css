@@ -95,13 +95,13 @@ html, body {
 .no_post_wrapper{
     border-radius: 16px; background-color: rgba(56, 56, 56, 0.016); color: white;
      display: flex; border: 1px solid rgb(109, 109, 109); align-items: center;
-    justify-content: center; gap: 15%; height: fit-content; margin-top: 2vh;
+    justify-content: center; height: fit-content; margin-top: 2vh;
     height: 160px;
    
 }
 .cricket_img{
      align-items: center; justify-content: center;
-     aspect-ratio: 1/1; height: 80%; margin-right: 10px;
+     aspect-ratio: 1/1; height: 30%; margin-right: 10px;
 
 }
 .text_no_post{

@@ -236,7 +236,8 @@ router.post('/login', async (req, res) => {
     sameSite: 'lax',
     maxAge: 60 * 60 * 24 * 1000 * 2,
   });
-  res.redirect(`${process.env.FRONT_END_URL}/dashboard`);
+  
+   res.status(200).json({'msg': 'logged-in successfully'})
 });
 
 router.get('/profile/:id', authenticateToken, async (req, res)=>{                                  

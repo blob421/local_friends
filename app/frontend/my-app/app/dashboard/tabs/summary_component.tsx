@@ -21,11 +21,11 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
 
   
     return ( 
-    <div className="col-lg-11">
+    <div className="col-lg-11 col-12 flex-column d-flex summary_right_panel g-0">
         
-                <div className="row justify-content-center g-0">
+            
                  
-                     <div className="col-12 mb-1 mb-lg-0 top_bar_dashboard">
+              <div className="top_bar_dashboard txt_sm">
                        {!visitor ? `Welcome ${user?.username}`
                                  : `You are viewing the profile of ${user?.username}` }
 
@@ -34,13 +34,14 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                         Unfollow
                         </button>
                         }
-                     </div>
-                </div>
-
-                <div className="row d-flex justify-content-center top_dash_row">
+              </div>
+              
+             <div className='container-fluid m-0 pt-5 pb-5 pb-md-0 pt-md-0 gap-4 gap-sm-5 gap-md-3 h-100 d-flex flex-column justify-content-center quadrants_row'>
+           
+                <div className="row d-flex justify-content-center p-0 m-0 pt-sm-3 pt-md-1 gap-4 gap-sm-5 gap-md-0 rect_row">
                   
-                    <div className="col-lg-5">
-                          <div className="rectangle mt-1 mb-2 m-large-2 m-0">
+                    <div className="col-lg-5 col-12 col-sm-11">
+                          <div className="rectangle">
                            {!visitor && <Image src={"/pen.png"} alt="Edit" height={25} 
                             width={25} className="edit_icon_dash"
                             onClick={
@@ -52,7 +53,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                               }/>}
 
                            
-                              <div className="account_top dashboard_squares_titles">
+                              <div className="account_top dashboard_squares_titles txt_lg">
                                   Account
                               </div>
                               <div className="account_bot">
@@ -70,7 +71,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
 
                                 <div className="info_left">
                                   
-                                 <div className="user_square_ul">
+                                 <div className="user_square_ul txt_xs">
                                         <div><strong>Username: </strong>{user.username}</div>
                                         <div><strong>Name: </strong>{user.firstName + " "}{user.lastName}</div>
                                         <div className="text_elipsis"><strong>Email: </strong>{user.email}</div>
@@ -88,17 +89,22 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
 
                           </div>
                     </div>
-                      <div className="col-lg-5">
-                          <div className="rectangle mt-1 mb-2 m-large-2 m-0">
-                               <div className="stats_top dashboard_squares_titles">
+                      <div className="col-lg-5 col-12 col-sm-11">
+                          <div className="rectangle">
+                               <div className="stats_top dashboard_squares_titles txt_lg">
                                  Stats
                                </div>
-                                <div className="stats_bot">
-                                   <ul>
-                                        <li>Animals found: {userStats?.found ?? '-'}</li>
-                                        <li>Followed : {userStats?.following ?? '-'}</li>
-                                        <li>Followers : {userStats?.followers ?? '-'}</li>
-                                   </ul>
+                                <div className="stats_bot txt_sm p-0 p-md-5">
+
+                                    <div className='dash_stats_grid'>
+                                    
+                                        <div className='oneStat ps-2 ps-lg-3'>
+                                          Animals found : {userStats?.found ?? '-'}</div>
+                                        <div className='oneStat ps-2 ps-lg-3'>
+                                          Following : {userStats?.following ?? '-'}</div>
+                                        <div className='oneStat ps-2 ps-lg-3'>
+                                          Followers : {userStats?.followers ?? '-'}</div>
+                                    </div>
                                </div>
                             
                           </div>            
@@ -106,10 +112,11 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                     </div>
                 
                 </div>
-                <div className="row justify-content-center">
+               
+            <div className="row d-flex justify-content-center p-0 m-0 pb-sm-3 pb-md-0 gap-4 gap-sm-5 gap-md-0 rect_row">
                   
-              <div className="col-lg-5">
-                    <div className="rectangle mt-1 mb-2 m-large-2 m-0">
+              <div className="col-lg-5 col-12 col-sm-11">
+                    <div className="rectangle">
                         {!visitor &&<Image src={"/pen.png"} alt="Edit" height={25} 
                       width={25} className="edit_icon_dash"
                       onClick={
@@ -118,7 +125,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                         $('#profile_modal_bg_animal').show()
                         }
                         }/>}
-                          <div className="team_upper dashboard_squares_titles">
+                          <div className="team_upper dashboard_squares_titles txt_lg">
                               {user.TeamId}
                               {!user.TeamId && 'Team'}
 
@@ -151,9 +158,9 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                           </div>
                     </div>
               </div>
-                <div className="col-lg-5">
-                    <div className="rectangle mt-1 mb-2 m-large-2 m-0">
-                        <div className="badges_title dashboard_squares_titles">
+                <div className="col-lg-5 col-12 col-sm-11">
+                    <div className="rectangle">
+                        <div className="badges_title dashboard_squares_titles txt_lg">
                           Badges
                         </div>
 
@@ -182,6 +189,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                     </div>
                 
                 </div>
+              </div> 
         </div>
     )
 }

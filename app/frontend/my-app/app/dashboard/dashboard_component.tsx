@@ -175,7 +175,7 @@ const follow = async () => {
    console.log("reqUser:", reqUser, "id:", user?.id, "following:", following);
 
      return (
-      <div className="dash_cont container-fluid p-0" id="dash_cont">
+      <div className="dash_cont container-fluid p-0 m-0" id="dash_cont">
         {visitor && <div id="follow_popup" className={followClicked2 ? "shrink": ""} >
                           <div id="follow_href" className={followClicked? "fadeout": ""} onClick={()=>{
                              
@@ -191,10 +191,11 @@ const follow = async () => {
                           </div>
                    </div>
           }
-        <div className="row outer_row_dash g-0 w-100">
-           <div className="col-lg-1 col-12 d-flex flex-row flex-lg-column gap-4 gap-lg-4 pl-4 pl-lg-0
-               mt-0 
-               align-items-center pt-3 pb-1 pt-lg-5 pb-lg-0 menu_options justify-content-lg-start justify-content-center"
+        <div className="row outer_row_dash w-100 h-100 p-0 m-0">
+
+           <div className="col-lg-1 col-12 d-flex flex-row flex-lg-column gap-4 gap-lg-4 pl-4 
+                           pl-lg-0mt-0 align-items-center pt-3 pb-1 pt-lg-5 pb-lg-0 
+                           menu_options justify-content-lg-start justify-content-center"
                >
               {!visitor && <div className="dash_img_menu_cont">
                                   <img src="/avatar.png" alt="stats_icon" 

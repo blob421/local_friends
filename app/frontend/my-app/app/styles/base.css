@@ -2,7 +2,8 @@ html{
     overflow-x: hidden; user-select: none; overflow-y: auto;
 }
 a{
-    text-decoration: none; color: white; padding: 0.5%; padding-left: 1%; padding-right: 1%;
+    text-decoration: none; color: white; padding: 0.5%; padding-left: 1%;
+     padding-right: 1%;
 }
 .txt_lg{
     font-size: max(1.5vw, 2.5vh) !important; 
@@ -22,11 +23,18 @@ font-size: max(1.3vw, 2vh)  !important;
 .txt_xxl{
     font-size: max(2.3vw, 3vh)  !important;
 }
-@media (orientation: portrait) and (min-width:819px){
+@media (orientation: portrait) and (min-width:799px){
     .top_landing_row > [class*='col-md']{
         flex: 0 0 95%
     }
     .modal_bg > [class*='col-md']{
         flex: 0 0 65% !important;
+    }
+    .summary_right_panel > [class*='quadrants_row']{
+        gap: 5vh !important;
+        padding-top: 8% !important; padding-bottom: 8% !important;
+    }
+    .container-fluid > [class*='rect_row'] {
+        gap: 5vh !important;
     }
 }

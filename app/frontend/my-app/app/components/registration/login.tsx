@@ -1,7 +1,6 @@
 "use client";
 
-import {useState, useEffect} from 'react'
-import $ from 'jquery';
+import {useState} from 'react'
 
 type reg_params = {
     onClose: () => void, reset : () => void

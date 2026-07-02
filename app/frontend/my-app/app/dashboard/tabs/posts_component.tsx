@@ -6,15 +6,15 @@ import Carousel from '../../components/UI/pic_carousel'
 import type {Image} from '../../components/UI/pic_carousel'
 import PostEditMenu from '@/app/components/UI/post_edit_menu'
 import DeleteBtnModal from '@/app/components/UI/delete_confirm'
-const CreateModal = dynamic(() => import('../../home/create_modal'))
+
 import { DelPost } from '@/app/utilities/delete_post'
-import { set_visible } from '@/app/utilities/set_visible'
-import { create } from 'domain'
 import $ from 'jquery'
+
 type DashboardPostsComponentProps = {
   userId: string
 }
 
+const CreateModal = dynamic(() => import('../../home/create_modal'))
 export const handleMenu = () =>{
     const menus = document.querySelectorAll('.option_menu_hidden')
     
@@ -144,11 +144,11 @@ export default function PostsComponent({userId}:DashboardPostsComponentProps){
            <div className='col-12 justify-content-center d-flex align-lg-center 
            gap-lg-3 gap-0 p-4 no_post_div'>
             <div className='no_post_wrapper col-12 col-lg-6 mt-2'>
-            <div className='text_no_post'>Nothing but crickets singing ...
+                <div className='text_no_post'>Nothing but crickets singing ...
 
-            </div>
+                </div>
             
-            <img src={'/cricket2.png'} className='cricket_img'/>
+                <img src={'/cricket2.png'} className='cricket_img'/>
             </div>
 
             </div>}

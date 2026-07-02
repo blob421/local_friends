@@ -1,8 +1,7 @@
 .nav_main{
-    position: sticky; left: 0; width: 100vw; height: 8vh;
+    position: sticky; left: 0; width: 100vw; height: 9vh;
      background-color: rgb(88, 88, 197); top: 0; z-index: 100000; color: black;
-    font-size: max(18px, 2.2vh)
-   
+    font-size: max(18px, 2.2vh); padding-left: 9%;
     
 }
 
