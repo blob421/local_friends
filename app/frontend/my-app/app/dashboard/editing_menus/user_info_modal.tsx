@@ -13,6 +13,7 @@ type UserInfoModalProps = {
   pictureUrl?: string;
   Region?: string;
   RegionId?: Number;
+  onClose: () => void
   
 };
 
@@ -21,7 +22,7 @@ type UserInfoModalProps = {
 type Option = { value: string; label: string };
 
 export default function User_info_modal({url, username, email, firstName, lastName,
-    pictureUrl, Region, RegionId}: UserInfoModalProps){
+    pictureUrl, Region, RegionId ,onClose}: UserInfoModalProps){
     const [newPassword, setNewPass] = useState("");
     const [passConf, setPassConf] = useState("");
     const [options, setOptions] = useState([]);
@@ -34,26 +35,29 @@ export default function User_info_modal({url, username, email, firstName, lastNa
 
   return(
     
-    <div id="profile_modal_bg">
-     <div className="profile_modal" id="profile_modal">
-        <button className="x_btn_modal_edit_dash"
-        onClick={()=> $('#profile_modal_bg').hide()}>X</button>
+    <div id="profile_modal_bg" className="row position-absolute p-0 m-0 d-flex 
+    justify-content-center align-items-md-center align-items-start pb-4">
+  
+     <div className="profile_modal col-12 mt-1 col-md-6 g-0 d-flex flex-column top-0 top-md-50" id="profile_modal">
 
-         <form className="image_form" encType="multipart/form-data" 
-          action={`${url}/profile/edit`} method="POST">
+        <button className="x_btn_reg txt_sm"
+        onClick={()=> onClose()}>X</button>
 
-            <div className="top_picture_flex">
-             
-                {pictureUrl && <img src={url + pictureUrl} className="pic_edit"></img>}
-        
-                {!pictureUrl && <img src={'/avatar.png'} className="pic_edit"
-                alt="profile picture">
-                </img>}
-           
-                <label htmlFor="avatarUpload" className="custom_upload">
-                <img src="/pen.png" alt="Upload avatar" />
-                </label>
-             
+         <form className="image_form p-0 m-0" encType="multipart/form-data" 
+                               action={`${url}/profile/edit`} method="POST">
+
+            <div className="top_picture_flex gap-2 gap-sm-5 gap-md-4 pb-3 pb-sm-4 pt-sm-4 pt-3 p-md-2 pl-4 ">
+               <div className="dash_picture_cont">
+                    {pictureUrl && <img src={url + pictureUrl} className="pic_edit"></img>}
+            
+                    {!pictureUrl && <img src={'/avatar.png'} className="pic_edit"
+                    alt="profile picture">
+                    </img>}
+              
+                    <label htmlFor="avatarUpload" className="custom_upload">
+                    <img src="/pen.png" alt="Upload avatar" className="pen_picture"/>
+                    </label>
+             </div>
                 <div id="region_dropdown">
                       <div className="region_bar_head">{Region}</div> 
                         
@@ -61,12 +65,12 @@ export default function User_info_modal({url, username, email, firstName, lastNa
                           cacheOptions
                           loadOptions={loadOptions}
                           defaultOptions
-                          className="region_select"
+                          className="region_select txt_sm"
                           value={selectedOption}              
                           onChange={(option) => {setSelectedOption(option);
                           
                           }} 
-                          placeholder={"Search for a region"}
+                          placeholder={"Select a region"}
                         />
                 </div>
             </div>
@@ -83,81 +87,87 @@ export default function User_info_modal({url, username, email, firstName, lastNa
          </form>
         
          <form action={`${url}/profile/edit`} method="POST" 
-          encType="multipart/form-data" className="form_profile_user">
+          encType="multipart/form-data" className="row form_profile_user w-100 
+          d-flex justify-content-center txt_md p-3 p-md-0 m-0 pb-md-2 pt-5 pt-md-4 gap-4 gap-md-4">
 
              <input type="hidden" name="region" id="region_input"
              value={selectedOption?.value || ''}></input>
 
-               <div>
-                   <div>First name:</div>
-                    
-                    <input type="text" name="firstName" placeholder={firstName}>
-                    </input>
-              </div>
-                             <div>
-                    <div>Last name:</div>
-                    <input type="text" name="lastName" placeholder={lastName}>
-                    </input>
-              </div>
-              <div>
-                    <div>Username:</div>
-                    <input type="text" name="username" placeholder={username} autoComplete="new-username">
-                    </input>
-                    
-              </div>
-              <div>
-                     <div>Email:</div>
+              <div className="col-11 col-sm-10 col-md-5 gap-4 gap-md-3 d-flex flex-column 
+              align-items-center">
+
+                
+                  <div className="flex-shrink-0 w-100">
+                      <div>First name</div>
+                        
+                        <input type="text" name="firstName" placeholder={firstName}/>
+                      
+                  </div>
+                   <div className="flex-shrink-0 w-100">
+                        <div>Last name</div>
+                        <input type="text" name="lastName" placeholder={lastName}>
+                        </input>
+                  </div>
+                  <div className="flex-shrink-0 w-100">
+                        <div>Username</div>
+                        <input type="text" name="username" placeholder={username} autoComplete="new-username">
+                        </input>
+                        
+                  </div>
+
+                   {usernameExists && <div className="error_username_dash flex-shrink-0">
+                        Username unavailable</div>}
+           
+
+                </div>
+    
+        <div className="col-11 col-sm-10 col-md-5 gap-4 gap-md-3 d-flex flex-column 
+              align-items-center">
+
+                <div className="flex-shrink-0 w-100">
+                     <div>Email</div>
                     <input type="text" name="email" placeholder={email} autoComplete="new-email">
                     </input>
               </div>
 
-              <div>
+                <div className="flex-shrink-0 w-100">
 
-                     <div>Password:</div>
+                     <div>Password</div>
                     <input type="password" name="password" autoComplete="new-password"
                     onChange={(e)=>setNewPass(e.target.value)}
                     placeholder="New password"></input>
               </div>
-              <div>
-                   <div>Confirm password:</div>
-                  <input type="password" name="password_2"
-              onChange={(e)=> setPassConf(e.target.value)}
-              placeholder="Confirm" autoComplete="new-password"></input>
-              </div>
-          
-            {passConf == newPassword &&  
-                        <div className="errors_cont_dash_edit">
-         
-                        {usernameExists && <div className="error_username_dash">
-                        Username unavailable</div>}
-                        </div>}
-      
-              
-            
-              {passConf !== newPassword &&  
-              <div className="errors_cont_dash_edit">
-              <div className="error_passwords_profile">
-               Passwords don't match
-               </div>
-               {usernameExists && <div className="error_username_dash">
-                        Username unavailable</div>}
-              
-              </div>}
-            
-            {passConf == newPassword && 
-             <div className="submit_cont_dash_edit">
-            <button type="submit"
-              className="submit_btn_edit_profile">Submit
-                </button>
-                </div>}
-             
 
+              <div className="flex-shrink-0 w-100">
+
+                  <div>Confirm password</div>
+                  <input type="password" name="password_2"
+                    onChange={(e)=> setPassConf(e.target.value)}
+                    placeholder="Confirm" autoComplete="new-password"></input>
+             </div>
+          
            
-              {passConf !== newPassword && 
-              <div className="submit_cont_dash_edit">
-              <input type="submit" className="submit_btn_edit_profile" disabled>
+         
+
+              {passConf !== newPassword &&  
+            
+                    <div className="error_passwords_profile flex-shrink-0">
+                        Passwords don't match
+                    </div>
+            
+             
+             }
+                   <div className="row submit_cont_dash_edit w-100 justify-content-end justify-content-md-end">
+              <input type="submit" className="submit_btn_edit_profile txt_md" 
+              disabled={passConf !== newPassword} value={'Update'}>
               </input>
-              </div>}
+           </div>
+
+           </div>
+        
+    
+              
+        
        
          </form>
      </div>

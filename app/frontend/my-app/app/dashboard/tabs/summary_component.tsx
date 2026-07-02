@@ -139,7 +139,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                                         </img>}
                                 </div>
                               
-                                {!user.Animal && <div className="no_team_content">
+                                {!user.Animal && <div className="no_team_content txt_sm">
                                       No team yet , click on the pen icon and pick your favorite animal ⭐
                                       </div>
                                       }

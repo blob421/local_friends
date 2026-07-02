@@ -37,4 +37,13 @@ font-size: max(1.3vw, 2vh)  !important;
     .container-fluid > [class*='rect_row'] {
         gap: 5vh !important;
     }
+    .row > [class*='col-md'] {
+        flex: 0 0 95%
+    }
+    .top_picture_flex {
+        padding:3% !important; padding-bottom: 3% !important; padding-top: 3% !important;
+    }
+    .form_profile_user{
+       padding: 12% !important; padding-top: 6vh!important; 
+    }
 }

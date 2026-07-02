@@ -259,7 +259,8 @@ const follow = async () => {
 
 {(showModal || modalTriggered) && (<UserModal url={url} username={user?.username} 
 email={user?.email} firstName={user?.firstName} lastName={user?.lastName}
-pictureUrl={user.picture} Region={region?.name} RegionId={region?.id}/>)}   
+pictureUrl={user.picture} Region={region?.name} RegionId={region?.id}
+onClose={()=> {setModal(false); setModalTriggered(false)}}/>)}   
 
 </div>                   
  )

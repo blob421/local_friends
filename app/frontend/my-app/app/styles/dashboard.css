@@ -247,17 +247,21 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 #profile_modal_bg{
     background-color: rgba(0, 0, 0, 0.29); position: absolute; left: 50%;
      top: 50%; transform: translate(-50%, -50%); height: 100vh; 
-    width: 100vw;
+    width: 100vw; z-index: 100000; 
 }
 #profile_modal_bg_animal{
        background-color: rgba(0, 0, 0, 0.29); position: absolute; left: 50%;
      top: 50%; transform: translate(-50%, -50%); height: 100vh; 
     width: 100vw;
 }
+.image_form{
+    width: 100%;
+}
 .profile_modal{
-    position: absolute; left: 50%; width: 50vw; height: 80vh;
-     top: 50%; transform: translate(-50%, -50%); background-color: aliceblue;
-     z-index: 1000; display: flex; justify-content: center;  
+  
+    background-color: aliceblue; position: relative;
+      border-radius: 5px; overflow: hidden;
+      border: 2px solid black;
 }
 .mini_modal{
     width: 40vw !important; height: 20vh !important; position: relative; border-radius: 5px;
@@ -269,49 +273,61 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 
 .x_btn_modal_edit_dash{
     position: absolute; right: 11; top: 9; background-color: rgb(204, 108, 108); 
-    z-index: 10000; width: 23px; height: 23px; cursor: pointer;
+    z-index: 100000; width: 23px; height: 23px; cursor: pointer;
     text-align: center; border-radius: 4px; border: 1px solid black;
 }
+
 .form_profile_user{
-    display: grid;  color: black; width: 95%; padding-bottom: 1%;
-    grid-template-columns: repeat(2, 1fr);  height: 66%; 
-    z-index: 1000; bottom: 0; position: absolute;
+      color: black;  background-color: aliceblue;
+  
 }
 .user_info_modal_bottom_flex{
     display: flex; align-items: center; width: 100%;
 }
 .submit_btn_edit_profile{
-     width: 50%; background-color: rgb(100, 135, 225) !important; 
+     width: 30%; background-color: rgb(100, 135, 225) !important; 
      color: white !important; border-radius: 5px; height: 7.5vh !important;
+     max-width: 150px;
+  
 
 }
 .submit_btn_edit_animal{
      width: 9vw; background-color: rgb(100, 135, 225) !important; 
      color: white !important; border-radius: 5px; height: 7.5vh !important;
-     bottom: 10; right: 10; position: absolute;
+     bottom: 10; right: 10; position: absolute; 
 
 }
 .submit_cont_dash_edit{
-    display: flex; align-items: center; height: 11vh; justify-content: center;
-    width: 100%; 
+    display: flex; align-items: center; height: 11vh; justify-content: end;
+    width: 100%;  color: white;
 }
 .form_profile_user > * {
     justify-self: center; 
 }
 .form_profile_user input{
-  border: 2px solid rgb(49, 49, 49);
-  background-color: antiquewhite; padding-left: 1%; height: 6vh; width: 100%;
+  border: 1px solid rgb(49, 49, 49); border-radius: 3px; color: black;
+  background-color: antiquewhite; padding-left: 1%; padding: 1.5%;
+  width: 100%;
+  
+ 
 }
 .form_profile_user input[type='file']{
     width: 2vw;
 }
 .pic_edit{
-    width: 100px; height: 100px;
+   width: 100%; height: 100%;
+}
+.dash_picture_cont{
+    position: relative;  height: 100%; aspect-ratio: 1/1; 
+}
+.pen_picture{
+    position: absolute; top: 0; right:  -6vh; aspect-ratio: 1/1; width: 5vh;
 }
 .top_picture_flex{
-    display: flex; position: absolute;
-    left: 0; top: 0; background-color: rgb(166, 166, 166); width: 100%;
-     padding: 2%;padding-left: 8%; gap: 5%;
+    display: flex; 
+    height: max(16vh, 11vw); align-items: end; 
+    background-color: rgb(166, 166, 166); width: 100%;
+     padding: 2%; 
 
 }
 .invisible_font{
@@ -323,29 +339,36 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 .error_username_dash{
     background-color: salmon; color: white; padding-left: 1%; display: flex;
     justify-content: center; border: 1px; padding: 1%;
+    width: 100%;border: 1px solid black; border-radius: 4px;
 }
 .error_passwords_profile{
-    width: 100%; display: flex; align-items: center; flex-direction: column; 
-
+     background-color: rgba(250, 128, 114, 0.813); color: white; padding-left: 1%; display: flex;
+    justify-content: center; border: 1px; padding: 1%;
+    width: 100%; border-radius: 4px;
 }
+
+
 .errors_cont_dash_edit{
     display: flex; flex-direction: column; justify-content: center; width: 100%;
-    height: 11vh; align-items: center;
+    height: 11vh; align-items: center; 
 }
 .animal_select{
     margin-top: 2vh !important; left: 2vw; position: absolute; top:2.5vh; 
 }
 .region_select{
-    width: 270px; color: black; z-index: 10000;margin-top: 5vh;
+   color: black; z-index: 10000;
+   position: absolute; bottom: 2px; width: 100%;
+    
 }
 .region_select input{
-    height: 20px;
+    height: min(3vh , 4vw)
 }
 .region_bar_head{
     margin-left: 5px; font-size: medium; margin-bottom: 1vh; margin-top: 1vh;
 }
 #region_dropdown{
-    width: 250px; 
+   display: flex; align-items: end; max-width: 350px; width: 70%
+   ;justify-content: start;
 }
 /*****************************SETTINGS MODAL********************************/
 
@@ -473,24 +496,18 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     .followers_modal{
     width: 100vw; height: 100vh; 
 }
-.profile_modal  {
-    width: 99vw; height: 80vh;
-}
+
 .mini_modal{
     width: 320px !important; height:130px !important
 }
-.region_select{
-    width: 200px; color: black; z-index: 10000; 
-}
+
 .submit_btn_edit_profile{
     width: 85%;
 }
 .submit_btn_edit_animal{
     height: 50px !important; width: 90px !important;
 }
-.form_profile_user input{
- width: 45vw;
-}
+
 .settings_modal{
     height: 80%; width: 97%;
 }
