@@ -38,7 +38,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
     <div id="profile_modal_bg" className="row position-absolute p-0 m-0 d-flex 
     justify-content-center align-items-md-center align-items-start pb-4">
   
-     <div className="profile_modal col-12 mt-1 col-md-6 g-0 d-flex flex-column top-0 top-md-50" id="profile_modal">
+     <div className="profile_modal col-12 col-md-6 g-0 d-flex flex-column top-0 top-md-50" id="profile_modal">
 
         <button className="x_btn_reg txt_sm"
         onClick={()=> onClose()}>X</button>

@@ -261,7 +261,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
   
     background-color: aliceblue; position: relative;
       border-radius: 5px; overflow: hidden;
-      border: 2px solid black;
+      border: 2px solid black; height: fit-content;
 }
 .mini_modal{
     width: 40vw !important; height: 20vh !important; position: relative; border-radius: 5px;

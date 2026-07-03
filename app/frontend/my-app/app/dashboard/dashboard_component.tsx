@@ -171,7 +171,35 @@ const follow = async () => {
       }
     })
    }
+
+   const handleScrolling = (classname:string, disable = true) => {
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+    if (!isPortrait) return;
+
+    const body = document.body;
    
+    let formH = 'auto'
+
+    if (disable){
+     const form = document.querySelector(`.${classname}`) as HTMLElement
+     formH = window.getComputedStyle(form).height
+    
+    }
+  
+    body.style.height = formH
+   
+    
+   
+   }
+
+ useEffect(()=> {
+  
+    handleScrolling('profile_modal', modalTriggered)
+
+ }, [modalTriggered])
+
+
    console.log("reqUser:", reqUser, "id:", user?.id, "following:", following);
 
      return (
