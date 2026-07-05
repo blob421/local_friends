@@ -70,6 +70,8 @@ async function main() {
   CREATE INDEX IF NOT EXISTS regions_name_trgm_idx
   ON "Regions"
   USING gin (name gin_trgm_ops);
+
+  CREATE INDEX IF NOT EXISTS addresses_street_idx ON "Addresses" USING gin (street gin_trgm_ops);
  
 `);
 

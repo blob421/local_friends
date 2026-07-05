@@ -25,7 +25,8 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
         
             
                  
-              <div className="top_bar_dashboard txt_md">
+              <div className="top_bar_dashboard txt_sm">
+                
                        {!visitor ? `Welcome ${user?.username}`
                                  : `You are viewing the profile of ${user?.username}` }
 
@@ -36,9 +37,11 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                         }
               </div>
               
-             <div className='container-fluid p-1 m-0 pt-5 pb-5 pb-md-0 pt-md-0 gap-4 gap-sm-5 gap-md-3 h-100 d-flex flex-column justify-content-center quadrants_row'>
+             <div className='container-fluid p-1 m-0 pt-5 pb-5 pb-md-0 pt-md-0 gap-4 gap-sm-5 
+             gap-md-3 h-100 d-flex flex-column justify-content-center quadrants_row'>
            
-                <div className="row d-flex justify-content-center p-0 m-0 pt-sm-3 pt-md-1 gap-4 gap-sm-5 gap-md-0 rect_row">
+                <div className="row d-flex justify-content-center 
+                p-0 m-0 pt-sm-3 pt-md-1 gap-4 gap-sm-5 gap-md-0 rect_row">
                   
                     <div className="col-lg-5 col-12 col-sm-11">
                           <div className="rectangle pb-2 pb-sm-0">
@@ -59,8 +62,8 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                               </div>
                               <div className="account_bot pl-md-2">
 
-                                <div className="photo_right align-self-start 
-                                align-self-sm-center 
+                                <div className="photo_right 
+                                align-self-center 
                                 m-2 m-sm-3 mt-0 mb-0">
 
                                     {user.picture && <img src={url + user.picture} 

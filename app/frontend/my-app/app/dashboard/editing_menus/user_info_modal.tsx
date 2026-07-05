@@ -19,7 +19,7 @@ type UserInfoModalProps = {
 
 
 
-type Option = { value: string; label: string };
+type Option = { value: string; label: string, region?:string };
 
 export default function User_info_modal({url, username, email, firstName, lastName,
     pictureUrl, Region, RegionId ,onClose}: UserInfoModalProps){
@@ -91,7 +91,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
           d-flex justify-content-center txt_md p-3 p-md-0 m-0 pb-md-2 pt-5 pt-md-4 gap-4 gap-md-4">
 
              <input type="hidden" name="region" id="region_input"
-             value={selectedOption?.value || ''}></input>
+             value={selectedOption?.region || ''}></input>
 
               <div className="col-11 col-sm-10 col-md-5 gap-4 gap-md-3 d-flex flex-column 
               align-items-center">

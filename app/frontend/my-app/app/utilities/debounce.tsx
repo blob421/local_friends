@@ -65,11 +65,13 @@ export default function handle_debounce(url:string, type:string){
                 console.log(data)
                 choices =  type !== 'addresses' ? data.data[type].map((element:element) => ({
                 label: element.name,
-                value: element.id
+                value: element.id,
+                
               }))
                                             :  data.data[type].map((element:element) => ({
                 label: element.number + ' ' + element.street + ', ' + (element.city? element.city: ""),
                 value:  element.number + element.street,
+                region: element.city ? element.city : null,
                 coords: {longitude: element.longitude, latitude: element.latitude}
 
                 

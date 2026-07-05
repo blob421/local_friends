@@ -50,4 +50,24 @@ font-size: max(1.3vw, 2vh)  !important;
         gap: 6vh !important; padding: 5% !important; padding-top: 7% !important;
         flex: 0 0 90% !important; border-radius: 8px !important;
     }
+    .settings_modal{
+        height: 100vh !important; width: 100vw !important; padding-top: 8% !important;
+    }
+    .nav_main{
+        justify-content: center !important; padding: 0% !important;
+    }
+    .menu_options{
+        padding: 3% !important
+    }
+
+ 
+}
+@media (max-width: 799px){
+    .settings_modal{
+        height: 100vh !important; width: 100vw !important;
+    }
+}
+@media(min-width:799px){ 
+
+
 }

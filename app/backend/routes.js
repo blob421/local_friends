@@ -706,6 +706,7 @@ router.post('/profile/edit', authenticateToken, uploadUser.single('image'),
 async (req, res)=>{
  const file = req.file
  const data = req.body
+ console.log(data)
  const user = await User.findByPk(req.user.id)
  let username_exists
 
@@ -733,8 +734,12 @@ async (req, res)=>{
     user.firstName = data.firstName
   }
   if (data.region){
+    const region = await Region.findOne({where: {name: {[Op.iLike]: `%${data.region}`} }})
+    if (region){
+       user.RegionId = region.id
+    }
+
     
-    user.RegionId = parseInt(data.region)
   }
   if (data.firstName){
     user.firstName = data.firstName

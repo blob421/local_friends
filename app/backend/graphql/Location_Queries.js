@@ -30,6 +30,7 @@ const Location_Queries = {
       resolve: async (_, {name}) => {
           const number =  name.match(/\d+/g);
           const string = name.replace(/\d+/g, "").trim();
+          
           return Addresses.findAll({ where:{[Op.and] : [
                                                          {street:{[Op.iLike]: `${string}%`}},
                                                          {number:{[Op.iLike]: `${number? number: ""}%`}}

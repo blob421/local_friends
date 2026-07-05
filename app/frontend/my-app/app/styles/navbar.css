@@ -1,22 +1,21 @@
 .nav_main{
-    position: sticky; left: 0; width: 100vw; height: 9vh;
+    width: 100vw; height: 9vh;
      background-color: rgb(88, 88, 197); top: 0; z-index: 100000; color: black;
-    font-size: max(18px, 2.2vh); padding-left: 9%;
+    font-size: max(18px, 2.2vh); position: relative; 
+  
     
 }
 
-.home_link{
-    display: flex;  display: flex; align-items: center; 
+.nav_link{
+    display: flex;  display: flex; align-items: center; min-width: 6em;
+    justify-content: center; height: 75%;
+    border-radius: 5px; 
+
 }
-.home_icon_nav{
-    justify-self: end; margin-left: 10px; height: max(36px, 4.5vh); width: max(36px, 4.5vh) ;
-}
-.map_link{
-    display: flex ;display: flex; align-items: center;
-}
-.map_icon{
+
+.nav_icon{
     border: 1px solid black;display: flex; align-items: center; margin-left: 10px;
-    height: max(36px, 4.5vh); width: max(36px, 4.5vh) ;
+    height: 5vh; aspect-ratio: 1/1; position: relative; flex-shrink: 0;
 }
 .toggled_nav{
     background-color: rgb(72, 59, 172); display: flex; align-items: center;

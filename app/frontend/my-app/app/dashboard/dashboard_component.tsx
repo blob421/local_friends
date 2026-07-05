@@ -181,9 +181,9 @@ const follow = async () => {
 
  useEffect(()=> {
   
-    block_scrolling(undefined, animalModal)
+    block_scrolling(undefined, animalModal || followerModal || optionsModal)
 
- }, [animalModal])
+ }, [animalModal, followerModal, optionsModal])
 
 
    console.log("reqUser:", reqUser, "id:", user?.id, "following:", following);
@@ -207,22 +207,22 @@ const follow = async () => {
           }
         <div className="row outer_row_dash w-100 h-100 p-0 m-0">
 
-           <div className="col-lg-1 col-12 d-flex flex-row flex-lg-column gap-2 gap-sm-4 gap-lg-4 pl-4 
-                           pl-lg-0mt-0 align-items-center pt-3 pb-1 pt-lg-5 pb-lg-0 
+           <div className="col-lg-1 col-12 d-flex flex-row flex-lg-column gap-4 gap-sm-5 gap-lg-4 pl-4 
+                           pl-lg-0mt-0 align-items-center p-3 p-sm-4 pt-lg-5  pb-lg-0 
                            menu_options justify-content-lg-start justify-content-center"
                >
               {!visitor && <div className="dash_img_menu_cont">
                                   <img src="/avatar.png" alt="stats_icon" 
                                   className={summary ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
                                    onClick={()=> {summaryToggled(true); postsToggled(false)}}/>
-                                  <div className={"hint_div_dash txt_md"}>Summary</div>
+                                  
                           </div>
               }
               {!visitor && <div className="dash_img_menu_cont">
                                   <img src="/feed_icon2.png" alt="stats_icon" 
                                   className={postPage ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
                                    onClick={()=> {postsToggled(true); summaryToggled(false)}}/>
-                                  <div className={"hint_div_dash txt_md"}>Posts</div>
+                               
                           </div>
               }
 
@@ -231,7 +231,7 @@ const follow = async () => {
                                   <img src="/group_icon.png" alt="stats_icon" 
                                   className={followerModal ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
                                    onClick={()=> {setFollowerModal(true);}}/>
-                                  <div className={"hint_div_dash txt_md"}>Followers</div>
+                               
                           </div>
               }
               
@@ -239,7 +239,7 @@ const follow = async () => {
                                 <Image src="/gear_icon.png" alt="gear_icon" 
                                 className={optionsModal ? 'selected_tab_dash dash_tab_icon': "dash_tab_icon"}
                                 width={30} height={30} onClick={()=> {setOptionsModal(true);}}/>
-                                <div className={"hint_div_dash txt_md"}>Settings</div>
+                               
                           </div>
               }
 
