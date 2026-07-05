@@ -1,13 +1,17 @@
 import json
 import csv
 import glob
-
+import os
+## PARSING FILES FROM openaddresses.io
 # Path to your folder of GeoJSON files
-input_files = glob.glob(r"C:\Users\gabri\Desktop\Python\local_friends\addresses\**\*.geojson", recursive=True)
-output_file = r"C:\Users\gabri\Desktop\Python\local_friends\addresses\addresses.csv"
+
+CUR_DIR = os.path.dirname(__file__)
+REGIONS_DATA_FOLDER = os.path.join(CUR_DIR, 'regions_data')
+input_files = glob.glob(rf"{REGIONS_DATA_FOLDER}/**/*.geojson", recursive=True)
+output_file = os.path.join(REGIONS_DATA_FOLDER ,'addresses.csv')
 
 # Define the CSV header
-fields = ["number", "street", "unit", "city", "district", "region", "latitude", "longitude"]
+fields = ["street", "number", "unit", "city", "district", "region", "latitude", "longitude"]
 
 with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
 
@@ -46,8 +50,9 @@ with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
                             lon, lat = geo[0][0][0], geo[1][1][1]
 
                     row = {
-                        "number": props.get("number", ""),
+                       
                         "street": props.get("street", ""),
+                        "number": props.get("number", ""),
                         "unit": props.get("unit", ""),
                         "city": props.get("city", ""),
                         "district": props.get("district", ""),

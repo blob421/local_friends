@@ -25,7 +25,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
         
             
                  
-              <div className="top_bar_dashboard txt_sm">
+              <div className="top_bar_dashboard txt_md">
                        {!visitor ? `Welcome ${user?.username}`
                                  : `You are viewing the profile of ${user?.username}` }
 
@@ -36,12 +36,12 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                         }
               </div>
               
-             <div className='container-fluid m-0 pt-5 pb-5 pb-md-0 pt-md-0 gap-4 gap-sm-5 gap-md-3 h-100 d-flex flex-column justify-content-center quadrants_row'>
+             <div className='container-fluid p-1 m-0 pt-5 pb-5 pb-md-0 pt-md-0 gap-4 gap-sm-5 gap-md-3 h-100 d-flex flex-column justify-content-center quadrants_row'>
            
                 <div className="row d-flex justify-content-center p-0 m-0 pt-sm-3 pt-md-1 gap-4 gap-sm-5 gap-md-0 rect_row">
                   
                     <div className="col-lg-5 col-12 col-sm-11">
-                          <div className="rectangle">
+                          <div className="rectangle pb-2 pb-sm-0">
                            {!visitor && <Image src={"/pen.png"} alt="Edit" height={25} 
                             width={25} className="edit_icon_dash"
                             onClick={
@@ -53,12 +53,15 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                               }/>}
 
                            
-                              <div className="account_top dashboard_squares_titles txt_lg">
+                              <div className="account_top dashboard_squares_titles txt_lg
+                              mb-2 mb-sm-0">
                                   Account
                               </div>
-                              <div className="account_bot">
+                              <div className="account_bot pl-md-2">
 
-                                <div className="photo_right">
+                                <div className="photo_right align-self-start 
+                                align-self-sm-center 
+                                m-2 m-sm-3 mt-0 mb-0">
 
                                     {user.picture && <img src={url + user.picture} 
                                     className="profile_pic_dash"></img>}
@@ -69,7 +72,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
 
                                 </div>
 
-                                <div className="info_left">
+                                <div className="info_left p-2 p-sm-3 mr-2 mr-sm-5">
                                   
                                  <div className="user_square_ul txt_xs">
                                         <div><strong>Username: </strong>{user.username}</div>
@@ -96,7 +99,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                                </div>
                                 <div className="stats_bot txt_sm p-0 p-md-5">
 
-                                    <div className='dash_stats_grid'>
+                                    <div className='dash_stats_grid p-2'>
                                     
                                         <div className='oneStat ps-2 ps-lg-3'>
                                           Animals found : {userStats?.found ?? '-'}</div>
@@ -117,12 +120,14 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                   
               <div className="col-lg-5 col-12 col-sm-11">
                     <div className="rectangle">
-                        {!visitor &&<Image src={"/pen.png"} alt="Edit" height={25} 
-                      width={25} className="edit_icon_dash"
+                        {!visitor &&<img src={"/pen.png"} alt="Edit" 
+                      className="edit_icon_dash"
                       onClick={
                         ()=>{ 
                         setAnimalModal(true); 
-                        $('#profile_modal_bg_animal').show()
+                        $('#profile_modal_bg_animal').show();
+                         window.scrollTo({ top: 0, behavior: 'instant' })
+
                         }
                         }/>}
                           <div className="team_upper dashboard_squares_titles txt_lg">
@@ -139,7 +144,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                                         </img>}
                                 </div>
                               
-                                {!user.Animal && <div className="no_team_content txt_sm">
+                                {!user.Animal && <div className="no_team_content txt_md">
                                       No team yet , click on the pen icon and pick your favorite animal ⭐
                                       </div>
                                       }

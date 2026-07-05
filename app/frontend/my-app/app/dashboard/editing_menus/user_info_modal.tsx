@@ -31,7 +31,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
     const usernameExists = params.get('username')
     
     const search_url = `${url}/graphql`
-    const loadOptions = handle_debounce(search_url, 'regions')
+    const loadOptions = handle_debounce(search_url, 'addresses')
 
   return(
     
@@ -40,7 +40,7 @@ export default function User_info_modal({url, username, email, firstName, lastNa
   
      <div className="profile_modal col-12 col-md-6 g-0 d-flex flex-column top-0 top-md-50" id="profile_modal">
 
-        <button className="x_btn_reg txt_sm"
+        <button className="x_btn_reg txt_md"
         onClick={()=> onClose()}>X</button>
 
          <form className="image_form p-0 m-0" encType="multipart/form-data" 

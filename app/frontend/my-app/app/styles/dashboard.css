@@ -1,5 +1,5 @@
 .rectangle{
-    background-color: rgb(121, 121, 121); height: min(39vh, 60vw); 
+    background-color: rgb(121, 121, 121); height: min(39vh, 63vw); 
     border-radius: 6px; overflow: hidden; position: relative; display: flex;
     flex-direction: column; border: 1px solid grey;
 }
@@ -26,8 +26,9 @@
     background-color: rgba(101, 103, 110, 0.431); border-radius: 15%;
 }
 .dash_tab_icon{
-    cursor: pointer; transition: transform ease 1s;transform-origin: center center; width: max(4vh, 3vw);
-    margin-bottom: 5px; height: max(4vh, 3vw); border-radius: 15%;
+    cursor: pointer; transition: transform ease 1s; width: max(4.5vh, 3vw);
+    transform-origin: center center; 
+    margin-bottom: 5px; height: max(4.5vh, 3vw); border-radius: 15%; 
 }
 .dash_tab_icon:hover{
     transform: scale(1.2); 
@@ -38,9 +39,7 @@
     font-size: small;
 
 }
-.hint_div_dash{
-   
-}
+
 .dash_img_menu_cont{
     justify-content: center; display: flex; flex-direction: column; align-items: center;
     font-size: small; padding: 2%; width: fit-content; gap: 2%
@@ -78,9 +77,7 @@
 .green_checkmark_follow{
     height: 20px; width: 20px;
 }
-.panels_cont{
-  
-}
+
 /*********************Square 1*************************/
 .no_team_content{
     position: absolute;  width: 72%;
@@ -188,12 +185,12 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
    
 }
 .account_bot{
-  display: flex; align-items: center; padding-top: 3%;
+  display: flex; align-items: center; height: 75%;
 }
 .info_left{
  width: 65%;  font-size: max(13px, 1.5vh); display: flex; justify-content: center;
  align-items: center; padding-bottom: 2vh;
- padding-top: 2vh; background-color: rgba(0, 0, 0, 0.139); margin-right: 5px;
+ padding-top: 2vh; background-color: rgba(0, 0, 0, 0.139); 
 }
 .profile_pic_dash{
     height: 85%; width: 85%; object-fit: contain; 
@@ -204,11 +201,12 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 .photo_right{
     width: 35%; display: flex; align-items: center;
     justify-content: center; aspect-ratio: 1/1;
-    padding-left: 1vw;
+    
 }
 .edit_icon_dash{
-    position: absolute; right: 10; top: 10; cursor: pointer;border-radius: 4px;
-    background-color: rgb(228, 227, 223);
+    position: absolute; right: min(2vw, 2vh); top: min(2vw, 2vh); cursor: pointer;border-radius: 4px;
+    background-color: rgb(228, 227, 223); aspect-ratio: 1/1; width: 4vh;
+
 
 }
 .edit_icon_dash:hover{
@@ -232,28 +230,24 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     
 }
 .dash_stats_grid{
- display: grid; grid-template-columns: repeat(2, 1fr); width: 100%;
+ display: grid; grid-template-columns: repeat(2, 0.6fr); width: 100%;
     justify-content: center; align-items: center;  grid-template-rows: 2.3em 2.3em;
     gap: 0; row-gap: 6%;
     
 }
 .oneStat{
-   justify-self: center; width: 100%; padding: 1%; padding-top: 2%; padding-bottom: 2%; 
+   justify-self: center; width: 96%; padding: 1%; padding-top: 2%; padding-bottom: 2%; 
   
-    background-color: #4776a5e3; max-width: max(90% , 8vh); border-radius: 4px;
+    background-color: #4776a5e3;  border-radius: 4px;
 }
 /*********************** PROFILE MODAL **************************/
 
 #profile_modal_bg{
-    background-color: rgba(0, 0, 0, 0.29); position: absolute; left: 50%;
+    background-color: rgba(0, 0, 0, 0.512); position: absolute; left: 50%;
      top: 50%; transform: translate(-50%, -50%); height: 100vh; 
     width: 100vw; z-index: 100000; 
 }
-#profile_modal_bg_animal{
-       background-color: rgba(0, 0, 0, 0.29); position: absolute; left: 50%;
-     top: 50%; transform: translate(-50%, -50%); height: 100vh; 
-    width: 100vw;
-}
+
 .image_form{
     width: 100%;
 }
@@ -264,9 +258,14 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
       border: 2px solid black; height: fit-content;
 }
 .mini_modal{
-    width: 40vw !important; height: 20vh !important; position: relative; border-radius: 5px;
-     top: 40%; display: block;
+    height: 32vh; position: relative; border-radius: 6px;
+     background-color: rgb(229, 234, 239); border: 2px solid black;
+ 
 }
+.animal_select{
+   color: black; border: 1px solid black; border-radius: 3px;
+}
+
 .summary_right_panel{
     min-height: 91vh; background-color: rgb(26, 26, 26);
 }
@@ -352,9 +351,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     display: flex; flex-direction: column; justify-content: center; width: 100%;
     height: 11vh; align-items: center; 
 }
-.animal_select{
-    margin-top: 2vh !important; left: 2vw; position: absolute; top:2.5vh; 
-}
+
 .region_select{
    color: black; z-index: 10000;
    position: absolute; bottom: 2px; width: 100%;
@@ -497,9 +494,6 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     width: 100vw; height: 100vh; 
 }
 
-.mini_modal{
-    width: 320px !important; height:130px !important
-}
 
 .submit_btn_edit_profile{
     width: 85%;

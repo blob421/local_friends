@@ -15,7 +15,7 @@ font-size: max(1.3vw, 2.3vh)  !important;
 font-size: max(1.3vw, 2vh)  !important;
 }
 .txt_xs{
-    font-size: max(1vw, 1.5vh)  !important;
+    font-size: max(1vw, 2vh)  !important;
 }
 .txt_xl{
     font-size: max(1.8vw, 2.8vh) !important;
@@ -45,5 +45,9 @@ font-size: max(1.3vw, 2vh)  !important;
     }
     .form_profile_user{
        padding: 12% !important; padding-top: 8vh!important; 
+    }
+    .mini_modal{
+        gap: 6vh !important; padding: 5% !important; padding-top: 7% !important;
+        flex: 0 0 90% !important; border-radius: 8px !important;
     }
 }

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import $ from 'jquery'
 import dynamic from 'next/dynamic';
 import { decodeUrlSafe } from "../utilities/encode";
-
+import { block_scrolling } from "../utilities/block_scrolling";
 import type {Region, User, Badge, UserBadge, stats} from '../types_dashboard'
 import {baseUser} from '../types_dashboard'
 
@@ -172,32 +172,18 @@ const follow = async () => {
     })
    }
 
-   const handleScrolling = (classname:string, disable = true) => {
-    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-
-    if (!isPortrait) return;
-
-    const body = document.body;
-   
-    let formH = 'auto'
-
-    if (disable){
-     const form = document.querySelector(`.${classname}`) as HTMLElement
-     formH = window.getComputedStyle(form).height
-    
-    }
-  
-    body.style.height = formH
-   
-    
-   
-   }
 
  useEffect(()=> {
   
-    handleScrolling('profile_modal', modalTriggered)
+    block_scrolling('profile_modal', modalTriggered)
 
  }, [modalTriggered])
+
+ useEffect(()=> {
+  
+    block_scrolling(undefined, animalModal)
+
+ }, [animalModal])
 
 
    console.log("reqUser:", reqUser, "id:", user?.id, "following:", following);
@@ -221,7 +207,7 @@ const follow = async () => {
           }
         <div className="row outer_row_dash w-100 h-100 p-0 m-0">
 
-           <div className="col-lg-1 col-12 d-flex flex-row flex-lg-column gap-4 gap-lg-4 pl-4 
+           <div className="col-lg-1 col-12 d-flex flex-row flex-lg-column gap-2 gap-sm-4 gap-lg-4 pl-4 
                            pl-lg-0mt-0 align-items-center pt-3 pb-1 pt-lg-5 pb-lg-0 
                            menu_options justify-content-lg-start justify-content-center"
                >
@@ -229,14 +215,14 @@ const follow = async () => {
                                   <img src="/avatar.png" alt="stats_icon" 
                                   className={summary ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
                                    onClick={()=> {summaryToggled(true); postsToggled(false)}}/>
-                                  <div className={"hint_div_dash"}>Summary</div>
+                                  <div className={"hint_div_dash txt_md"}>Summary</div>
                           </div>
               }
               {!visitor && <div className="dash_img_menu_cont">
                                   <img src="/feed_icon2.png" alt="stats_icon" 
                                   className={postPage ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
                                    onClick={()=> {postsToggled(true); summaryToggled(false)}}/>
-                                  <div className={"hint_div_dash"}>Posts</div>
+                                  <div className={"hint_div_dash txt_md"}>Posts</div>
                           </div>
               }
 
@@ -245,7 +231,7 @@ const follow = async () => {
                                   <img src="/group_icon.png" alt="stats_icon" 
                                   className={followerModal ?"selected_tab_dash dash_tab_icon" :"dash_tab_icon"}
                                    onClick={()=> {setFollowerModal(true);}}/>
-                                  <div className={"hint_div_dash"}>Followers</div>
+                                  <div className={"hint_div_dash txt_md"}>Followers</div>
                           </div>
               }
               
@@ -253,7 +239,7 @@ const follow = async () => {
                                 <Image src="/gear_icon.png" alt="gear_icon" 
                                 className={optionsModal ? 'selected_tab_dash dash_tab_icon': "dash_tab_icon"}
                                 width={30} height={30} onClick={()=> {setOptionsModal(true);}}/>
-                                <div className={"hint_div_dash"}>Settings</div>
+                                <div className={"hint_div_dash txt_md"}>Settings</div>
                           </div>
               }
 
@@ -281,7 +267,7 @@ const follow = async () => {
 
 {Usersettings.firstLogin && <FirstLoginModal/>}
 {followerModal && <FollowersModal closeModal={()=> setFollowerModal(false) }/>}
-{animalModal && <AnimalModal url={url}/>}
+{animalModal && <AnimalModal url={url} onClose={()=> setAnimalModal(false)}/>}
 
 {optionsModal && <Settings settings={Usersettings} hideModal={()=> setOptionsModal(false)}/>}
 

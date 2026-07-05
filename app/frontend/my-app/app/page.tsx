@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Register from "./components/registration/register";
 import Reset from "./components/registration/reset";
 import Login from "./components/registration/login";
-
+import { block_scrolling } from './utilities/block_scrolling';
 import InfoBanner from './components/banners/home_banner';
 
 export default function Home(){
@@ -30,7 +30,11 @@ export default function Home(){
      useEffect(()=> {
         isAuth()
      }, [])
-     
+
+     useEffect(()=>{
+        block_scrolling(undefined, regV || loginV || resetV)
+     },[regV, loginV, resetV])
+
     return(
         <div className="container-fluid p-0 m-0">
               <div className="row p-0 m-0">
