@@ -66,6 +66,9 @@ font-size: max(1.3vw, 2vh)  !important;
     .settings_modal{
         height: 100vh !important; width: 100vw !important;
     }
+    .animal_pic_cont{
+        width: 55% !important;
+    }
 }
 @media(min-width:799px){ 
 

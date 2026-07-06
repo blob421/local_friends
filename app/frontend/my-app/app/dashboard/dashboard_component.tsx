@@ -190,6 +190,7 @@ const follow = async () => {
 
      return (
       <div className="dash_cont container-fluid p-0 m-0" id="dash_cont">
+
         {visitor && <div id="follow_popup" className={followClicked2 ? "shrink": ""} >
                           <div id="follow_href" className={followClicked? "fadeout": ""} onClick={()=>{
                              
@@ -205,6 +206,7 @@ const follow = async () => {
                           </div>
                    </div>
           }
+          
         <div className="row outer_row_dash w-100 h-100 p-0 m-0">
 
            <div className="col-lg-1 col-12 d-flex flex-row flex-lg-column gap-4 gap-sm-5 gap-lg-4 pl-4 

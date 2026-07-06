@@ -100,7 +100,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                                <div className="stats_top dashboard_squares_titles txt_lg">
                                  Stats
                                </div>
-                                <div className="stats_bot txt_sm p-0 p-md-5">
+                                <div className="stats_bot txt_sm p-2 p-md-5">
 
                                     <div className='dash_stats_grid p-2'>
                                     
@@ -154,10 +154,11 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                                 <div className="animal_desc_dash">
                                   
                               
-                                    <div className="animal_title_dash">
+                                    <div className="animal_title_dash txt_md">
                                     {user.Animal && user.Animal.name}
                                       </div>
-                                    {user.Animal && <div className="animal_text_dash">
+                                    {user.Animal && <div className="animal_text_dash txt_xs 
+                                    p-3 pt-3 pl-4 pr-1">
                                       {user.Animal.description}
 
                                     </div>}   
@@ -172,7 +173,7 @@ export default function SummaryComponent({user, visitor, reqUser, unfollow, foll
                           Badges
                         </div>
 
-                        <div className="badge_grid_dash">
+                        <div className="badge_grid_dash p-2 p-sm-4 p-md-4 gap-1 gap-md-3 pt-md-4">
                         {badges.map(b=>{
                           return <div className={"single_badge_div"} key={b.id}>
                                   <img src={b.picture} className={obtainedBadges.includes(b.id) ? 

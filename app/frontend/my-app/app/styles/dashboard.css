@@ -102,7 +102,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
 }
 .animal_title_dash{
     text-align: center; position: sticky; top: 0; background-color: rgb(39, 39, 39);
-     font-size: max(15px, 2vh);
+     font-size: max(15px, 2vh); 
     
 }
 .teams_grid > * {
@@ -112,7 +112,7 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     animation: wiggle ; animation-duration: 1.5s; animation-fill-mode: forwards;
 }
 .animal_ico{
-   width:90%; height: 90%; object-fit: contain;
+   width:85%; height: 85%; object-fit: contain;
 }
 .animal_pic_cont{
  cursor: pointer;  width:45%; display: flex; justify-content: center; align-items: center;
@@ -131,16 +131,17 @@ width: 55%; ;overflow-y: scroll; scrollbar-width: thin;
     display: flex; justify-content: center; 
 }
 .badge_grid_dash{
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); display: grid; overflow-y: scroll;
-    grid-auto-rows: max(70px); padding-top: 1.6vh; background-color: rgb(37, 37, 37); 
-    height: 75%;
+    grid-template-columns: repeat(auto-fill, minmax(20%, 1fr)); display: grid; overflow-y: scroll;
+     padding-top: 1.6vh; background-color: rgb(37, 37, 37); 
+    height: 75%; row-gap: max(0.5vh, 0.5vw);
 }
 .single_badge_div{ 
     border: 1px solid rgb(62, 62, 62); display: flex; justify-content: center;
-    align-items: center; background-color: #494949; 
+    align-items: center; background-color: #494949; aspect-ratio: 1/1; 
+    width: 95%; justify-self: center; border-radius: 5px; align-self: center;
 }
 .badge_image{
-    height: 60px; width: 60px; align-self: center; justify-self: center;
+    height: 75% ;width:75%; align-self: center; justify-self: center;
      background-color: rgba(66, 66, 66, 0); border-radius: 50%;
 }
 .badge_image:hover{
