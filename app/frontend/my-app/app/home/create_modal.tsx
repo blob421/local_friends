@@ -53,7 +53,7 @@ const loadOptions = handle_debounce(url + '/graphql', 'addresses')
         setFiles(files)
         }
 
-   const SendPostEditCreate = (e:React.FormEvent) =>{
+   const SendPostEditCreate = async (e:React.FormEvent) =>{
     e.preventDefault()
     const fetchUrl = !post ? `${url}/post` : `${url}/post/edit/${post._id}`
     
@@ -76,8 +76,10 @@ const loadOptions = handle_debounce(url + '/graphql', 'addresses')
     formData.append("images", file)
     })
 
-    fetchAuth(fetchUrl, {method: 'POST', 
-                         body: formData
+    await fetch(fetchUrl, {method: 'POST', 
+                         body: formData,
+                      
+                         credentials: 'include'
                          }).then(res => res.json()).then(data => {
                          
                          

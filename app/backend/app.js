@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
+const runMode = process.env.runModeLocalFriends || 'Dev'
 
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
@@ -14,14 +15,22 @@ const queryInterface = sequelize.getQueryInterface();
 // Middleware///////////////////////////////////////////////////////////////////
 const authenticateToken = require('./jwt_middleware');
 
-app.use(express.json());
+app.use(express.json({limit: '10MB'}));
 app.use(cors({ origin: process.env.FRONT_END_URL, credentials: true }));
 const bcrypt = require('bcrypt');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+if (runMode == 'Dev'){
+app.use('/home/blob421/dev/Projects/local_friends/media/', 
+         express.static('/home/blob421/dev/Projects/local_friends/media/'));
+
+}
+else {
 app.use('/usr/src/app/media', express.static('/usr/src/app/media'));
+
+}
 
 /////////////////////////////// RATE LIMITER ///////////////////////////////////
 const {rateLimit} = require('express-rate-limit')

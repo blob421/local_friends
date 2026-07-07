@@ -21,3 +21,4 @@ backend/node_modules/
 backend/uploads/
 app/backend/migrations
 regions_data
+/media

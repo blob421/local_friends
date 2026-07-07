@@ -1,13 +1,16 @@
 "use client";
 import { useEffect , useState} from "react";
 import dynamic from "next/dynamic";
-import type {Comment, Post, User} from '../home/page'
+import type {Comment, Post, User} from '../types_feed'
 import { truncateText } from '../components/truncate_text';
 import $ from 'jquery'
+
 const MapComponent = dynamic(() => import("./map"), {
   ssr: false
 });
+
 const PostDetailModal = dynamic(()=> import('../home/post_detail_modal'))
+
 const default_user:User = {
     id:0,
     username:'defaultUser',
@@ -102,6 +105,10 @@ export default function MapMain(){
   delPost={(post)=> {setPosts(prev=> prev.filter(p=> p.id !== post.id));
     setActivePost(null); setPostDetailModal(false)
   }}
+  
+  postModified={(post:Post) => {setPosts(prev => prev.map(p => p.id == post.id ? post : p));
+                                       setActivePost(prev => post)
+          } }
   onClose={()=> {setActivePost(null); setPostDetailModal(false)}}
     delComment={(commentId, type, subComments) => {
           

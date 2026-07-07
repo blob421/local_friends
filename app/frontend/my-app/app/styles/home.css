@@ -1,7 +1,7 @@
 /************************ BAR *****************************/
 .feed_top_bar_create{
-    background-color: rgba(48, 49, 50, 0.924); top:0; position: sticky; border-radius: 5px;
-    height: 9vh; display: flex; align-items: center; gap: 1%;  justify-content: flex-end;
+    background-color: rgba(48, 49, 50, 0.924); border-radius: 5px;
+    height: max(9vh, 5vw); position: relative;
     margin-bottom: 1%; border: 1px solid grey; z-index: 1000; 
     
 }
@@ -9,27 +9,30 @@
    background-color: rgb(99, 107, 212); cursor: pointer;
 }
 .new_post_icon{
-  height: 26px; transition: transform ease 0.5s;
+  height: 60%; transition: transform ease 0.5s;
 }
 .newPostButtonRight{
     transform: scale(1.1); position: relative;
 }
 .new_post_btn{
-    width: 120px; background-color: rgb(116, 124, 239); height: 70%; display: 
-    flex; align-items: center; justify-content: center; border-radius: 5px; border: 1px solid black;
-    font-size: smaller; gap: 8%;
+     background-color: rgb(116, 124, 239); height: 70%; gap: 8%;
+    display: flex; align-items: center; justify-content: center; 
+    border-radius: 5px; border: 1px solid black; padding-left: 5%; padding-right: 4%;
+    position: absolute; right: max(1vh , 1vw); text-wrap: nowrap;
+    
 }
 .anchor_user_home{
     color: rgb(124, 124, 244) !important
 }
 
 .region_home_btn{
-  background-color: rgb(51, 51, 51); padding: 1%; border: 1px solid white;  border-radius: 5px;
-  position: absolute; left: 25; width: 75px;
+  background-color: rgb(51, 51, 51); padding: 1%; border: 1px solid white;  
+  border-radius: 5px; padding-left: 10%; padding-right:  10%;
+   height: 70%;
 }
 .worldwide_home_btn{
- background-color: rgb(47, 47, 47); position: absolute; left: 115px; padding: 1%; border-radius: 5px;
- width: 75px; border: 1px solid white; 
+ background-color: rgb(47, 47, 47);  padding: 1%; border-radius: 5px;
+  border: 1px solid white; height: 70%; padding-left: 10%; padding-right:  10%;
 }
 .region_home_btn:hover{
     background-color: rgb(75, 75, 75);
@@ -44,7 +47,9 @@
 .web_icon_posts{
    
 }
-
+.container_main_home{
+    background-color: rgb(80, 61, 109);
+}
 .region_popup_feed{
     background-color: rgb(65, 65, 65); border: 1px solid white; border-radius: 5px; font-size: small;
     width: fit-content; padding: 17%; visibility: hidden; position: absolute;
@@ -56,6 +61,7 @@
 .no_posts_div{
     height: 30vh; background-color: rgba(18, 18, 18, 0.508); color: rgb(255, 255, 255);  padding: 2%;
    display: flex; align-items: center; justify-content: center; margin-top: 1vh;
+   border-radius: 5px;
 }
 .post_user_home_img{
     width:17px; height: 17px; 
@@ -66,10 +72,12 @@
      margin-bottom: 1vh;
 }
 .feed_left{
-    background-color: rgb(16, 16, 16); 
+    background-color: rgb(239, 239, 239); 
 }
 .feed_middle{
- overflow-y: scroll; overflow-x: hidden;  background-color: rgb(87, 148, 228); height: 90vh;
+ overflow-y: scroll; overflow-x: hidden;  background-color: rgb(87, 148, 228); 
+ height: 90vh; 
+
  
 
 }

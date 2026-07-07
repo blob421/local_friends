@@ -35,20 +35,15 @@ const multer = require('multer')
 const path = require('path');
 const fs = require('fs');
 
-const storage = multer.diskStorage({ 
-destination: (req, file, cb) => {
-  fs.mkdirSync(path.join('/', 'usr', 'src', 'app', 'media'), {recursive: true})
-  cb(null, path.join('/', 'usr', 'src', 'app', 'media'))
-}, 
+const storage_arr = runMode == 'Dev' ? ['/', 'home','blob421','dev','Projects','local_friends', 'media'] 
+                                     : ['/', 'usr','src','app','media']
 
-filename: (req, file ,cb) => {
-  cb(null, Date.now() + path.extname(file.originalname));
-}
-})
 
 const storageUser = multer.diskStorage({ 
+
 destination: (req, file, cb) => {
-  const uploadPath = path.join('/', 'usr','src','app', 'media' ,'user', String(req.user.id))
+  const uploadPath = path.join(...[...storage_arr, ...String(req.user.id)])
+
   fs.mkdirSync(uploadPath, { recursive: true });
   cb(null, uploadPath)
 }, 
@@ -58,7 +53,6 @@ filename: (req, file ,cb) => {
 }
 })
 
-const upload = multer({ storage : storage });
 const uploadUser = multer({storage : storageUser})
 
 
@@ -406,7 +400,7 @@ router.post('/register', async (req, res) => {
 
 ////////////////////////////// POST ////////////////////////////////////
 router.post('/post', authenticateToken,
-                     upload.array('images', 5) ,
+                     uploadUser.array('images', 5) ,
   async (req, res) => {
  
 
@@ -454,6 +448,7 @@ router.get('/home', authenticateToken, async (req, res) =>{
     } 
 
     else{
+        
         region = user.UserSetting.postScopeRegion ? user.RegionId : null
        }    
 
@@ -466,16 +461,16 @@ router.get('/home', authenticateToken, async (req, res) =>{
      }
 
 
-     res.json({posts, user: user, settings: user.UserSetting, region: region})
+     res.json({posts:posts, user: user, settings: user.UserSetting, region: region})
     }
   )
 
 //// CACHES SEEN POSTS AND FETCH MORE POSTS FOR THE FEED 
-router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>{
+router.post('/more_posts/:feed/:regionId>', authenticateToken, async (req, res)=>{
   const data = req.body.ids
   const userId = req.user.id
   const Posts = getPosts()
-  console.log(req.body)
+
   const feed = req.params.feed
   const regionId = req.params.regionId
   const region = feed === 'Region'
@@ -506,7 +501,7 @@ router.post('/more_posts/:feed/:regionId', authenticateToken, async (req, res)=>
  res.json({posts})
 
  }else{
-  res.sendStatus(400)
+  res.status(400).json({msg: 'No posts'})
  }
  
 })
@@ -670,7 +665,7 @@ router.delete('/post/region/:regionId/id/:id', authenticateToken, async (req, re
   }
 })
 
-router.post('/post/edit/:id', authenticateToken, upload.array('images', 5), async (req, res)=>{
+router.post('/post/edit/:id', authenticateToken, uploadUser.array('images', 5), async (req, res)=>{
   const id = req.params.id
   const data = req.body
   const Posts = getPosts()

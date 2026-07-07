@@ -44,11 +44,13 @@ const removeOverflowingId = (id: string) => {
 
 const getResponse = async (scope:string | null) => {
         const fetch_url = scope ? `${url}/home?scope=${scope.toLowerCase()}` :`${url}/home`
+        
         const response = await fetchAuth(`${fetch_url}`, {
             method: 'GET',
             headers: {'Content-Type': 'application/json'}
         })
         const data = await response.json()
+
         console.log(data)
         setRegionId(data.region)
         console.log(regionId)
@@ -191,8 +193,10 @@ useEffect(()=>{
 
 /// Runs when bottom reached
 useEffect(()=>{
+  if (posts.length < 4) return ;
   const morePosts_url = url + `/more_posts/${postScope}/${regionId}`
- fetchAuth(morePosts_url, {method:'POST', 
+  
+  fetchAuth(morePosts_url, {method:'POST', 
                              headers: {'Content-Type': 'application/json'},
                              body: JSON.stringify({ids: viewedPostsId})})
                              .then(res => res.json()).then(data =>{ 
@@ -273,43 +277,50 @@ const setVisiblePopUp = (id:string) => {
 
 return (
  
-<div className="container-fluid d-flex justify-content-center p-0">
+<div className="container-fluid d-flex justify-content-center p-0 m-0 h-100 container_main_home">
         
         
 
 
-            <div className="feed_middle col-12 col-lg-7 col-ipad-pro" id='feed_middle'>
+            <div className="feed_middle col-12 p-2 pt-2 p-md-5 pt-md-2 col-lg-7 col-ipad-pro" id='feed_middle'>
                
-              <div className='row d-flex justify-content-center'>
+              <div className='row d-flex justify-content-center p-2 p-md-5 pt-1 pt-md-1 m-0'>
                   
-                  <div className='feed_top_bar_create col-md-10'>
 
-                    <button className={postScope !== 'Region' ? 'region_home_btn'
-                                                             : 'region_home_btn toggled_btn'}
-                     onClick={()=>{ if(postScope == 'World'){getResponse('Region')}}}>
-                      Region</button>
-                  
-                    <button onClick={
-                      ()=>{ if(postScope == 'Region'){getResponse('World')}}
-                    }
-                    className={postScope == 'World' ? 'worldwide_home_btn toggled_btn'
-                                                    : 'worldwide_home_btn'}>World</button>
+                  <div className='feed_top_bar_create col-md-10 d-flex w-100 
+                  align-items-center'>
+
+                      <div className='region_world_btn_cont txt_sm d-flex gap-2 h-100 align-items-center'>
+
+                    
+                            <button className={postScope !== 'Region' ? 'region_home_btn'
+                                                          : 'region_home_btn toggled_btn'}
+                            onClick={()=>{ if(postScope == 'World'){getResponse('Region')}}}>
+                              Region</button>
+                          
+                            <button onClick={
+                              ()=>{ if(postScope == 'Region'){getResponse('World')}}
+                            }
+                                  className={postScope == 'World' ? 
+                                                            'worldwide_home_btn toggled_btn'
+                                                            : 'worldwide_home_btn'}>
+                              World</button>
 
 
-
-
-                    <button className='new_post_btn' id={'new_post_div'} onClick={()=>{setModal(true);
+                    </div>
+                    
+                    <button className='new_post_btn txt_sm' id={'new_post_div'} onClick={()=>{setModal(true);
                        $('#feed_modal_bg').show()}}>
                       New post <img src={'/new_post.png'} id='new_post_icon' className='new_post_icon'></img>
                     </button>
                      
                     
                   </div>
-                  {noPosts ? <div className='col-md-10 no_posts_div'>
+                  {noPosts ? <div className='col-md-10 txt_sm no_posts_div w-100'>
                      No posts yet for this region
                     </div>:
 
-                  <div className='posts_cont col-md-10'>
+                  <div className='posts_cont col-md-10 w-100'>
                  
                   
                   {posts?.map(post => {
